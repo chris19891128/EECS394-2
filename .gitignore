@@ -1,6 +1,7 @@
 GCMSample
 MainActivity
 LearnAndroid
+*/bin
 
 # Compiled source #
 ###################
@@ -10,6 +11,7 @@ LearnAndroid
 *.exe
 *.o
 *.so
+*.apk
 
 # Packages #
 ############
@@ -19,7 +21,6 @@ LearnAndroid
 *.dmg
 *.gz
 *.iso
-*.jar
 *.rar
 *.tar
 *.zip
