@@ -2,10 +2,10 @@
 -- version 4.0.4.1
 -- http://www.phpmyadmin.net
 --
--- Host: localhost
--- Generation Time: Nov 09, 2013 at 01:24 AM
--- Server version: 5.6.12
--- PHP Version: 5.5.3
+-- 主机: localhost
+-- 生成日期: 2013 年 11 月 09 日 18:35
+-- 服务器版本: 5.6.12
+-- PHP 版本: 5.5.3
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Database: `EasyPolling`
+-- 数据库: `EasyPolling`
 --
 CREATE DATABASE IF NOT EXISTS `EasyPolling` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
 USE `EasyPolling`;
@@ -25,20 +25,34 @@ USE `EasyPolling`;
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Answer`
+-- 表的结构 `Answer`
 --
 
 CREATE TABLE IF NOT EXISTS `Answer` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
-  `Poll_ID` int(11) DEFAULT NULL,
+  `Poll_ID` varchar(11) DEFAULT NULL,
   `Answer` varchar(15) DEFAULT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=15 ;
+
+--
+-- 转存表中的数据 `Answer`
+--
+
+INSERT INTO `Answer` (`ID`, `Poll_ID`, `Answer`) VALUES
+(7, 'u6al', '4'),
+(8, 'u6al', '3'),
+(9, 'u6al', '3'),
+(10, 'u6al', '3'),
+(11, 'o46z', '3'),
+(12, 'o46z', '2'),
+(13, 'o46z', '4'),
+(14, 'y2sx', '2');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Poll`
+-- 表的结构 `Poll`
 --
 
 CREATE TABLE IF NOT EXISTS `Poll` (
@@ -48,21 +62,26 @@ CREATE TABLE IF NOT EXISTS `Poll` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `Poll`
+-- 转存表中的数据 `Poll`
 --
 
 INSERT INTO `Poll` (`ID`, `Content`) VALUES
 ('1kub', '{question: "What is your gender?", answer:["Male", "Female"]}'),
 ('2lqb', '{question: "test", answer:["1"]}'),
 ('5a0b', '{question: "Test", answer:["01", "124"]}'),
+('60t9', '{question: "what&#39;s that?", answer:["wawa", "lala", "hehe", "hehe3", "hehe1"]}'),
 ('7m66', '{question: "Test AGain", answer:["A", "B", "C", "D"]}'),
+('9nxy', '{question: "what is your name?", answer:["vance", "hehe", "lala", "wuwu", "xixi"]}'),
 ('cqgo', '{question: "Test", answer:["O1", "O2"]}'),
-('gyg2', '{question: "What&#39;s your favorite color?", answer:["Red", "Green"]}');
+('gyg2', '{question: "What&#39;s your favorite color?", answer:["Red", "Green"]}'),
+('o46z', '{question: "what&#39;s the time?", answer:["11:00", "12:00", "1:00", "2:00", "3:00", ""]}'),
+('u6al', '{question: "what is your name?", answer:["lala", "houhou", "xixi", "hehe", "haha"]}'),
+('y2sx', '{question: "nihao?", answer:["nihao1", "nihao2", "nihao3", "nihao4", "nihao5"]}');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Users`
+-- 表的结构 `Users`
 --
 
 CREATE TABLE IF NOT EXISTS `Users` (
@@ -73,7 +92,7 @@ CREATE TABLE IF NOT EXISTS `Users` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
 
 --
--- Dumping data for table `Users`
+-- 转存表中的数据 `Users`
 --
 
 INSERT INTO `Users` (`ID`, `username`, `password`) VALUES
