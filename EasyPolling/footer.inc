@@ -1,4 +1,4 @@
-<HR><!Ë®Æ½Ïß>
+<HR />
 <div align='center'>
 <P ALIGN="CENTER">
 <SMALL><I>

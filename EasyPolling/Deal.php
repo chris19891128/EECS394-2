@@ -15,11 +15,6 @@
 </head>
 <body>
 
-
-
-
-
-
 <?php
     $question=$_POST["Question"];
     $choice1=$_POST["Choice1"];
