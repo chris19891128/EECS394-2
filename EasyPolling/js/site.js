@@ -47,11 +47,7 @@ function newPoll() {
         },
         success:function(data){
         	$('#create').hide();
-<<<<<<< HEAD
         	$('#url').val('http://orange394.cloudapp.net/' + guid);
-=======
-        	$('#url').val('http://localhost/EECS394-2/EasyPolling/answer.php/' + guid);
->>>>>>> 907f970b02eb2cd101364d293a84ef4d73a2e785
         	$('#success').show();
     	}
     });

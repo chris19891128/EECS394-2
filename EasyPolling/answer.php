@@ -68,6 +68,10 @@ function Parse()
 <h3><?php echo(" ".$question); ?></h3>
 <form action="?survey_id=<?php echo $survey_id; ?>" method="post">
 
+for each $choice_array as $c
+<button onclick="click($c)">$c</button>
+
+
 <input type="radio" name="Choice" value="1"><?php echo(" ".$choice_array[0]); ?><br>
 <input type="radio" name="Choice" value="2"><?php echo(" ".$choice_array[1]); ?><br>
 <input type="radio" name="Choice" value="3"><?php echo(" ".$choice_array[2]); ?><br>
@@ -94,7 +98,7 @@ funtion write()
     //require_once('extract.php');
     if($_POST)
     {
-        $mysql = new mysqli('localhost', 'root', '', 'EasyPolling') or die ('Cannot connect to Database');
+        $mysql = new mysqli('localhost', 'root', 'stu.fudan2013', 'EasyPolling') or die ('Cannot connect to Database');
         $result = $_POST["Choice"];
         //echo ($result);
         //echo $_GET["survey_id"];
