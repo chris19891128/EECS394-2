@@ -16,7 +16,7 @@
 <body>
 
 <!-- Login form -->
-<form action="MakeSurvey.php" method="post">
+<form action="new.html" method="post">
 <p>
 <label for="username">Username: </label>
 <input type="text" name="username"><br>
