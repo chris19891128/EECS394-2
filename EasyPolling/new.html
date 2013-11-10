@@ -1,47 +1,57 @@
-
-
 <!doctype html>
 <head>
-    <meta charset="utf-8">
+<meta charset="utf-8">
 
-    <title>Easy Polling</title>
-    <meta name="description" content="Test Project">
-    <meta name="viewport" content="width=device-width">
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css" rel="stylesheet">
-    <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+<title>Easy Polling</title>
+<meta name="description" content="Test Project">
+<meta name="viewport" content="width=device-width">
+<link
+	href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"
+	rel="stylesheet">
+<link
+	href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css"
+	rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
-    <div class="container">
-        <form action="" method="" id="create">
-            <div id="options">
-                <div class="form-group">
-                    <label for="question">Question:</label>
-                    <input type="text" class="form-control" id="question" placeholder="Enter your question here" />
-                </div>
-                <div class="form-group">
-                    <label for="option1">Option 1:</label>
-                    <input type="text" class="form-control" id="option1" placeholder="" />
-                </div>
-            </div>
-            <button type="button" class="btn btn-default" onclick="addOption()">Add Option</button>
-            <button type="button" class="btn btn-default" onclick="newPoll()">Make a Poll</button>
-        </form>
+	<div class="container">
+		<form action="" method="" id="create">
+			<div id="options">
+				<div class="form-group">
+					<label for="question">Question:</label> <input type="text"
+						class="form-control" id="question"
+						placeholder="Enter your question here" />
+				</div>
+				<div class="form-group" id="option_group">
+					<label for="option1">Option 1:</label> <input type="text"
+						class="form-control" id="option_1_input" placeholder="" />
+				</div>
+			</div>
+			<button type="button" class="btn btn-default" onclick="addOption()">Add
+				Option</button>
+			<button type="button" class="btn btn-default" onclick="newPoll()">Make
+				a Poll</button>
+		</form>
 
-        <form class="form-inline" role="form" id="success">
-            <p>Congrats! Your poll has been created. Copy this url to share with your friends!</p>
-            <div class="form-group">
-                <input type="text" class="form-control" id="url" />
-            </div>
-            <!-- <button type="button" class="btn btn-default">Copy</button> -->
-        </form>
-    </div>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-    <script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.2.12.min.js"></script>
-    <script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/less.js/1.4.1/less.min.js"></script>
-    <script type="text/javascript" src="js/site.js"></script>
+		<form class="form-inline" role="form" id="success">
+			<p>Congrats! Your poll has been created. Copy this url to share
+				with your friends!</p>
+			<div class="form-group">
+				<input type="text" class="form-control" id="url" />
+			</div>
+			<!-- <button type="button" class="btn btn-default">Copy</button> -->
+		</form>
+	</div>
+	<script type="text/javascript"
+		src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<script type="text/javascript"
+		src="http://www.parsecdn.com/js/parse-1.2.12.min.js"></script>
+	<script type="text/javascript"
+		src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+	<script type="text/javascript"
+		src="//cdnjs.cloudflare.com/ajax/libs/less.js/1.4.1/less.min.js"></script>
+	<script type="text/javascript" src="js/site.js"></script>
 </body>
 
 </html>
