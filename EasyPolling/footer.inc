@@ -1,9 +1,1 @@
-<HR />
-<div align='center'>
-<P ALIGN="CENTER">
-<SMALL><I>
-EasyPolling,   Powered by Orange Team, 2013
-</I></SMALL>
-</P>
-</BODY>
-</HTML>
+<footer>- EasyPolling, Powered by the Orange Team, EECS394 2013</footer>

@@ -1,2 +1,3 @@
 #success {display: none;}
-#url {width: 600px;}
+#answerUrl, #statUrl {width: 600px;}
+footer {text-align: right; color: #ccc;}

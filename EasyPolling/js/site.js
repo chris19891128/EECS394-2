@@ -57,7 +57,8 @@ function newPoll() {
 		},
 		success : function(data) {
 			$('#create').hide();
-			$('#url').val('http://orange394.cloudapp.net/' + guid);
+			$('#answerUrl').val('http://orange394.cloudapp.net/answer.php?id=' + guid);
+			$('#statUrl').val('http://orange394.cloudapp.net/stat.php?id=' + guid);
 			$('#success').show();
 		}
 	});
