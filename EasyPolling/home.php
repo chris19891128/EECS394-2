@@ -28,7 +28,7 @@ require_once 'lib/all_error.php';
 <body>
 
 <?php
-echo $_SESSION ['user'];
+echo var_dump($_SESSION ['user']);
 ?>
 </body>
 </html>
