@@ -26,7 +26,7 @@ $client->setScopes("http://www.google.com/m8/feeds/");
 // oauth2_client_id, oauth2_client_secret, and register your oauth2_redirect_uri.
 $client->setClientId ( '519869230344.apps.googleusercontent.com' );
 $client->setClientSecret ( '-wESR-1Mwr7y6h2QOoNcXaRR' );
-$client->setRedirectUri ( 'http://orange394.cloudapp.net/EasyPolling/login.php' );
+$client->setRedirectUri ( 'http://orange394.cloudapp.net/EasyPolling/simple.php' );
 $client->setDeveloperKey ( 'AIzaSyBMs1qCCwvCJyvgxEkJkGxaIVcUOmzU8dI' );
 
 if (isset($_GET['code'])) {
