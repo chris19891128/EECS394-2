@@ -37,5 +37,10 @@ if ($client->getAccessToken ()) {
 	$_SESSION ['token'] = $client->getAccessToken ();
 } else {
 	$authUrl = $client->createAuthUrl ();
-	print "<a href='$authUrl'>Connect Me!</a>";
+}
+
+if (isset ( $authUrl )) {
+	print "<a class=login href='$auth'>Connect Me!</a>";
+} else {
+	print "<a class=logout href='?logout'>Logout</a>";
 }
