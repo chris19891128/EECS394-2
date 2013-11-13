@@ -1,7 +1,6 @@
 <?php
-session_start ();
 require_once 'lib/google-api-php-client/src/Google_Client.php';
-require_once 'lib/google-api-php-client/src/contrib/Google_PlusService.php';
+require_once 'lib/google-api-php-client/src/contrib/Google_Oauth2Service.php';
 require_once 'lib/all_error.php';
 
 // Set your cached access token. Remember to replace $_SESSION with a
@@ -16,7 +15,12 @@ $client->setClientId ( '519869230344.apps.googleusercontent.com' );
 $client->setClientSecret ( '-wESR-1Mwr7y6h2QOoNcXaRR' );
 $client->setRedirectUri ( 'http://orange394.cloudapp.net/EasyPolling/login.php' );
 $client->setDeveloperKey ( 'AIzaSyBMs1qCCwvCJyvgxEkJkGxaIVcUOmzU8dI' );
-$plus = new Google_PlusService ( $client );
+$oauth = new Google_Oauth2Service ( $client );
+
+if (isset ( $_GET ['logout'] )) {
+	unset ( $_SESSION ['token'] );
+	unset ( $_SESSION ['user'] );
+}
 
 if (isset ( $_GET ['code'] )) {
 	$client->authenticate ();
@@ -30,15 +34,10 @@ if (isset ( $_SESSION ['token'] )) {
 }
 
 if ($client->getAccessToken ()) {
-	$activities = $plus->activities->listActivities ( 'me', 'public' );
 	$_SESSION ['token'] = $client->getAccessToken ();
-	echo "session token" . $_SESSION ['token'];
+	$_SESSION ['user'] = $oauth->$userinfo;
+	header ( 'location: home.php' );
 } else {
 	$authUrl = $client->createAuthUrl ();
-}
-
-if (isset ( $authUrl )) {
-	print "<a class=login href='$authUrl'>Connect Me!</a>";
-} else {
-	print "<a class=logout href='?logout'>Logout</a>";
+	print "<a class='login' href='$authUrl'>Connect Me!</a>";
 }
