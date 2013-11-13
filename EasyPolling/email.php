@@ -122,8 +122,10 @@ END;
 
 $email = $_SESSION ['google_user'] ['email'];
 $accessToken = $_SESSION ['token'];
+$tok = json_decode ( mb_convert_encoding ( $accessToken, 'utf-8' ) );
+$tok2 = $tok->{'access_token'};
 
-displayForm ( $email, $accessToken );
+displayForm ( $email, $tok2 );
 
 if ($email && $accessToken) {
 	tryImapLogin ( $email, $accessToken );
