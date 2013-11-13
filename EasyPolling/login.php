@@ -14,7 +14,7 @@ $client->setApplicationName ( 'EasyPolling' );
 $client->setClientId ( '519869230344.apps.googleusercontent.com' );
 $client->setClientSecret ( '-wESR-1Mwr7y6h2QOoNcXaRR' );
 $client->setRedirectUri ( 'http://orange394.cloudapp.net/EasyPolling/login.php' );
-$client->setDeveloperKey ( 'AIzaSyBMs1qCCwvCJyvgxEkJkGxaIVcUOmzU8dI' );
+$client->setDeveloperKey ( 'AIzaSyB8tQTq2iobDEoqxdrTr2W_xJzAVIcz55s' );
 $plus = new Google_PlusService ( $client );
 
 if (isset ( $_GET ['code'] )) {
