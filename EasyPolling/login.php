@@ -15,9 +15,7 @@ $client->setClientId ( '519869230344.apps.googleusercontent.com' );
 $client->setClientSecret ( '-wESR-1Mwr7y6h2QOoNcXaRR' );
 $client->setRedirectUri ( 'http://orange394.cloudapp.net/EasyPolling/login.php' );
 $client->setDeveloperKey ( 'AIzaSyBMs1qCCwvCJyvgxEkJkGxaIVcUOmzU8dI' );
-$client->setScopes ( array (
-		'https://mail.google.com/' 
-) );
+$client->setScopes ( 'https://mail.google.com/' );
 $oauth = new Google_Oauth2Service ( $client );
 
 if (isset ( $_GET ['logout'] )) {
