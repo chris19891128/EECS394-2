@@ -35,7 +35,7 @@ if (isset ( $_SESSION ['token'] )) {
 
 if ($client->getAccessToken ()) {
 	$_SESSION ['token'] = $client->getAccessToken ();
-	$_SESSION ['user'] = $oauth->$userinfo;
+	$_SESSION ['user'] = $oauth->userinfo;
 	header ( 'location: home.php' );
 } else {
 	$authUrl = $client->createAuthUrl ();
