@@ -33,7 +33,7 @@ if (! isset ( $_SESSION ['token'] )) {
 
 <?php
 //echo var_dump ( $_SESSION ['google_user'] );
-"<h1> Welcome $_SESSION['google_user']['name'] ($_SESSION['google_user']['email'])"
+echo "<h1> Welcome $_SESSION['google_user']['name'] ($_SESSION['google_user']['email'])"
 ?>
 </body>
 </html>
