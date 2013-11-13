@@ -20,6 +20,10 @@
 <?php
 session_start ();
 require_once 'lib/all_error.php';
+
+if (! isset ( $_SESSION ['token'] )) {
+	header ( 'location: login.php' );
+}
 ?>
 <html>
 <head>
@@ -28,7 +32,8 @@ require_once 'lib/all_error.php';
 <body>
 
 <?php
-echo var_dump($_SESSION ['google_user']);
+//echo var_dump ( $_SESSION ['google_user'] );
+"<h1> Welcome $_SESSION['google_user']['name'] ($_SESSION['google_user']['email'])"
 ?>
 </body>
 </html>
