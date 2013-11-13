@@ -1,6 +1,9 @@
 <?php
 require_once 'lib/all_error.php';
 session_start ();
+if (! isset ( $_SESSION ['token'] )) {
+	header ( 'location: login.php' );
+}
 ?>
 <html>
 <head>
