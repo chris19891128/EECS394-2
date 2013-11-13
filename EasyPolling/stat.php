@@ -18,7 +18,7 @@
 				<th>Statistic</th>
 			</tr>
 			<?php
-			$mysql = new mysqli ( 'localhost', 'root', '', 'EasyPolling' ) or die ( 'Cannot connect to Database' );
+			$mysql = new mysqli ( 'localhost', 'root', 'stu.fudan2013', 'EasyPolling' ) or die ( 'Cannot connect to Database' );
 			$query = "SELECT Answer from Answer where Poll_ID='$_GET[id]'";
 			$result = mysqli_query ( $mysql, $query );
 			$stat = array ();
