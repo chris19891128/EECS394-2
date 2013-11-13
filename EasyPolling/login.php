@@ -40,7 +40,7 @@ if ($client->getAccessToken ()) {
 }
 
 if (isset ( $authUrl )) {
-	print "<a class=login href='$auth'>Connect Me!</a>";
+	print "<a class=login href='$authUrl'>Connect Me!</a>";
 } else {
 	print "<a class=logout href='?logout'>Logout</a>";
 }
