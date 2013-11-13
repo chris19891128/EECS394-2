@@ -1,32 +1,17 @@
-<!--
- * Copyright 2012 Google Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- * Sample code for authenticating to Gmail with OAuth2. See
- * https://code.google.com/p/google-mail-oauth2-tools/wiki/PhpSampleCode
- * for documentation.
- * -->
 <?php
-session_start ();
 ini_set ( 'include_path', './lib' );
 require_once 'all_error.php';
 require_once 'Zend/Mail/Protocol/Imap.php';
 require_once 'Zend/Mail/Storage/Imap.php';
+session_start ();
+if (! isset ( $_SESSION ['token'] )) {
+	header ( 'location: login.php' );
+}
+
 ?>
 <html>
 <head>
-<title>OAuth2 IMAP example with Gmail</title>
+<title>Send out emails</title>
 </head>
 <body>
 
@@ -135,10 +120,8 @@ function displayForm($email, $accessToken) {
 END;
 }
 
-$email = "chris19891128@gmail.com";
-// $accessToken = $_POST['access_token'];
+$email = $_SESSION ['google_user'] ['email'];
 $accessToken = $_SESSION ['token'];
-echo $accessToken;
 
 displayForm ( $email, $accessToken );
 
