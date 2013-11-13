@@ -131,8 +131,9 @@ function displayForm($email, $accessToken) {
 END;
 }
 
-$email = $_POST['email'];
-$accessToken = $_POST['access_token'];
+$email = "chris19891128@gmail.com";
+//$accessToken = $_POST['access_token'];
+$accessToken = $_SESSION ['token'];
 
 displayForm($email, $accessToken);
 
