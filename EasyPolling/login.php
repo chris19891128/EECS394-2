@@ -13,7 +13,7 @@ $client->setApplicationName ( 'EasyPolling' );
 // client id, client secret, and to register your redirect uri.
 $client->setClientId ( '519869230344.apps.googleusercontent.com' );
 $client->setClientSecret ( '-wESR-1Mwr7y6h2QOoNcXaRR' );
-$client->setRedirectUri ( 'http://orange394.cloudapp.net/EasyPolling/home.php' );
+$client->setRedirectUri ( 'http://orange394.cloudapp.net/EasyPolling/login.php' );
 $client->setDeveloperKey ( 'AIzaSyBMs1qCCwvCJyvgxEkJkGxaIVcUOmzU8dI' );
 $plus = new Google_PlusService ( $client );
 
@@ -31,10 +31,13 @@ if (isset ( $_SESSION ['token'] )) {
 if ($client->getAccessToken ()) {
 	$activities = $plus->activities->listActivities ( 'me', 'public' );
 	$_SESSION ['token'] = $client->getAccessToken ();
+	echo "session token" . $_SESSION ['token'];
 } else {
 	$authUrl = $client->createAuthUrl ();
 }
 
 if (isset ( $authUrl )) {
 	print "<a class=login href='$authUrl'>Connect Me!</a>";
+} else {
+	print "<a class=logout href='?logout'>Logout</a>";
 }
