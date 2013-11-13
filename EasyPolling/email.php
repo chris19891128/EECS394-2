@@ -108,7 +108,7 @@ function tryImapLogin($email, $accessToken) {
  */
 function displayForm($email, $accessToken) {
 	echo <<<END
-<form method="POST" action="oauth2.php">
+<form method="POST" action="email.php">
   <h1>Please enter your e-mail address: </h1>
   <input type="text" name="email" value="$email"/>
   <p>
