@@ -24,9 +24,10 @@
 <body>
 
 <?php
-require_once 'lib/all_error.php';
-require_once 'lib/oauth2-php-samples/Zend/Mail/Protocol/Imap.php';
-require_once 'lib/oauth2-php-samples/Zend/Mail/Storage/Imap.php';
+ini_set('include_path', './lib');
+require_once 'all_error.php';
+require_once 'Zend/Mail/Protocol/Imap.php';
+require_once 'Zend/Mail/Storage/Imap.php';
 
 
 /**
