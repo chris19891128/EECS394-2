@@ -4,7 +4,13 @@
 <title>EasyPolling</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Bootstrap -->
-<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+<link
+	href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"
+	rel="stylesheet">
+<link
+	href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css"
+	rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
 <script type="text/javascript"
 	src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 
@@ -25,7 +31,7 @@
         url: "response.php",
         data: data,
         success:function(data){
-        	location.replace("success.html");
+        	location.replace("stat.php?id=" + <?php echo "'$survey_id'"; ?>);
     	}
     });
 	}
@@ -33,16 +39,15 @@
 </head>
 <body>
 
-	<div id="main_div">
-		<h3> <?php echo($survey['question']); ?> </h3>
+	<div class="container">
+		<h1> <?php echo($survey['question']); ?> </h1>
 	
 	<?php
 	foreach ( $survey ['answer'] as $choice ) {
-		echo "<button class='choiceButton' type='button' onClick=\"submitIt('$choice')\"'>$choice</button></br>";
+		echo "<p><button class='choiceButton btn btn-default' type='button' onClick=\"submitIt('$choice')\"'>$choice</button></p>";
 	}
 	?>
-	</div>
-	
 	<?php include ("footer.inc");?>
+	</div>
 </body>
 </html>
