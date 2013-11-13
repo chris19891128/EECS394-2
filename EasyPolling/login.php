@@ -1,6 +1,7 @@
 <?php
 require_once 'lib/google-api-php-client/src/Google_Client.php';
 require_once 'lib/google-api-php-client/src/contrib/Google_PlusService.php';
+require_once 'lib/all_error.php';
 
 // Set your cached access token. Remember to replace $_SESSION with a
 // real database or memcached.
