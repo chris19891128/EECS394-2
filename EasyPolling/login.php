@@ -11,10 +11,10 @@ $client = new Google_Client ();
 $client->setApplicationName ( 'EasyPolling' );
 // Visit https://code.google.com/apis/console?api=plus to generate your
 // client id, client secret, and to register your redirect uri.
-$client->setClientId ( '519869230344.apps.googleusercontent.com' );
-$client->setClientSecret ( '-wESR-1Mwr7y6h2QOoNcXaRR' );
+$client->setClientId ( '519869230344-g04r7hhcurmiis7pvk0fkj9tnp5e5ap0.apps.googleusercontent.com' );
+$client->setClientSecret ( 'GLNwVaXx5ZJItCIOElQCjEXK' );
 $client->setRedirectUri ( 'http://orange394.cloudapp.net/EasyPolling/login.php' );
-$client->setDeveloperKey ( 'AIzaSyBMs1qCCwvCJyvgxEkJkGxaIVcUOmzU8dI' );
+$client->setDeveloperKey ( 'AIzaSyAVm4SundltxWo09gJqGgDfa-vifm8VafI' );
 $plus = new Google_PlusService ( $client );
 
 if (isset ( $_GET ['code'] )) {
