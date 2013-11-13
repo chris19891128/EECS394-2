@@ -24,10 +24,10 @@ $client->setScopes("http://www.google.com/m8/feeds/");
 // Documentation: http://code.google.com/apis/gdata/docs/2.0/basics.html
 // Visit https://code.google.com/apis/console?api=contacts to generate your
 // oauth2_client_id, oauth2_client_secret, and register your oauth2_redirect_uri.
-// $client->setClientId('insert_your_oauth2_client_id');
-// $client->setClientSecret('insert_your_oauth2_client_secret');
-// $client->setRedirectUri('insert_your_redirect_uri');
-// $client->setDeveloperKey('insert_your_developer_key');
+$client->setClientId('insert_your_oauth2_client_id');
+$client->setClientSecret('insert_your_oauth2_client_secret');
+$client->setRedirectUri('insert_your_redirect_uri');
+$client->setDeveloperKey('insert_your_developer_key');
 
 if (isset($_GET['code'])) {
   $client->authenticate();
