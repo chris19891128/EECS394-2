@@ -25,8 +25,8 @@
 
 <?php
 require_once 'lib/all_error.php';
-require_once 'lib/oauth2-php-client/Zend/Mail/Protocol/Imap.php';
-require_once 'lib/oauth2-php-client/Zend/Mail/Storage/Imap.php';
+require_once 'lib/oauth2-php-samples/Zend/Mail/Protocol/Imap.php';
+require_once 'lib/oauth2-php-samples/Zend/Mail/Storage/Imap.php';
 
 
 /**
