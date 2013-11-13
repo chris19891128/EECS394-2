@@ -12,7 +12,7 @@ if (! isset ( $_SESSION ['token'] )) {
 <body>
 
 <?php
-// echo var_dump ( $_SESSION ['google_user'] );
+echo var_dump ( $_SESSION ['token'] );
 echo "<h1> Welcome " . $_SESSION ['google_user'] ['name'] . " (" . $_SESSION ['google_user'] ['email'] . ")";
 ?>
 </body>
