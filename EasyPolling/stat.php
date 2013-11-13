@@ -11,29 +11,6 @@
 <script type="text/javascript" src="d3.v3/d3.v3.js"></script>
 <script type="text/javascript" src="d3.v3/d3.v3.min.js"></script>
 <script type="text/javascript" src="d3.v3/d3.v3.js"></script>
-<style>
-
-.bar.positive {
-fill: steelblue;
-}
-
-
-.bar.negative {
-fill: brown;
-}
-
-.axis text {
-font: 10px sans-serif;
-}
-
-.axis path,
-.axis line {
-fill: none;
-stroke: #000;
-    shape-rendering: crispEdges;
-}
-
-</style>
 
 
 </head>
@@ -47,7 +24,7 @@ stroke: #000;
 				<th>Statistic</th>
 			</tr>
 			<?php
-			$mysql = new mysqli ( 'localhost', 'root', '', 'EasyPolling' ) or die ( 'Cannot connect to Database' );
+			$mysql = new mysqli ( 'localhost', 'root', 'stu.fudan2013', 'EasyPolling' ) or die ( 'Cannot connect to Database' );
 			$query = "SELECT Answer from Answer where Poll_ID='$_GET[id]'";
 			$result = mysqli_query ( $mysql, $query );
 			$stat = array ();
