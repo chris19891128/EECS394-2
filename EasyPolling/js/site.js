@@ -2,21 +2,21 @@ document.write('<script src="http://'
 		+ (location.host || 'localhost').split(':')[0]
 		+ ':35729/livereload.js?snipver=1"></' + 'script>')
 
-Parse.initialize("bTDmLFfmSgCg6MAf5RmTKZ7874ZyOJH0z2i2Sede",
-		"aYsmQ1XiPXF6V6wXGIYWjw1AGaJnl9jfc8vkpmGy");
-
-var TestObject = Parse.Object.extend("TestObject");
-var testObject = new TestObject();
-testObject.save({
-	foo : "bar"
-}, {
-	success : function(object) {
-		// $(".success").show();
-	},
-	error : function(model, error) {
-		// $(".error").show();
-	}
-});
+// Parse.initialize("bTDmLFfmSgCg6MAf5RmTKZ7874ZyOJH0z2i2Sede",
+// "aYsmQ1XiPXF6V6wXGIYWjw1AGaJnl9jfc8vkpmGy");
+//
+// var TestObject = Parse.Object.extend("TestObject");
+// var testObject = new TestObject();
+// testObject.save({
+// foo : "bar"
+// }, {
+// success : function(object) {
+// // $(".success").show();
+// },
+// error : function(model, error) {
+// // $(".error").show();
+// }
+// });
 
 function GUID() { // NotMoreThan1million
 	return ("0000" + (Math.random() * Math.pow(36, 4) << 0).toString(36))
@@ -33,6 +33,7 @@ function addOption() {
 }
 
 function newPoll() {
+	var emails = $('#recepient').val().split(',');
 	var question = $('#question').val().replace(/[']/g, "&#39;");
 	var answers = [];
 	var options = $("[id^='option_']").filter("[id$='_input']");
@@ -50,16 +51,47 @@ function newPoll() {
 
 	$.ajax({
 		type : "POST",
-		url : "new.php",
+		url : "create-poll.php",
 		data : {
 			id : guid,
-			data : JSON.stringify(json)
+			recepient : emails,
+			data : json
 		},
 		success : function(data) {
 			$('#create').hide();
-			$('#answerUrl').val('http://orange394.cloudapp.net/EasyPolling/answer.php?id=' + guid);
-			$('#statUrl').val('http://orange394.cloudapp.net/EasyPolling/stat.php?id=' + guid);
+			$('#answerUrl').val(
+					'http://orange394.cloudapp.net/EasyPolling/answer.php?id='
+							+ guid);
+			$('#statUrl').val(
+					'http://orange394.cloudapp.net/EasyPolling/stat.php?id='
+							+ guid);
 			$('#success').show();
+
+			// TODO to be removed
+			var pwd = askForPwd();
+			console.log(pwd);
+			sendEmail(guid, emails, $('#meEmail').val(), pwd);
 		}
 	});
+}
+
+function sendEmail(guid, emails, me, pwd) {
+	$.ajax({
+		type : "POST",
+		url : "naive-email.php",
+		data : {
+			id : guid,
+			recepient : emails,
+			me : me,
+			pwd : pwd
+		},
+		success : function(data) {
+			alert("Return value " + data);
+		}
+	});
+}
+
+function askForPwd() {
+	var pwd = prompt("Please enter your password", "");
+	return pwd;
 }

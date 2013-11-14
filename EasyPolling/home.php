@@ -13,7 +13,11 @@ if (! isset ( $_SESSION ['token'] )) {
 
 <?php
 echo var_dump ( $_SESSION ['token'] );
-echo "<h1> Welcome " . $_SESSION ['google_user'] ['name'] . " (" . $_SESSION ['google_user'] ['email'] . ")";
+echo "<h1> Welcome " . $_SESSION ['google_user'] ['name'] . "</h1>";
 ?>
+	<button type="submit" class="btn btn-default"
+		formaction="/create-poll.php">New Poll</button>
+	<button type="submit" class="btn btn-default"
+		formaction="/history-poll.php">History Polls</button>
 </body>
 </html>

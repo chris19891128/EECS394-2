@@ -1,3 +1,27 @@
+<?php
+require_once 'lib/all_error.php';
+session_start ();
+
+// DEBUG PURPOSE ONLY
+
+// $_SESSION ['token'] = 'myMagic';
+// $_SESSION ['google_user'] = array (
+// 		'email' => 'chris19891128@gmail.com',
+// 		'name' => 'Chao Shi' 
+// );
+
+if (! isset ( $_SESSION ['token'] )) {
+	header ( 'location: login.php' );
+}
+
+if ($_POST) {
+	$mysql = new mysqli ( 'localhost', 'root', 'stu.fudan2013', 'EasyPolling' ) or die ( 'Cannot connect to Database' );
+	$query = "INSERT INTO Poll VALUES('" . $_POST ['id'] . "', '" . json_encode($_POST ['data']) . "')";
+	if ($updateDb = $mysql->query ( $query ) or die ( $mysql->error )) {
+		echo 'success';
+	}
+} else {
+	echo '
 <!doctype html>
 <head>
 <meta charset="utf-8">
@@ -15,16 +39,24 @@
 </head>
 
 <body>
-	<div class="container">
+	<input id="meEmail" type="hidden" value="' . $_SESSION ['google_user'] ['email'] . '"></input>
+	<input id="meName" type="hidden" value="' . $_SESSION ['google_user'] ['name'] . '"></input>
+	
+	<div class="container">		
 		<form action="" method="" id="create">
 			<div id="options">
+				<div class="form-group">
+					<label for="recepients">To:</label> <input type="text"
+						class="form-control" id="recepient"
+						placeholder="Email list here separated by comma" />
+				</div>
 				<div class="form-group">
 					<label for="question">Question:</label> <input type="text"
 						class="form-control" id="question"
 						placeholder="Enter your question here" />
 				</div>
 				<div class="form-group" id="option_group">
-					<label for="option1">Option 1:</label> <input type="text"
+					<label for="option_1_input">Option 1:</label> <input type="text"
 						class="form-control" id="option_1_input" placeholder="" />
 				</div>
 			</div>
@@ -33,10 +65,10 @@
 			<button type="button" class="btn btn-default" onclick="newPoll()">Make
 				a Poll</button>
 		</form>
-
+		
 		<form class="form-inline" role="form" id="success">
-			<p>Congrats! Your poll has been created. Copy this url to share
-				with your friends!</p>
+			<p>Congrats! Your poll has been created. Copy this url to share with
+				your friends!</p>
 			<div class="form-group">
 				<input type="text" class="form-control" id="answerUrl" />
 			</div>
@@ -44,10 +76,11 @@
 			<div class="form-group">
 				<input type="text" class="form-control" id="statUrl" />
 			</div>
-			<!-- <button type="button" class="btn btn-default">Copy</button> -->
 		</form>
+
 		<footer>- EasyPolling, Powered by the Orange Team, EECS394 2013</footer>
 	</div>
+				
 	<script type="text/javascript"
 		src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 	<script type="text/javascript"
@@ -58,5 +91,6 @@
 		src="//cdnjs.cloudflare.com/ajax/libs/less.js/1.4.1/less.min.js"></script>
 	<script type="text/javascript" src="js/site.js"></script>
 </body>
-
-</html>
+</html>';
+}
+?>
