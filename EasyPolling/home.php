@@ -16,9 +16,9 @@ echo "<h1> Welcome " . $_SESSION ['google_user'] ['name'] . "</h1>";
 ?>
 	<form method="GET">
 		<button type="submit" class="btn btn-default"
-			formaction="create-poll.php">New Poll</button>
+			formaction="EasyPollling/create-poll.php">New Poll</button>
 		<button type="submit" class="btn btn-default"
-			formaction="history-poll.php">History Polls</button>
+			formaction="EasyPolling/history-poll.php">History Polls</button>
 	</form>
 </body>
 </html>
