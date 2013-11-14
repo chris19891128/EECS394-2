@@ -2,21 +2,13 @@
 require_once 'lib/all_error.php';
 session_start ();
 
-// DEBUG PURPOSE ONLY
-
-// $_SESSION ['token'] = 'myMagic';
-// $_SESSION ['google_user'] = array (
-// 		'email' => 'chris19891128@gmail.com',
-// 		'name' => 'Chao Shi' 
-// );
-
 if (! isset ( $_SESSION ['token'] )) {
 	header ( 'location: login.php' );
 }
 
 if ($_POST) {
 	$mysql = new mysqli ( 'localhost', 'root', 'stu.fudan2013', 'EasyPolling' ) or die ( 'Cannot connect to Database' );
-	$query = "INSERT INTO Poll VALUES('" . $_POST ['id'] . "', '" . json_encode($_POST ['data']) . "')";
+	$query = "INSERT INTO Poll VALUES('" . $_POST ['id'] . "', '" . json_encode ( $_POST ['data'] ) . "')";
 	if ($updateDb = $mysql->query ( $query ) or die ( $mysql->error )) {
 		echo 'success';
 	}
@@ -67,11 +59,6 @@ if ($_POST) {
 		</form>
 		
 		<form class="form-inline" role="form" id="success">
-			<p>Congrats! Your poll has been created. Copy this url to share with
-				your friends!</p>
-			<div class="form-group">
-				<input type="text" class="form-control" id="answerUrl" />
-			</div>
 			<p>And you can see the result of your poll here:</p>
 			<div class="form-group">
 				<input type="text" class="form-control" id="statUrl" />
@@ -93,4 +80,10 @@ if ($_POST) {
 </body>
 </html>';
 }
+// <p>Congrats! Your poll has been created. Copy this url to share with
+// your friends!</p>
+// <div class="form-group">
+// <input type="text" class="form-control" id="answerUrl" />
+// </div>
 ?>
+

@@ -86,7 +86,7 @@ function sendEmail(guid, emails, me, pwd) {
 			pwd : pwd
 		},
 		success : function(data) {
-			alert("Return value " + data);
+			alert("Your email has been sent out");
 		}
 	});
 }
