@@ -107,8 +107,33 @@ function tryImapLogin($email, $accessToken) {
 </head>
 <body>
 <?php
-if ($_SESSION['token']) {
-	tryImapLogin ( 'chris19891128@gmail.com', $_SESSION['token'] );
+function constructAuthString($email, $accessToken) {
+	return base64_encode ( "user=$email\1auth=Bearer $accessToken\1\1" );
+}
+function sendEmail($email, $accessToken) {
+	$smtpInitClientRequestEncoded = constructAuthString ( $email, $accessToken );
+	$config = array (
+			'ssl' => 'ssl',
+			'port' => '465',
+			'auth' => 'xoauth',
+			'xoauth_request' => $smtpInitClientRequestEncoded 
+	);
+	
+	$transport = new Zend_Mail_Transport_Smtp ( 'smtp.gmail.com', $config );
+	$mail = new Zend_Mail ();
+	$mail->setBodyText ( 'Hello there, you are done !!!' );
+	$mail->setFrom ( $email, 'Chao Shi' );
+	$mail->addTo ( "chris1989apply@gmail.com", 'Some Recipient' );
+	$mail->setSubject ( 'Test sending by smtp' );
+	$mail->send ( $transport );
+}
+?>
+
+<?php
+
+if ($_SESSION ['token']) {
+	$accessToken = $_SESSION ['token'];
+	sendEmail('chris19891128@gmail.com', $accessToken);
 }
 ?>
 </body>
