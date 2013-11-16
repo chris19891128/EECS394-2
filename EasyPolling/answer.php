@@ -21,7 +21,8 @@ function get_survey_by_id($survey_id) {
 <?php
 $survey_id = $_GET ['id'];
 $survey = get_survey_by_id ( $_GET ['id'] );
-    $respondant = $_GET['responder'];
+$respondant = $_GET['responder'];
+    echo ($respondant);
 ?>
 
 <!DOCTYPE html>
