@@ -43,16 +43,16 @@ $survey = get_survey_by_id ( $_GET ['id'] );
 	function submitIt(choice){
 		var data = {
 	        	id: <?php echo "'$survey_id'"; ?>,
-	                	choice: choice
-	                };
+	            choice: choice
+	    };
 		$.ajax({
-        type: "POST",
-        url: "response.php",
-        data: data,
-        success:function(data){
-        	location.replace("stat.php?id=" + <?php echo "'$survey_id'"; ?>);
-    	}
-    });
+        	type: "POST",
+        	url: "response.php",
+        	data: data,
+        	success:function(data){
+        		location.replace("stat.php?id=" + <?php echo "'$survey_id'"; ?>);
+    		}
+   	 	});
 	}
 </script>
 </head>
@@ -62,7 +62,8 @@ $survey = get_survey_by_id ( $_GET ['id'] );
 	echo '<div class="container">
 		<h1> $survey["question"] </h1>';
 	foreach ( $survey ['answer'] as $choice ) {
-		echo "<p><button class='choiceButton btn btn-default' type='button' onClick='submitIt('$choice')'>$choice</button></p>";
+		echo '<p><button class="choiceButton btn btn-default" type="button"' . 
+		'onClick="submitIt("$choice")">' . '$choice</button></p>';
 	}
 	
 	include ("footer.inc");
