@@ -1,4 +1,18 @@
 <?php
+ini_set ( 'include_path', './lib' );
+require_once 'all_error.php';
+require_once 'google-api-php-client/src/Google_Client.php';
+require_once 'Zend/Mail/Protocol/Imap.php';
+require_once 'Zend/Mail/Storage/Imap.php';
+session_start ();
+
+if (! isset ( $_SESSION ['token'] )) {
+	header ( 'location: login.php' );
+}
+
+?>
+
+<?php
 
 /**
  * Builds an OAuth2 authentication string for the given email address and access
@@ -86,41 +100,6 @@ function tryImapLogin($email, $accessToken) {
 	}
 }
 
-/**
- * Displays a form to collect the email address and access token.
- */
-function displayForm($email, $accessToken) {
-	echo <<<END
-<form method="POST" action="email.php">
-  <h1>Please enter your e-mail address: </h1>
-  <input type="text" name="email" value="$email"/>
-  <p>
-  <h1>Please enter your access token: </h1>
-  <input type="text" name="access_token" value="$accessToken"/>
-  <input type="submit"/>
-</form>
-<hr>
-END;
-}
-
-function authenticate() {
-	$client = new Google_Client ();
-	$client->setApplicationName ( 'EasyPolling' );
-	$client->setClientId ( '519869230344.apps.googleusercontent.com' );
-	$client->setClientSecret ( '-wESR-1Mwr7y6h2QOoNcXaRR' );
-	$client->setRedirectUri ( 'http://orange394.cloudapp.net/EasyPolling/email.php' );
-	$client->setDeveloperKey ( 'AIzaSyBMs1qCCwvCJyvgxEkJkGxaIVcUOmzU8dI' );
-}
-
-?>
-
-<?php
-ini_set ( 'include_path', './lib' );
-require_once 'all_error.php';
-require_once 'google-api-php-client/src/Google_Client.php';
-require_once 'Zend/Mail/Protocol/Imap.php';
-require_once 'Zend/Mail/Storage/Imap.php';
-session_start ();
 ?>
 <html>
 <head>
@@ -128,10 +107,8 @@ session_start ();
 </head>
 <body>
 <?php
-displayForm ( $email, $tok2 );
-
-if ($email && $accessToken) {
-	tryImapLogin ( $email, $accessToken );
+if ($_SESSION['token']) {
+	tryImapLogin ( 'chris19891128@gmail.com', $accessToken );
 }
 ?>
 </body>
