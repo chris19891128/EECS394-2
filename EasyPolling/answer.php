@@ -21,6 +21,7 @@ function get_survey_by_id($survey_id) {
 <?php
 $survey_id = $_GET ['id'];
 $survey = get_survey_by_id ( $_GET ['id'] );
+    $respondant = $_GET['responder'];
 ?>
 
 <!DOCTYPE html>
@@ -43,7 +44,8 @@ $survey = get_survey_by_id ( $_GET ['id'] );
 	function submitIt(choice){
 		var data = {
 	        	id: <?php echo "'$survey_id'"; ?>,
-	            choice: choice
+	            choice: choice,
+        respondant: <?php echo "'$respondant'"; ?>
 	    };
 		$.ajax({
         	type: "POST",
