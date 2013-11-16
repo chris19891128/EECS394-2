@@ -2,9 +2,9 @@
 require_once 'lib/all_error.php';
 session_start ();
 
-if (! isset ( $_SESSION ['token'] )) {
-	header ( 'location: login.php' );
-}
+// if (! isset ( $_SESSION ['token'] )) {
+// 	header ( 'location: login.php' );
+// }
 
 if ($_POST) {
 	$mysql = new mysqli ( 'localhost', 'root', 'stu.fudan2013', 'EasyPolling' ) or die ( 'Cannot connect to Database' );

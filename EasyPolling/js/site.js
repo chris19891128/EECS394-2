@@ -6,26 +6,28 @@ function GUID() { // NotMoreThan1million
 function addOption() {
 	var options = $('#option-group');
 	var n = options.children().length;
-	var template = '<div class="form-group"><label for="option#">Option ' + n + ':</label><input type="text" class="form-control" id="option_'
+	var template = '<div class="form-group"><label for="option#">Option ' + n
+			+ ':</label><input type="text" class="form-control" id="option_'
 			+ n + '_input"placeholder="" /></div>';
 	options.append(nextOption);
 }
 
 /**
  * Improve this function by adding more functionality inside
+ * 
  * @returns {The json encoding poll}
  */
-function encodePoll(){
+function encodePoll() {
 	/*
 	 * Collect all the emails
 	 */
-	var emails = $('#recepient').val().replace(/(^\s+|\s+$)/g,'').split(',');
-	
+	var emails = $('#recepient').val().replace(/\s+/g, '').split(',');
+
 	/*
-	 * Collect the question 
+	 * Collect the question
 	 */
 	var question = $('#question').val().replace(/[']/g, "&#39;");
-	
+
 	/*
 	 * Collect all the answers
 	 */
@@ -36,19 +38,19 @@ function encodePoll(){
 			answers.push(options[i].value.replace("/[']/g", "&#39;"));
 		}
 	}
-	
+
 	var json = {
 		question : question,
 		answer : answers
 	}
-	
+
 	return json;
 }
 
 function newPoll() {
-	
+
 	var json = encodePoll();
-	
+
 	var guid = GUID();
 
 	$.ajax({
