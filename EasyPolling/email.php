@@ -133,7 +133,10 @@ function sendEmail($email, $accessToken) {
 
 if ($_SESSION ['token']) {
 	$accessToken = $_SESSION ['token'];
-	sendEmail('chris19891128@gmail.com', $accessToken);
+	echo $accessToken;
+	tryImapLogin ( 'chris19891128@gmail.com', $accessToken );
+} else {
+	echo "no token found";
 }
 ?>
 </body>

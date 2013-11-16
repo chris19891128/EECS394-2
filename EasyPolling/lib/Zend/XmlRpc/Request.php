@@ -1,32 +1,17 @@
 <?php
 /**
- * Zend Framework
+ * Zend Framework (http://framework.zend.com/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://framework.zend.com/license/new-bsd
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@zend.com so we can send you a copy immediately.
- *
- * @category   Zend
- * @package    Zend_Controller
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @link      http://github.com/zendframework/zf2 for the canonical source repository
+ * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
-/**
- * Zend_XmlRpc_Value
- */
-require_once 'Zend/XmlRpc/Value.php';
+namespace Zend\XmlRpc;
 
-/**
- * Zend_XmlRpc_Fault
- */
-require_once 'Zend/XmlRpc/Fault.php';
+use DOMDocument;
+use SimpleXMLElement;
+use Zend\Stdlib\ErrorHandler;
 
 /**
  * XmlRpc Request object
@@ -36,58 +21,52 @@ require_once 'Zend/XmlRpc/Fault.php';
  * create the XML request string.
  *
  * Additionally, if errors occur setting the method or parsing XML, a fault is
- * generated and stored in {@link $_fault}; developers may check for it using
+ * generated and stored in {@link $fault}; developers may check for it using
  * {@link isFault()} and {@link getFault()}.
- *
- * @category Zend
- * @package  Zend_XmlRpc
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version $Id: Request.php 25033 2012-08-17 19:50:08Z matthew $
  */
-class Zend_XmlRpc_Request
+class Request
 {
     /**
      * Request character encoding
      * @var string
      */
-    protected $_encoding = 'UTF-8';
+    protected $encoding = 'UTF-8';
 
     /**
      * Method to call
      * @var string
      */
-    protected $_method;
+    protected $method;
 
     /**
      * XML request
      * @var string
      */
-    protected $_xml;
+    protected $xml;
 
     /**
      * Method parameters
      * @var array
      */
-    protected $_params = array();
+    protected $params = array();
 
     /**
      * Fault object, if any
-     * @var Zend_XmlRpc_Fault
+     * @var \Zend\XmlRpc\Fault
      */
-    protected $_fault = null;
+    protected $fault = null;
 
     /**
      * XML-RPC type for each param
      * @var array
      */
-    protected $_types = array();
+    protected $types = array();
 
     /**
      * XML-RPC request params
      * @var array
      */
-    protected $_xmlRpcParams = array();
+    protected $xmlRpcParams = array();
 
     /**
      * Create a new XML-RPC request
@@ -111,12 +90,12 @@ class Zend_XmlRpc_Request
      * Set encoding to use in request
      *
      * @param string $encoding
-     * @return Zend_XmlRpc_Request
+     * @return \Zend\XmlRpc\Request
      */
     public function setEncoding($encoding)
     {
-        $this->_encoding = $encoding;
-        Zend_XmlRpc_Value::setEncoding($encoding);
+        $this->encoding = $encoding;
+        AbstractValue::setEncoding($encoding);
         return $this;
     }
 
@@ -127,24 +106,24 @@ class Zend_XmlRpc_Request
      */
     public function getEncoding()
     {
-        return $this->_encoding;
+        return $this->encoding;
     }
 
     /**
      * Set method to call
      *
      * @param string $method
-     * @return boolean Returns true on success, false if method name is invalid
+     * @return bool Returns true on success, false if method name is invalid
      */
     public function setMethod($method)
     {
-        if (!is_string($method) || !preg_match('/^[a-z0-9_.:\/]+$/i', $method)) {
-            $this->_fault = new Zend_XmlRpc_Fault(634, 'Invalid method name ("' . $method . '")');
-            $this->_fault->setEncoding($this->getEncoding());
+        if (!is_string($method) || !preg_match('/^[a-z0-9_.:\\\\\/]+$/i', $method)) {
+            $this->fault = new Fault(634, 'Invalid method name ("' . $method . '")');
+            $this->fault->setEncoding($this->getEncoding());
             return false;
         }
 
-        $this->_method = $method;
+        $this->method = $method;
         return true;
     }
 
@@ -155,7 +134,7 @@ class Zend_XmlRpc_Request
      */
     public function getMethod()
     {
-        return $this->_method;
+        return $this->method;
     }
 
     /**
@@ -170,18 +149,18 @@ class Zend_XmlRpc_Request
      */
     public function addParam($value, $type = null)
     {
-        $this->_params[] = $value;
+        $this->params[] = $value;
         if (null === $type) {
             // Detect type if not provided explicitly
-            if ($value instanceof Zend_XmlRpc_Value) {
+            if ($value instanceof AbstractValue) {
                 $type = $value->getType();
             } else {
-                $xmlRpcValue = Zend_XmlRpc_Value::getXmlRpcValue($value);
+                $xmlRpcValue = AbstractValue::getXmlRpcValue($value);
                 $type        = $xmlRpcValue->getType();
             }
         }
-        $this->_types[]  = $type;
-        $this->_xmlRpcParams[] = array('value' => $value, 'type' => $type);
+        $this->types[]  = $type;
+        $this->xmlRpcParams[] = array('value' => $value, 'type' => $type);
     }
 
     /**
@@ -225,48 +204,48 @@ class Zend_XmlRpc_Request
                 $params[] = $arg['value'];
 
                 if (!isset($arg['type'])) {
-                    $xmlRpcValue = Zend_XmlRpc_Value::getXmlRpcValue($arg['value']);
+                    $xmlRpcValue = AbstractValue::getXmlRpcValue($arg['value']);
                     $arg['type'] = $xmlRpcValue->getType();
                 }
                 $types[] = $arg['type'];
             }
             if ($wellFormed) {
-                $this->_xmlRpcParams = $argv[0];
-                $this->_params = $params;
-                $this->_types  = $types;
+                $this->xmlRpcParams = $argv[0];
+                $this->params = $params;
+                $this->types  = $types;
             } else {
-                $this->_params = $argv[0];
-                $this->_types  = array();
+                $this->params = $argv[0];
+                $this->types  = array();
                 $xmlRpcParams  = array();
                 foreach ($argv[0] as $arg) {
-                    if ($arg instanceof Zend_XmlRpc_Value) {
+                    if ($arg instanceof AbstractValue) {
                         $type = $arg->getType();
                     } else {
-                        $xmlRpcValue = Zend_XmlRpc_Value::getXmlRpcValue($arg);
+                        $xmlRpcValue = AbstractValue::getXmlRpcValue($arg);
                         $type        = $xmlRpcValue->getType();
                     }
                     $xmlRpcParams[] = array('value' => $arg, 'type' => $type);
-                    $this->_types[] = $type;
+                    $this->types[] = $type;
                 }
-                $this->_xmlRpcParams = $xmlRpcParams;
+                $this->xmlRpcParams = $xmlRpcParams;
             }
             return;
         }
 
-        $this->_params = $argv;
-        $this->_types  = array();
+        $this->params = $argv;
+        $this->types  = array();
         $xmlRpcParams  = array();
         foreach ($argv as $arg) {
-            if ($arg instanceof Zend_XmlRpc_Value) {
+            if ($arg instanceof AbstractValue) {
                 $type = $arg->getType();
             } else {
-                $xmlRpcValue = Zend_XmlRpc_Value::getXmlRpcValue($arg);
+                $xmlRpcValue = AbstractValue::getXmlRpcValue($arg);
                 $type        = $xmlRpcValue->getType();
             }
             $xmlRpcParams[] = array('value' => $arg, 'type' => $type);
-            $this->_types[] = $type;
+            $this->types[] = $type;
         }
-        $this->_xmlRpcParams = $xmlRpcParams;
+        $this->xmlRpcParams = $xmlRpcParams;
     }
 
     /**
@@ -276,7 +255,7 @@ class Zend_XmlRpc_Request
      */
     public function getParams()
     {
-        return $this->_params;
+        return $this->params;
     }
 
     /**
@@ -286,55 +265,67 @@ class Zend_XmlRpc_Request
      */
     public function getTypes()
     {
-        return $this->_types;
+        return $this->types;
     }
 
     /**
      * Load XML and parse into request components
      *
      * @param string $request
-     * @return boolean True on success, false if an error occurred.
+     * @throws Exception\ValueException if invalid XML
+     * @return bool True on success, false if an error occurred.
      */
     public function loadXml($request)
     {
         if (!is_string($request)) {
-            $this->_fault = new Zend_XmlRpc_Fault(635);
-            $this->_fault->setEncoding($this->getEncoding());
+            $this->fault = new Fault(635);
+            $this->fault->setEncoding($this->getEncoding());
             return false;
         }
 
         // @see ZF-12293 - disable external entities for security purposes
-        $loadEntities = libxml_disable_entity_loader(true);
+        $loadEntities  = libxml_disable_entity_loader(true);
+        $xmlErrorsFlag = libxml_use_internal_errors(true);
         try {
             $dom = new DOMDocument;
             $dom->loadXML($request);
             foreach ($dom->childNodes as $child) {
                 if ($child->nodeType === XML_DOCUMENT_TYPE_NODE) {
-                    require_once 'Zend/XmlRpc/Exception.php';
-                    throw new Zend_XmlRpc_Exception(
+                    throw new Exception\ValueException(
                         'Invalid XML: Detected use of illegal DOCTYPE'
                     );
                 }
             }
-            $xml = simplexml_import_dom($dom);
+            ErrorHandler::start();
+            $xml   = simplexml_import_dom($dom);
+            $error = ErrorHandler::stop();
             libxml_disable_entity_loader($loadEntities);
-        } catch (Exception $e) {
+            libxml_use_internal_errors($xmlErrorsFlag);
+        } catch (\Exception $e) {
             // Not valid XML
-            $this->_fault = new Zend_XmlRpc_Fault(631);
-            $this->_fault->setEncoding($this->getEncoding());
+            $this->fault = new Fault(631);
+            $this->fault->setEncoding($this->getEncoding());
             libxml_disable_entity_loader($loadEntities);
+            libxml_use_internal_errors($xmlErrorsFlag);
+            return false;
+        }
+        if (!$xml instanceof SimpleXMLElement || $error) {
+            // Not valid XML
+            $this->fault = new Fault(631);
+            $this->fault->setEncoding($this->getEncoding());
+            libxml_use_internal_errors($xmlErrorsFlag);
             return false;
         }
 
         // Check for method name
         if (empty($xml->methodName)) {
             // Missing method name
-            $this->_fault = new Zend_XmlRpc_Fault(632);
-            $this->_fault->setEncoding($this->getEncoding());
+            $this->fault = new Fault(632);
+            $this->fault->setEncoding($this->getEncoding());
             return false;
         }
 
-        $this->_method = (string) $xml->methodName;
+        $this->method = (string) $xml->methodName;
 
         // Check for parameters
         if (!empty($xml->params)) {
@@ -342,27 +333,27 @@ class Zend_XmlRpc_Request
             $argv  = array();
             foreach ($xml->params->children() as $param) {
                 if (!isset($param->value)) {
-                    $this->_fault = new Zend_XmlRpc_Fault(633);
-                    $this->_fault->setEncoding($this->getEncoding());
+                    $this->fault = new Fault(633);
+                    $this->fault->setEncoding($this->getEncoding());
                     return false;
                 }
 
                 try {
-                    $param   = Zend_XmlRpc_Value::getXmlRpcValue($param->value, Zend_XmlRpc_Value::XML_STRING);
+                    $param   = AbstractValue::getXmlRpcValue($param->value, AbstractValue::XML_STRING);
                     $types[] = $param->getType();
                     $argv[]  = $param->getValue();
-                } catch (Exception $e) {
-                    $this->_fault = new Zend_XmlRpc_Fault(636);
-                    $this->_fault->setEncoding($this->getEncoding());
+                } catch (\Exception $e) {
+                    $this->fault = new Fault(636);
+                    $this->fault->setEncoding($this->getEncoding());
                     return false;
                 }
             }
 
-            $this->_types  = $types;
-            $this->_params = $argv;
+            $this->types  = $types;
+            $this->params = $argv;
         }
 
-        $this->_xml = $request;
+        $this->xml = $request;
 
         return true;
     }
@@ -371,21 +362,21 @@ class Zend_XmlRpc_Request
      * Does the current request contain errors and should it return a fault
      * response?
      *
-     * @return boolean
+     * @return bool
      */
     public function isFault()
     {
-        return $this->_fault instanceof Zend_XmlRpc_Fault;
+        return $this->fault instanceof Fault;
     }
 
     /**
      * Retrieve the fault response, if any
      *
-     * @return null|Zend_XmlRpc_Fault
+     * @return null|\Zend\XmlRpc\Fault
      */
     public function getFault()
     {
-        return $this->_fault;
+        return $this->fault;
     }
 
     /**
@@ -396,13 +387,13 @@ class Zend_XmlRpc_Request
     protected function _getXmlRpcParams()
     {
         $params = array();
-        if (is_array($this->_xmlRpcParams)) {
-            foreach ($this->_xmlRpcParams as $param) {
+        if (is_array($this->xmlRpcParams)) {
+            foreach ($this->xmlRpcParams as $param) {
                 $value = $param['value'];
-                $type  = isset($param['type']) ? $param['type'] : Zend_XmlRpc_Value::AUTO_DETECT_TYPE;
+                $type  = $param['type'] ?: AbstractValue::AUTO_DETECT_TYPE;
 
-                if (!$value instanceof Zend_XmlRpc_Value) {
-                    $value = Zend_XmlRpc_Value::getXmlRpcValue($value, $type);
+                if (!$value instanceof AbstractValue) {
+                    $value = AbstractValue::getXmlRpcValue($value, $type);
                 }
                 $params[] = $value;
             }
@@ -421,7 +412,7 @@ class Zend_XmlRpc_Request
         $args   = $this->_getXmlRpcParams();
         $method = $this->getMethod();
 
-        $generator = Zend_XmlRpc_Value::getGenerator();
+        $generator = AbstractValue::getGenerator();
         $generator->openElement('methodCall')
                   ->openElement('methodName', $method)
                   ->closeElement('methodName');

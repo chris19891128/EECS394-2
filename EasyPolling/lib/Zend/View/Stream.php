@@ -1,23 +1,13 @@
 <?php
 /**
- * Zend Framework
+ * Zend Framework (http://framework.zend.com/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://framework.zend.com/license/new-bsd
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@zend.com so we can send you a copy immediately.
- *
- * @category   Zend
- * @package    Zend_View
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Stream.php 24593 2012-01-05 20:35:02Z matthew $
+ * @link      http://github.com/zendframework/zf2 for the canonical source repository
+ * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
+
+namespace Zend\View;
 
 /**
  * Stream wrapper to convert markup of mostly-PHP templates into PHP prior to
@@ -31,66 +21,67 @@
  * written by
  *     Mike Naberezny (@link http://mikenaberezny.com)
  *     Paul M. Jones  (@link http://paul-m-jones.com)
- *
- * @category   Zend
- * @package    Zend_View
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class Zend_View_Stream
+class Stream
 {
     /**
      * Current stream position.
      *
      * @var int
      */
-    protected $_pos = 0;
+    protected $pos = 0;
 
     /**
      * Data for streaming.
      *
      * @var string
      */
-    protected $_data;
+    protected $data;
 
     /**
      * Stream stats.
      *
      * @var array
      */
-    protected $_stat;
+    protected $stat;
 
     /**
      * Opens the script file and converts markup.
+     *
+     * @param  string $path
+     * @param         $mode
+     * @param         $options
+     * @param         $opened_path
+     * @return bool
      */
     public function stream_open($path, $mode, $options, &$opened_path)
     {
         // get the view script source
         $path        = str_replace('zend.view://', '', $path);
-        $this->_data = file_get_contents($path);
+        $this->data = file_get_contents($path);
 
         /**
          * If reading the file failed, update our local stat store
          * to reflect the real stat of the file, then return on failure
          */
-        if ($this->_data === false) {
-            $this->_stat = stat($path);
+        if ($this->data === false) {
+            $this->stat = stat($path);
             return false;
         }
 
         /**
-         * Convert <?= ?> to long-form <?php echo ?> and <? ?> to <?php ?>
+         * Convert <?= ?> to long-form <?php echo ?> and <?php ?> to <?php ?>
          *
          */
-        $this->_data = preg_replace('/\<\?\=/',          "<?php echo ",  $this->_data);
-        $this->_data = preg_replace('/<\?(?!xml|php)/s', '<?php ',       $this->_data);
+        $this->data = preg_replace('/\<\?\=/',          "<?php echo ",  $this->data);
+        $this->data = preg_replace('/<\?(?!xml|php)/s', '<?php ',       $this->data);
 
         /**
          * file_get_contents() won't update PHP's stat cache, so we grab a stat
          * of the file to prevent additional reads should the script be
          * requested again, which will make include() happy.
          */
-        $this->_stat = stat($path);
+        $this->stat = stat($path);
 
         return true;
     }
@@ -102,56 +93,69 @@ class Zend_View_Stream
      */
     public function url_stat()
     {
-        return $this->_stat;
+        return $this->stat;
     }
 
     /**
      * Reads from the stream.
+     *
+     * @param  int $count
+     * @return string
      */
     public function stream_read($count)
     {
-        $ret = substr($this->_data, $this->_pos, $count);
-        $this->_pos += strlen($ret);
+        $ret = substr($this->data, $this->pos, $count);
+        $this->pos += strlen($ret);
         return $ret;
     }
 
 
     /**
      * Tells the current position in the stream.
+     *
+     * @return int
      */
     public function stream_tell()
     {
-        return $this->_pos;
+        return $this->pos;
     }
 
 
     /**
      * Tells if we are at the end of the stream.
+     *
+     * @return bool
      */
     public function stream_eof()
     {
-        return $this->_pos >= strlen($this->_data);
+        return $this->pos >= strlen($this->data);
     }
 
 
     /**
      * Stream statistics.
+     *
+     * @return array
      */
     public function stream_stat()
     {
-        return $this->_stat;
+        return $this->stat;
     }
 
 
     /**
      * Seek to a specific point in the stream.
+     *
+     * @param  $offset
+     * @param  $whence
+     * @return bool
      */
     public function stream_seek($offset, $whence)
     {
         switch ($whence) {
             case SEEK_SET:
-                if ($offset < strlen($this->_data) && $offset >= 0) {
-                $this->_pos = $offset;
+                if ($offset < strlen($this->data) && $offset >= 0) {
+                $this->pos = $offset;
                     return true;
                 } else {
                     return false;
@@ -160,7 +164,7 @@ class Zend_View_Stream
 
             case SEEK_CUR:
                 if ($offset >= 0) {
-                    $this->_pos += $offset;
+                    $this->pos += $offset;
                     return true;
                 } else {
                     return false;
@@ -168,8 +172,8 @@ class Zend_View_Stream
                 break;
 
             case SEEK_END:
-                if (strlen($this->_data) + $offset >= 0) {
-                    $this->_pos = strlen($this->_data) + $offset;
+                if (strlen($this->data) + $offset >= 0) {
+                    $this->pos = strlen($this->data) + $offset;
                     return true;
                 } else {
                     return false;

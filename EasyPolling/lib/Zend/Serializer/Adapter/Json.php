@@ -1,66 +1,76 @@
 <?php
 /**
- * Zend Framework
+ * Zend Framework (http://framework.zend.com/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://framework.zend.com/license/new-bsd
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@zend.com so we can send you a copy immediately.
- *
- * @category   Zend
- * @package    Zend_Serializer
- * @subpackage Adapter
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Json.php 24593 2012-01-05 20:35:02Z matthew $
+ * @link      http://github.com/zendframework/zf2 for the canonical source repository
+ * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
-/** @see Zend_Serializer_Adapter_AdapterAbstract */
-require_once 'Zend/Serializer/Adapter/AdapterAbstract.php';
+namespace Zend\Serializer\Adapter;
 
-/** @see Zend_Json */
-require_once 'Zend/Json.php';
+use Zend\Json\Json as ZendJson;
+use Zend\Serializer\Exception;
 
-/**
- * @category   Zend
- * @package    Zend_Serializer
- * @subpackage Adapter
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
- */
-class Zend_Serializer_Adapter_Json extends Zend_Serializer_Adapter_AdapterAbstract
+class Json extends AbstractAdapter
 {
     /**
-     * @var array Default options
+     * @var JsonOptions
      */
-    protected $_options = array(
-        'cycleCheck'           => false,
-        'enableJsonExprFinder' => false,
-        'objectDecodeType'     => Zend_Json::TYPE_ARRAY,
-    );
+    protected $options = null;
+
+    /**
+     * Set options
+     *
+     * @param  array|\Traversable|JsonOptions $options
+     * @return Json
+     */
+    public function setOptions($options)
+    {
+        if (!$options instanceof JsonOptions) {
+            $options = new JsonOptions($options);
+        }
+
+        $this->options = $options;
+        return $this;
+    }
+
+    /**
+     * Get options
+     *
+     * @return JsonOptions
+     */
+    public function getOptions()
+    {
+        if ($this->options === null) {
+            $this->options = new JsonOptions();
+        }
+        return $this->options;
+    }
 
     /**
      * Serialize PHP value to JSON
      *
      * @param  mixed $value
-     * @param  array $opts
      * @return string
-     * @throws Zend_Serializer_Exception on JSON encoding exception
+     * @throws Exception\InvalidArgumentException
+     * @throws Exception\RuntimeException
      */
-    public function serialize($value, array $opts = array())
+    public function serialize($value)
     {
-        $opts = $opts + $this->_options;
+        $options    = $this->getOptions();
+        $cycleCheck = $options->getCycleCheck();
+        $opts = array(
+            'enableJsonExprFinder' => $options->getEnableJsonExprFinder(),
+            'objectDecodeType'     => $options->getObjectDecodeType(),
+        );
 
-        try  {
-            return Zend_Json::encode($value, $opts['cycleCheck'], $opts);
-        } catch (Exception $e) {
-            require_once 'Zend/Serializer/Exception.php';
-            throw new Zend_Serializer_Exception('Serialization failed', 0, $e);
+        try {
+            return ZendJson::encode($value, $cycleCheck, $opts);
+        } catch (\InvalidArgumentException $e) {
+            throw new Exception\InvalidArgumentException('Serialization failed: ' . $e->getMessage(), 0, $e);
+        } catch (\Exception $e) {
+            throw new Exception\RuntimeException('Serialization failed: ' . $e->getMessage(), 0, $e);
         }
     }
 
@@ -68,24 +78,18 @@ class Zend_Serializer_Adapter_Json extends Zend_Serializer_Adapter_AdapterAbstra
      * Deserialize JSON to PHP value
      *
      * @param  string $json
-     * @param  array $opts
      * @return mixed
+     * @throws Exception\InvalidArgumentException
+     * @throws Exception\RuntimeException
      */
-    public function unserialize($json, array $opts = array())
+    public function unserialize($json)
     {
-        $opts = $opts + $this->_options;
-
         try {
-            $ret = Zend_Json::decode($json, $opts['objectDecodeType']);
-        } catch (Exception $e) {
-            require_once 'Zend/Serializer/Exception.php';
-            throw new Zend_Serializer_Exception('Unserialization failed by previous error', 0, $e);
-        }
-
-        // json_decode returns null for invalid JSON
-        if ($ret === null && $json !== 'null') {
-            require_once 'Zend/Serializer/Exception.php';
-            throw new Zend_Serializer_Exception('Invalid json data');
+            $ret = ZendJson::decode($json, $this->getOptions()->getObjectDecodeType());
+        } catch (\InvalidArgumentException $e) {
+            throw new Exception\InvalidArgumentException('Unserialization failed: ' . $e->getMessage(), 0, $e);
+        } catch (\Exception $e) {
+            throw new Exception\RuntimeException('Unserialization failed: ' . $e->getMessage(), 0, $e);
         }
 
         return $ret;

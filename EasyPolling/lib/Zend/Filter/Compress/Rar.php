@@ -1,38 +1,20 @@
 <?php
 /**
- * Zend Framework
+ * Zend Framework (http://framework.zend.com/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://framework.zend.com/license/new-bsd
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@zend.com so we can send you a copy immediately.
- *
- * @category   Zend
- * @package    Zend_Filter
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Rar.php 24593 2012-01-05 20:35:02Z matthew $
+ * @link      http://github.com/zendframework/zf2 for the canonical source repository
+ * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
-/**
- * @see Zend_Filter_Compress_CompressAbstract
- */
-require_once 'Zend/Filter/Compress/CompressAbstract.php';
+namespace Zend\Filter\Compress;
+
+use Zend\Filter\Exception;
 
 /**
  * Compression adapter for Rar
- *
- * @category   Zend
- * @package    Zend_Filter
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class Zend_Filter_Compress_Rar extends Zend_Filter_Compress_CompressAbstract
+class Rar extends AbstractCompressionAlgorithm
 {
     /**
      * Compression Options
@@ -45,7 +27,7 @@ class Zend_Filter_Compress_Rar extends Zend_Filter_Compress_CompressAbstract
      *
      * @var array
      */
-    protected $_options = array(
+    protected $options = array(
         'callback' => null,
         'archive'  => null,
         'password' => null,
@@ -56,12 +38,12 @@ class Zend_Filter_Compress_Rar extends Zend_Filter_Compress_CompressAbstract
      * Class constructor
      *
      * @param array $options (Optional) Options to set
+     * @throws Exception\ExtensionNotLoadedException if rar extension not loaded
      */
     public function __construct($options = null)
     {
         if (!extension_loaded('rar')) {
-            require_once 'Zend/Filter/Exception.php';
-            throw new Zend_Filter_Exception('This filter needs the rar extension');
+            throw new Exception\ExtensionNotLoadedException('This filter needs the rar extension');
         }
         parent::__construct($options);
     }
@@ -73,23 +55,23 @@ class Zend_Filter_Compress_Rar extends Zend_Filter_Compress_CompressAbstract
      */
     public function getCallback()
     {
-        return $this->_options['callback'];
+        return $this->options['callback'];
     }
 
     /**
      * Sets the callback to use
      *
-     * @param string $callback
-     * @return Zend_Filter_Compress_Rar
+     * @param  string $callback
+     * @return self
+     * @throws Exception\InvalidArgumentException if invalid callback provided
      */
     public function setCallback($callback)
     {
         if (!is_callable($callback)) {
-            require_once 'Zend/Filter/Exception.php';
-            throw new Zend_Filter_Exception('Callback can not be accessed');
+            throw new Exception\InvalidArgumentException('Invalid callback provided');
         }
 
-        $this->_options['callback'] = $callback;
+        $this->options['callback'] = $callback;
         return $this;
     }
 
@@ -100,19 +82,19 @@ class Zend_Filter_Compress_Rar extends Zend_Filter_Compress_CompressAbstract
      */
     public function getArchive()
     {
-        return $this->_options['archive'];
+        return $this->options['archive'];
     }
 
     /**
      * Sets the archive to use for de-/compression
      *
-     * @param string $archive Archive to use
-     * @return Zend_Filter_Compress_Rar
+     * @param  string $archive Archive to use
+     * @return self
      */
     public function setArchive($archive)
     {
         $archive = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $archive);
-        $this->_options['archive'] = (string) $archive;
+        $this->options['archive'] = (string) $archive;
 
         return $this;
     }
@@ -124,18 +106,18 @@ class Zend_Filter_Compress_Rar extends Zend_Filter_Compress_CompressAbstract
      */
     public function getPassword()
     {
-        return $this->_options['password'];
+        return $this->options['password'];
     }
 
     /**
      * Sets the password to use
      *
-     * @param string $password
-     * @return Zend_Filter_Compress_Rar
+     * @param  string $password
+     * @return self
      */
     public function setPassword($password)
     {
-        $this->_options['password'] = (string) $password;
+        $this->options['password'] = (string) $password;
         return $this;
     }
 
@@ -146,24 +128,24 @@ class Zend_Filter_Compress_Rar extends Zend_Filter_Compress_CompressAbstract
      */
     public function getTarget()
     {
-        return $this->_options['target'];
+        return $this->options['target'];
     }
 
     /**
      * Sets the targetpath to use
      *
-     * @param string $target
-     * @return Zend_Filter_Compress_Rar
+     * @param  string $target
+     * @return self
+     * @throws Exception\InvalidArgumentException if specified target directory does not exist
      */
     public function setTarget($target)
     {
         if (!file_exists(dirname($target))) {
-            require_once 'Zend/Filter/Exception.php';
-            throw new Zend_Filter_Exception("The directory '$target' does not exist");
+            throw new Exception\InvalidArgumentException("The directory '$target' does not exist");
         }
 
-        $target = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $target);
-        $this->_options['target'] = (string) $target;
+        $target = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, (string) $target);
+        $this->options['target'] = $target;
         return $this;
     }
 
@@ -172,13 +154,13 @@ class Zend_Filter_Compress_Rar extends Zend_Filter_Compress_CompressAbstract
      *
      * @param  string|array $content
      * @return string
+     * @throws Exception\RuntimeException if no callback available, or error during compression
      */
     public function compress($content)
     {
         $callback = $this->getCallback();
         if ($callback === null) {
-            require_once 'Zend/Filter/Exception.php';
-            throw new Zend_Filter_Exception('No compression callback available');
+            throw new Exception\RuntimeException('No compression callback available');
         }
 
         $options = $this->getOptions();
@@ -186,8 +168,7 @@ class Zend_Filter_Compress_Rar extends Zend_Filter_Compress_CompressAbstract
 
         $result = call_user_func($callback, $options, $content);
         if ($result !== true) {
-            require_once 'Zend/Filter/Exception.php';
-            throw new Zend_Filter_Exception('Error compressing the RAR Archive');
+            throw new Exception\RuntimeException('Error compressing the RAR Archive');
         }
 
         return $this->getArchive();
@@ -197,18 +178,17 @@ class Zend_Filter_Compress_Rar extends Zend_Filter_Compress_CompressAbstract
      * Decompresses the given content
      *
      * @param  string $content
-     * @return boolean
+     * @return bool
+     * @throws Exception\RuntimeException if archive not found, cannot be opened,
+     *                                    or error during decompression
      */
     public function decompress($content)
     {
-        $archive = $this->getArchive();
-        if (file_exists($content)) {
-            $archive = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, realpath($content));
-        } elseif (empty($archive) || !file_exists($archive)) {
-            require_once 'Zend/Filter/Exception.php';
-            throw new Zend_Filter_Exception('RAR Archive not found');
+        if (!file_exists($content)) {
+            throw new Exception\RuntimeException('RAR Archive not found');
         }
 
+        $archive  = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, realpath($content));
         $password = $this->getPassword();
         if ($password !== null) {
             $archive = rar_open($archive, $password);
@@ -217,8 +197,7 @@ class Zend_Filter_Compress_Rar extends Zend_Filter_Compress_CompressAbstract
         }
 
         if (!$archive) {
-            require_once 'Zend/Filter/Exception.php';
-            throw new Zend_Filter_Exception("Error opening the RAR Archive");
+            throw new Exception\RuntimeException("Error opening the RAR Archive");
         }
 
         $target = $this->getTarget();
@@ -228,11 +207,10 @@ class Zend_Filter_Compress_Rar extends Zend_Filter_Compress_CompressAbstract
 
         $filelist = rar_list($archive);
         if (!$filelist) {
-            require_once 'Zend/Filter/Exception.php';
-            throw new Zend_Filter_Exception("Error reading the RAR Archive");
+            throw new Exception\RuntimeException("Error reading the RAR Archive");
         }
 
-        foreach($filelist as $file) {
+        foreach ($filelist as $file) {
             $file->extract($target);
         }
 

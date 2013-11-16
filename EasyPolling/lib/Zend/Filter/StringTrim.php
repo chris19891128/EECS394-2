@@ -1,66 +1,56 @@
 <?php
 /**
- * Zend Framework
+ * Zend Framework (http://framework.zend.com/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://framework.zend.com/license/new-bsd
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@zend.com so we can send you a copy immediately.
- *
- * @category   Zend
- * @package    Zend_Filter
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: StringTrim.php 24593 2012-01-05 20:35:02Z matthew $
+ * @link      http://github.com/zendframework/zf2 for the canonical source repository
+ * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
-/**
- * @see Zend_Filter_Interface
- */
-require_once 'Zend/Filter/Interface.php';
+namespace Zend\Filter;
 
-/**
- * @category   Zend
- * @package    Zend_Filter
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
- */
-class Zend_Filter_StringTrim implements Zend_Filter_Interface
+use Traversable;
+
+class StringTrim extends AbstractFilter
 {
     /**
-     * List of characters provided to the trim() function
-     *
-     * If this is null, then trim() is called with no specific character list,
-     * and its default behavior will be invoked, trimming whitespace.
-     *
-     * @var string|null
+     * @var array
      */
-    protected $_charList;
+    protected $options = array(
+        'charlist' => null,
+    );
 
     /**
      * Sets filter options
      *
-     * @param  string|array|Zend_Config $options
-     * @return void
+     * @param  string|array|Traversable $charlistOrOptions
      */
-    public function __construct($options = null)
+    public function __construct($charlistOrOptions = null)
     {
-        if ($options instanceof Zend_Config) {
-            $options = $options->toArray();
-        } else if (!is_array($options)) {
-            $options          = func_get_args();
-            $temp['charlist'] = array_shift($options);
-            $options          = $temp;
+        if ($charlistOrOptions !== null) {
+            if (!is_array($charlistOrOptions)
+                && !$charlistOrOptions  instanceof Traversable)
+            {
+                $this->setCharList($charlistOrOptions);
+            } else {
+                $this->setOptions($charlistOrOptions);
+            }
         }
+    }
 
-        if (array_key_exists('charlist', $options)) {
-            $this->setCharList($options['charlist']);
+    /**
+     * Sets the charList option
+     *
+     * @param  string $charList
+     * @return self Provides a fluent interface
+     */
+    public function setCharList($charList)
+    {
+        if (empty($charList)) {
+            $charList = null;
         }
+        $this->options['charlist'] = $charList;
+        return $this;
     }
 
     /**
@@ -70,23 +60,11 @@ class Zend_Filter_StringTrim implements Zend_Filter_Interface
      */
     public function getCharList()
     {
-        return $this->_charList;
+        return $this->options['charlist'];
     }
 
     /**
-     * Sets the charList option
-     *
-     * @param  string|null $charList
-     * @return Zend_Filter_StringTrim Provides a fluent interface
-     */
-    public function setCharList($charList)
-    {
-        $this->_charList = $charList;
-        return $this;
-    }
-
-    /**
-     * Defined by Zend_Filter_Interface
+     * Defined by Zend\Filter\FilterInterface
      *
      * Returns the string $value with characters stripped from the beginning and end
      *
@@ -95,11 +73,16 @@ class Zend_Filter_StringTrim implements Zend_Filter_Interface
      */
     public function filter($value)
     {
-        if (null === $this->_charList) {
-            return $this->_unicodeTrim((string) $value);
-        } else {
-            return $this->_unicodeTrim((string) $value, $this->_charList);
+        // Do not filter non-string values
+        if (!is_string($value)) {
+            return $value;
         }
+
+        if (null === $this->options['charlist']) {
+            return $this->unicodeTrim((string) $value);
+        }
+
+        return $this->unicodeTrim((string) $value, $this->options['charlist']);
     }
 
     /**
@@ -110,15 +93,16 @@ class Zend_Filter_StringTrim implements Zend_Filter_Interface
      * @param string $charlist
      * @return string
      */
-    protected function _unicodeTrim($value, $charlist = '\\\\s')
+    protected function unicodeTrim($value, $charlist = '\\\\s')
     {
         $chars = preg_replace(
-            array( '/[\^\-\]\\\]/S', '/\\\{4}/S', '/\//'),
-            array( '\\\\\\0', '\\', '\/' ),
+            array('/[\^\-\]\\\]/S', '/\\\{4}/S', '/\//'),
+            array('\\\\\\0', '\\', '\/'),
             $charlist
         );
 
-        $pattern = '^[' . $chars . ']*|[' . $chars . ']*$';
-        return preg_replace("/$pattern/sSD", '', $value);
+        $pattern = '/^[' . $chars . ']+|[' . $chars . ']+$/usSD';
+
+        return preg_replace($pattern, '', $value);
     }
 }

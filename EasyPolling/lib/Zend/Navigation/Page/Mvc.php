@@ -1,74 +1,45 @@
 <?php
 /**
- * Zend Framework
+ * Zend Framework (http://framework.zend.com/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://framework.zend.com/license/new-bsd
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@zend.com so we can send you a copy immediately.
- *
- * @category   Zend
- * @package    Zend_Navigation
- * @subpackage Page
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Mvc.php 24964 2012-06-15 14:37:43Z adamlundrigan $
+ * @link      http://github.com/zendframework/zf2 for the canonical source repository
+ * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
-/**
- * @see Zend_Navigation_Page
- */
-require_once 'Zend/Navigation/Page.php';
+namespace Zend\Navigation\Page;
+
+use Zend\Mvc\ModuleRouteListener;
+use Zend\Mvc\Router\RouteMatch;
+use Zend\Mvc\Router\RouteStackInterface;
+use Zend\Navigation\Exception;
 
 /**
- * @see Zend_Controller_Action_HelperBroker
- */
-require_once 'Zend/Controller/Action/HelperBroker.php';
-
-/**
- * Used to check if page is active
- *
- * @see Zend_Controller_Front
- */
-require_once 'Zend/Controller/Front.php';
-
-/**
- * Represents a page that is defined using module, controller, action, route
+ * Represents a page that is defined using controller, action, route
  * name and route params to assemble the href
- *
- * @category   Zend
- * @package    Zend_Navigation
- * @subpackage Page
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class Zend_Navigation_Page_Mvc extends Zend_Navigation_Page
+class Mvc extends AbstractPage
 {
     /**
      * Action name to use when assembling URL
      *
      * @var string
      */
-    protected $_action;
+    protected $action;
 
     /**
      * Controller name to use when assembling URL
      *
      * @var string
      */
-    protected $_controller;
+    protected $controller;
 
     /**
-     * Module name to use when assembling URL
+     * URL query part to use when assembling URL
      *
-     * @var string
+     * @var array|string
      */
-    protected $_module;
+    protected $query;
 
     /**
      * Params to use when assembling URL
@@ -76,46 +47,15 @@ class Zend_Navigation_Page_Mvc extends Zend_Navigation_Page
      * @see getHref()
      * @var array
      */
-    protected $_params = array();
+    protected $params = array();
 
     /**
-     * Route name to use when assembling URL
+     * RouteInterface name to use when assembling URL
      *
      * @see getHref()
      * @var string
      */
-    protected $_route;
-
-    /**
-     * Whether params should be reset when assembling URL
-     *
-     * @see getHref()
-     * @var bool
-     */
-    protected $_resetParams = true;
-
-    /**
-     * Whether href should be encoded when assembling URL
-     *
-     * @see getHref()
-     * @var bool 
-     */
-    protected $_encodeUrl = true;
-
-    /**
-     * Whether this page should be considered active
-     *
-     * @var bool
-     */
-    protected $_active = null;
-
-    /**
-     * Scheme to use when assembling URL
-     *
-     * @see getHref()
-     * @var string
-     */
-    protected $_scheme;
+    protected $route;
 
     /**
      * Cached href
@@ -126,31 +66,46 @@ class Zend_Navigation_Page_Mvc extends Zend_Navigation_Page
      *
      * @var string
      */
-    protected $_hrefCache;
+    protected $hrefCache;
 
     /**
-     * Action helper for assembling URLs
+     * RouteInterface matches; used for routing parameters and testing validity
      *
-     * @see getHref()
-     * @var Zend_Controller_Action_Helper_Url
+     * @var RouteMatch
      */
-    protected static $_urlHelper = null;
+    protected $routeMatch;
 
     /**
-     * View helper for assembling URLs with schemes
+     * If true and set routeMatch than getHref will use routeMatch params
+     * to assemble uri
+     * @var bool
+     */
+    protected $useRouteMatch = false;
+
+    /**
+     * Router for assembling URLs
      *
      * @see getHref()
-     * @var Zend_View_Helper_ServerUrl
+     * @var RouteStackInterface
      */
-    protected static $_schemeHelper = null;
+    protected $router = null;
+
+    /**
+     * Default router to be used if router is not given.
+     *
+     * @see getHref()
+     *
+     * @var RouteStackInterface
+     */
+    protected static $defaultRouter= null;
 
     // Accessors:
 
     /**
      * Returns whether page should be considered active or not
      *
-     * This method will compare the page properties against the request object
-     * that is found in the front controller.
+     * This method will compare the page properties against the route matches
+     * composed in the object.
      *
      * @param  bool $recursive  [optional] whether page should be considered
      *                          active if any child pages are active. Default is
@@ -159,57 +114,60 @@ class Zend_Navigation_Page_Mvc extends Zend_Navigation_Page
      */
     public function isActive($recursive = false)
     {
-        if (null === $this->_active) {
-            $front     = Zend_Controller_Front::getInstance();
-            $request   = $front->getRequest();
+        if (!$this->active) {
             $reqParams = array();
-            if ($request) {
-                $reqParams = $request->getParams();
-                if (!array_key_exists('module', $reqParams)) {
-                    $reqParams['module'] = $front->getDefaultModule();
+            if ($this->routeMatch instanceof RouteMatch) {
+                $reqParams  = $this->routeMatch->getParams();
+
+                if (isset($reqParams[ModuleRouteListener::ORIGINAL_CONTROLLER])) {
+                    $reqParams['controller'] = $reqParams[ModuleRouteListener::ORIGINAL_CONTROLLER];
+                }
+
+                $myParams   = $this->params;
+                if (null !== $this->controller) {
+                    $myParams['controller'] = $this->controller;
+                }
+                if (null !== $this->action) {
+                    $myParams['action'] = $this->action;
+                }
+
+                if (null !== $this->getRoute()) {
+                    if (
+                        $this->routeMatch->getMatchedRouteName() === $this->getRoute()
+                        && (count(array_intersect_assoc($reqParams, $myParams)) == count($myParams))
+                    ) {
+                        $this->active = true;
+                        return $this->active;
+                    } else {
+                        return parent::isActive($recursive);
+                    }
                 }
             }
 
-            $myParams = $this->_params;
+            $myParams = $this->params;
 
-            if ($this->_route) {
-                $route = $front->getRouter()->getRoute($this->_route);
-                if(method_exists($route, 'getDefaults')) {
-                    $myParams = array_merge($route->getDefaults(), $myParams);
-                }
+            if (null !== $this->controller) {
+                $myParams['controller'] = $this->controller;
+            } else {
+                /**
+                 * @todo In ZF1, this was configurable and pulled from the front controller
+                 */
+                $myParams['controller'] = 'index';
             }
 
-            if (null !== $this->_module) {
-                $myParams['module'] = $this->_module;
-            } elseif(!array_key_exists('module', $myParams)) {
-                $myParams['module'] = $front->getDefaultModule();
+            if (null !== $this->action) {
+                $myParams['action'] = $this->action;
+            } else {
+                /**
+                 * @todo In ZF1, this was configurable and pulled from the front controller
+                 */
+                $myParams['action'] = 'index';
             }
 
-            if (null !== $this->_controller) {
-                $myParams['controller'] = $this->_controller;
-            } elseif(!array_key_exists('controller', $myParams)) {
-                $myParams['controller'] = $front->getDefaultControllerName();
-            }
-
-            if (null !== $this->_action) {
-                $myParams['action'] = $this->_action;
-            } elseif(!array_key_exists('action', $myParams)) {
-                $myParams['action'] = $front->getDefaultAction();
-            }
-
-            foreach($myParams as $key => $value) {
-                if($value == null) {
-                    unset($myParams[$key]);
-                }
-            }
-
-            if (count(array_intersect_assoc($reqParams, $myParams)) ==
-                count($myParams)) {
-                $this->_active = true;
+            if (count(array_intersect_assoc($reqParams, $myParams)) == count($myParams)) {
+                $this->active = true;
                 return true;
             }
-            
-            $this->_active = false;
         }
 
         return parent::isActive($recursive);
@@ -218,59 +176,83 @@ class Zend_Navigation_Page_Mvc extends Zend_Navigation_Page
     /**
      * Returns href for this page
      *
-     * This method uses {@link Zend_Controller_Action_Helper_Url} to assemble
+     * This method uses {@link RouteStackInterface} to assemble
      * the href based on the page's properties.
      *
+     * @see RouteStackInterface
      * @return string  page href
+     * @throws Exception\DomainException if no router is set
      */
     public function getHref()
     {
-        if ($this->_hrefCache) {
-            return $this->_hrefCache;
+        if ($this->hrefCache) {
+            return $this->hrefCache;
         }
 
-        if (null === self::$_urlHelper) {
-            self::$_urlHelper =
-                Zend_Controller_Action_HelperBroker::getStaticHelper('Url');
+        $router = $this->router;
+        if (null === $router) {
+            $router = static::$defaultRouter;
         }
 
-        $params = $this->getParams();
-
-        if ($param = $this->getModule()) {
-            $params['module'] = $param;
+        if (!$router instanceof RouteStackInterface) {
+            throw new Exception\DomainException(
+                __METHOD__
+                . ' cannot execute as no Zend\Mvc\Router\RouteStackInterface instance is composed'
+            );
         }
 
-        if ($param = $this->getController()) {
+        if ($this->useRouteMatch() && $this->getRouteMatch()) {
+            $rmParams = $this->getRouteMatch()->getParams();
+
+            if (isset($rmParams[ModuleRouteListener::ORIGINAL_CONTROLLER])) {
+                $rmParams['controller'] = $rmParams[ModuleRouteListener::ORIGINAL_CONTROLLER];
+                unset($rmParams[ModuleRouteListener::ORIGINAL_CONTROLLER]);
+            }
+
+            if (isset($rmParams[ModuleRouteListener::MODULE_NAMESPACE])) {
+                unset($rmParams[ModuleRouteListener::MODULE_NAMESPACE]);
+            }
+
+            $params = array_merge($rmParams, $this->getParams());
+        } else {
+            $params = $this->getParams();
+        }
+
+
+        if (($param = $this->getController()) != null) {
             $params['controller'] = $param;
         }
 
-        if ($param = $this->getAction()) {
+        if (($param = $this->getAction()) != null) {
             $params['action'] = $param;
         }
 
-        $url = self::$_urlHelper->url($params,
-                                      $this->getRoute(),
-                                      $this->getResetParams(),
-                                      $this->getEncodeUrl());
-
-        // Use scheme?
-        $scheme = $this->getScheme();
-        if (null !== $scheme) {
-            if (null === self::$_schemeHelper) {
-                require_once 'Zend/View/Helper/ServerUrl.php';
-                self::$_schemeHelper = new Zend_View_Helper_ServerUrl();
-            }
-
-            $url = self::$_schemeHelper->setScheme($scheme)->serverUrl($url);
+        switch (true) {
+            case ($this->getRoute() !== null):
+                $name = $this->getRoute();
+                break;
+            case ($this->getRouteMatch() !== null):
+                $name = $this->getRouteMatch()->getMatchedRouteName();
+                break;
+            default:
+                throw new Exception\DomainException('No route name could be found');
         }
 
+        $options = array('name' => $name);
+
         // Add the fragment identifier if it is set
-        $fragment = $this->getFragment();       
+        $fragment = $this->getFragment();
         if (null !== $fragment) {
-            $url .= '#' . $fragment;
-        }         
-        
-        return $this->_hrefCache = $url;
+            $options['fragment'] = $fragment;
+        }
+
+        if (null !== ($query = $this->getQuery())) {
+            $options['query'] = $query;
+        }
+
+        $url = $router->assemble($params, $options);
+
+        return $this->hrefCache = $url;
     }
 
     /**
@@ -279,19 +261,19 @@ class Zend_Navigation_Page_Mvc extends Zend_Navigation_Page
      * @see getHref()
      *
      * @param  string $action             action name
-     * @return Zend_Navigation_Page_Mvc   fluent interface, returns self
-     * @throws Zend_Navigation_Exception  if invalid $action is given
+     * @return Mvc   fluent interface, returns self
+     * @throws Exception\InvalidArgumentException  if invalid $action is given
      */
     public function setAction($action)
     {
         if (null !== $action && !is_string($action)) {
-            require_once 'Zend/Navigation/Exception.php';
-            throw new Zend_Navigation_Exception(
-                    'Invalid argument: $action must be a string or null');
+            throw new Exception\InvalidArgumentException(
+                'Invalid argument: $action must be a string or null'
+            );
         }
 
-        $this->_action = $action;
-        $this->_hrefCache = null;
+        $this->action    = $action;
+        $this->hrefCache = null;
         return $this;
     }
 
@@ -304,7 +286,7 @@ class Zend_Navigation_Page_Mvc extends Zend_Navigation_Page
      */
     public function getAction()
     {
-        return $this->_action;
+        return $this->action;
     }
 
     /**
@@ -313,19 +295,19 @@ class Zend_Navigation_Page_Mvc extends Zend_Navigation_Page
      * @see getHref()
      *
      * @param  string|null $controller    controller name
-     * @return Zend_Navigation_Page_Mvc   fluent interface, returns self
-     * @throws Zend_Navigation_Exception  if invalid controller name is given
+     * @return Mvc   fluent interface, returns self
+     * @throws Exception\InvalidArgumentException  if invalid controller name is given
      */
     public function setController($controller)
     {
         if (null !== $controller && !is_string($controller)) {
-            require_once 'Zend/Navigation/Exception.php';
-            throw new Zend_Navigation_Exception(
-                    'Invalid argument: $controller must be a string or null');
+            throw new Exception\InvalidArgumentException(
+                'Invalid argument: $controller must be a string or null'
+            );
         }
 
-        $this->_controller = $controller;
-        $this->_hrefCache = null;
+        $this->controller = $controller;
+        $this->hrefCache  = null;
         return $this;
     }
 
@@ -338,170 +320,66 @@ class Zend_Navigation_Page_Mvc extends Zend_Navigation_Page
      */
     public function getController()
     {
-        return $this->_controller;
+        return $this->controller;
     }
 
     /**
-     * Sets module name to use when assembling URL
+     * Sets URL query part to use when assembling URL
      *
      * @see getHref()
-     *
-     * @param  string|null $module        module name
-     * @return Zend_Navigation_Page_Mvc   fluent interface, returns self
-     * @throws Zend_Navigation_Exception  if invalid module name is given
+     * @param  array|string|null $query    URL query part
+     * @return self   fluent interface, returns self
      */
-    public function setModule($module)
+    public function setQuery($query)
     {
-        if (null !== $module && !is_string($module)) {
-            require_once 'Zend/Navigation/Exception.php';
-            throw new Zend_Navigation_Exception(
-                    'Invalid argument: $module must be a string or null');
-        }
-
-        $this->_module = $module;
-        $this->_hrefCache = null;
+        $this->query      = $query;
+        $this->hrefCache  = null;
         return $this;
     }
 
     /**
-     * Returns module name to use when assembling URL
+     * Returns URL query part to use when assembling URL
      *
      * @see getHref()
      *
-     * @return string|null  module name or null
+     * @return array|string|null  URL query part (as an array or string) or null
      */
-    public function getModule()
+    public function getQuery()
     {
-        return $this->_module;
+        return $this->query;
     }
 
     /**
-     * Set multiple parameters (to use when assembling URL) at once
+     * Sets params to use when assembling URL
      *
-     * URL options passed to the url action helper for assembling URLs.
-     * Overwrites any previously set parameters!
-     * 
      * @see getHref()
-     *
-     * @param  array|null $params           [optional] paramters as array
-     *                                      ('name' => 'value'). Default is null
-     *                                      which clears all params.
-     * @return Zend_Navigation_Page_Mvc     fluent interface, returns self
+     * @param  array|null $params [optional] page params. Default is null
+     *                            which sets no params.
+     * @return Mvc  fluent interface, returns self
      */
     public function setParams(array $params = null)
     {
-        $this->clearParams();
-        
-        if (is_array($params)) {
-            $this->addParams($params);
-        }
-        
-        return $this;
-    }
-    
-    /**
-     * Set parameter (to use when assembling URL)
-     * 
-     * URL option passed to the url action helper for assembling URLs.
-     *
-     * @see getHref()
-     *
-     * @param  string $name                 parameter name
-     * @param  mixed $value                 parameter value
-     * @return Zend_Navigation_Page_Mvc     fluent interface, returns self
-     */
-    public function setParam($name, $value)
-    {
-        $name = (string) $name;
-        $this->_params[$name] = $value;
-
-        $this->_hrefCache = null;
-        return $this;
-    }
-
-    /**
-     * Add multiple parameters (to use when assembling URL) at once
-     * 
-     * URL options passed to the url action helper for assembling URLs.
-     * 
-     * @see getHref()
-     *
-     * @param  array $params                paramters as array ('name' => 'value')
-     * @return Zend_Navigation_Page_Mvc     fluent interface, returns self
-     */
-    public function addParams(array $params)
-    {
-        foreach ($params as $name => $value) {
-            $this->setParam($name, $value);
+        if (null === $params) {
+            $this->params = array();
+        } else {
+            // TODO: do this more intelligently?
+            $this->params = $params;
         }
 
+        $this->hrefCache = null;
         return $this;
     }
 
     /**
-     * Remove parameter (to use when assembling URL)
-     * 
+     * Returns params to use when assembling URL
+     *
      * @see getHref()
      *
-     * @param  string $name
-     * @return bool
-     */
-    public function removeParam($name)
-    {             
-        if (array_key_exists($name, $this->_params)) {
-            unset($this->_params[$name]);
-
-            $this->_hrefCache = null;
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Clear all parameters (to use when assembling URL)
-     * 
-     * @see getHref()
-     *
-     * @return Zend_Navigation_Page_Mvc     fluent interface, returns self
-     */
-    public function clearParams()
-    {
-        $this->_params = array();
-
-        $this->_hrefCache = null;
-        return $this;
-    }
-    
-    /**
-     * Retrieve all parameters (to use when assembling URL)
-     * 
-     * @see getHref()
-     *
-     * @return array                        parameters as array ('name' => 'value')
+     * @return array  page params
      */
     public function getParams()
     {
-        return $this->_params;
-    }
-
-    /**
-     * Retrieve a single parameter (to use when assembling URL)
-     * 
-     * @see getHref()
-     *
-     * @param  string $name                 parameter name
-     * @return mixed
-     */
-    public function getParam($name)
-    {
-        $name = (string) $name;
-
-        if (!array_key_exists($name, $this->_params)) {
-            return null;
-        }
-
-        return $this->_params[$name];
+        return $this->params;
     }
 
     /**
@@ -510,19 +388,19 @@ class Zend_Navigation_Page_Mvc extends Zend_Navigation_Page
      * @see getHref()
      *
      * @param  string $route              route name to use when assembling URL
-     * @return Zend_Navigation_Page_Mvc   fluent interface, returns self
-     * @throws Zend_Navigation_Exception  if invalid $route is given
+     * @return Mvc   fluent interface, returns self
+     * @throws Exception\InvalidArgumentException  if invalid $route is given
      */
     public function setRoute($route)
     {
         if (null !== $route && (!is_string($route) || strlen($route) < 1)) {
-            require_once 'Zend/Navigation/Exception.php';
-            throw new Zend_Navigation_Exception(
-                 'Invalid argument: $route must be a non-empty string or null');
+            throw new Exception\InvalidArgumentException(
+                'Invalid argument: $route must be a non-empty string or null'
+            );
         }
 
-        $this->_route = $route;
-        $this->_hrefCache = null;
+        $this->route     = $route;
+        $this->hrefCache = null;
         return $this;
     }
 
@@ -535,123 +413,99 @@ class Zend_Navigation_Page_Mvc extends Zend_Navigation_Page
      */
     public function getRoute()
     {
-        return $this->_route;
+        return $this->route;
     }
 
     /**
-     * Sets whether params should be reset when assembling URL
+     * Get the route match.
      *
-     * @see getHref()
-     *
-     * @param  bool $resetParams         whether params should be reset when
-     *                                   assembling URL
-     * @return Zend_Navigation_Page_Mvc  fluent interface, returns self
+     * @return \Zend\Mvc\Router\RouteMatch
      */
-    public function setResetParams($resetParams)
+    public function getRouteMatch()
     {
-        $this->_resetParams = (bool) $resetParams;
-        $this->_hrefCache = null;
+        return $this->routeMatch;
+    }
+
+    /**
+     * Set route match object from which parameters will be retrieved
+     *
+     * @param  RouteMatch $matches
+     * @return Mvc fluent interface, returns self
+     */
+    public function setRouteMatch(RouteMatch $matches)
+    {
+        $this->routeMatch = $matches;
         return $this;
     }
 
     /**
-     * Returns whether params should be reset when assembling URL
+     * Get the useRouteMatch flag
      *
-     * @see getHref()
-     *
-     * @return bool  whether params should be reset when assembling URL
+     * @return bool
      */
-    public function getResetParams()
+    public function useRouteMatch()
     {
-        return $this->_resetParams;
+        return $this->useRouteMatch;
     }
 
     /**
-     * Sets whether href should be encoded when assembling URL
-     * 
-     * @see getHref()
-     *
-     * @param bool $resetParams         whether href should be encoded when
-     *                                  assembling URL
-     * @return Zend_Navigation_Page_Mvc fluent interface, returns self
-     */
-    public function setEncodeUrl($encodeUrl)
-    {
-        $this->_encodeUrl = (bool) $encodeUrl;
-        $this->_hrefCache = null;
-        
-        return $this;
-    }
-    
-    /**
-     * Returns whether herf should be encoded when assembling URL
-     * 
-     * @see getHref()
-     *
-     * @return bool whether herf should be encoded when assembling URL 
-     */
-    public function getEncodeUrl()
-    {
-        return $this->_encodeUrl;
-    }
-
-    /**
-     * Sets scheme to use when assembling URL
+     * Set whether the page should use route match params for assembling link uri
      *
      * @see getHref()
-     *
-     * @param  string|null $scheme        scheme
-     * @return Zend_Navigation_Page_Mvc   fluent interface, returns self
+     * @param bool $useRouteMatch [optional]
+     * @return Mvc
      */
-    public function setScheme($scheme)
+    public function setUseRouteMatch($useRouteMatch = true)
     {
-        if (null !== $scheme && !is_string($scheme)) {
-            require_once 'Zend/Navigation/Exception.php';
-            throw new Zend_Navigation_Exception(
-                'Invalid argument: $scheme must be a string or null'
-            );
-        }
-
-        $this->_scheme = $scheme;
+        $this->useRouteMatch = (bool) $useRouteMatch;
+        $this->hrefCache = null;
         return $this;
     }
 
     /**
-     * Returns scheme to use when assembling URL
+     * Get the router.
      *
-     * @see getHref()
-     *
-     * @return string|null  scheme or null
+     * @return null|RouteStackInterface
      */
-    public function getScheme()
+    public function getRouter()
     {
-        return $this->_scheme;
+        return $this->router;
     }
 
     /**
-     * Sets action helper for assembling URLs
+     * Sets router for assembling URLs
      *
      * @see getHref()
      *
-     * @param  Zend_Controller_Action_Helper_Url $uh  URL helper
+     * @param  RouteStackInterface $router Router
+     * @return Mvc    fluent interface, returns self
+     */
+    public function setRouter(RouteStackInterface $router)
+    {
+        $this->router = $router;
+        return $this;
+    }
+
+    /**
+     * Sets the default router for assembling URLs.
+     *
+     * @see getHref()
+     * @param  RouteStackInterface $router Router
      * @return void
      */
-    public static function setUrlHelper(Zend_Controller_Action_Helper_Url $uh)
+    public static function setDefaultRouter($router)
     {
-        self::$_urlHelper = $uh;
+        static::$defaultRouter = $router;
     }
 
     /**
-     * Sets view helper for assembling URLs with schemes
+     * Gets the default router for assembling URLs.
      *
-     * @see getHref()
-     *
-     * @param  Zend_View_Helper_ServerUrl $sh   scheme helper
-     * @return void
+     * @return RouteStackInterface
      */
-    public static function setSchemeHelper(Zend_View_Helper_ServerUrl $sh)
+    public static function getDefaultRouter()
     {
-        self::$_schemeHelper = $sh;
+        return static::$defaultRouter;
     }
 
     // Public methods:
@@ -666,14 +520,12 @@ class Zend_Navigation_Page_Mvc extends Zend_Navigation_Page
         return array_merge(
             parent::toArray(),
             array(
-                'action'       => $this->getAction(),
-                'controller'   => $this->getController(),
-                'module'       => $this->getModule(),
-                'params'       => $this->getParams(),
-                'route'        => $this->getRoute(),
-                'reset_params' => $this->getResetParams(),
-                'encodeUrl'    => $this->getEncodeUrl(),
-                'scheme'       => $this->getScheme(),
+                 'action'     => $this->getAction(),
+                 'controller' => $this->getController(),
+                 'params'     => $this->getParams(),
+                 'route'      => $this->getRoute(),
+                 'router'     => $this->getRouter(),
+                 'route_match' => $this->getRouteMatch(),
             )
         );
     }

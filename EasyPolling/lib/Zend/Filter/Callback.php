@@ -1,152 +1,102 @@
 <?php
 /**
- * Zend Framework
+ * Zend Framework (http://framework.zend.com/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://framework.zend.com/license/new-bsd
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@zend.com so we can send you a copy immediately.
- *
- * @category   Zend
- * @package    Zend_Filter
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Callback.php 24593 2012-01-05 20:35:02Z matthew $
+ * @link      http://github.com/zendframework/zf2 for the canonical source repository
+ * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
-/**
- * @see Zend_Filter_Interface
- */
-require_once 'Zend/Filter/Interface.php';
+namespace Zend\Filter;
 
-/**
- * @category   Zend
- * @package    Zend_Filter
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
- */
-class Zend_Filter_Callback implements Zend_Filter_Interface
+use Traversable;
+
+class Callback extends AbstractFilter
 {
     /**
-     * Callback in a call_user_func format
-     *
-     * @var string|array
+     * @var array
      */
-    protected $_callback = null;
+    protected $options = array(
+        'callback'        => null,
+        'callback_params' => array()
+    );
 
     /**
-     * Default options to set for the filter
-     *
-     * @var mixed
+     * @param callable|array|Traversable $callbackOrOptions
+     * @param array $callbackParams
      */
-    protected $_options = null;
-
-    /**
-     * Constructor
-     *
-     * @param string|array $callback Callback in a call_user_func format
-     * @param mixed        $options  (Optional) Default options for this filter
-     */
-    public function __construct($options)
+    public function __construct($callbackOrOptions, $callbackParams = array())
     {
-        if ($options instanceof Zend_Config) {
-            $options = $options->toArray();
-        } else if (!is_array($options) || !array_key_exists('callback', $options)) {
-            $options          = func_get_args();
-            $temp['callback'] = array_shift($options);
-            if (!empty($options)) {
-                $temp['options'] = array_shift($options);
-            }
-
-            $options = $temp;
+        if (is_callable($callbackOrOptions)) {
+            $this->setCallback($callbackOrOptions);
+            $this->setCallbackParams($callbackParams);
+        } else {
+            $this->setOptions($callbackOrOptions);
         }
-
-        if (!array_key_exists('callback', $options)) {
-            require_once 'Zend/Filter/Exception.php';
-            throw new Zend_Filter_Exception('Missing callback to use');
-        }
-
-        $this->setCallback($options['callback']);
-        if (array_key_exists('options', $options)) {
-            $this->setOptions($options['options']);
-        }
-    }
-
-    /**
-     * Returns the set callback
-     *
-     * @return string|array Set callback
-     */
-    public function getCallback()
-    {
-        return $this->_callback;
     }
 
     /**
      * Sets a new callback for this filter
      *
-     * @param unknown_type $callback
-     * @return unknown
+     * @param  callable $callback
+     * @throws Exception\InvalidArgumentException
+     * @return self
      */
-    public function setCallback($callback, $options = null)
+    public function setCallback($callback)
     {
         if (!is_callable($callback)) {
-            require_once 'Zend/Filter/Exception.php';
-            throw new Zend_Filter_Exception('Callback can not be accessed');
+            throw new Exception\InvalidArgumentException(
+                'Invalid parameter for callback: must be callable'
+            );
         }
 
-        $this->_callback = $callback;
-        $this->setOptions($options);
+        $this->options['callback'] = $callback;
         return $this;
     }
 
     /**
-     * Returns the set default options
+     * Returns the set callback
      *
-     * @return mixed
+     * @return callable
      */
-    public function getOptions()
+    public function getCallback()
     {
-        return $this->_options;
+        return $this->options['callback'];
     }
 
     /**
-     * Sets new default options to the callback filter
+     * Sets parameters for the callback
      *
-     * @param mixed $options Default options to set
-     * @return Zend_Filter_Callback
+     * @param  mixed $params
+     * @return self
      */
-    public function setOptions($options)
+    public function setCallbackParams($params)
     {
-        $this->_options = $options;
+        $this->options['callback_params'] = (array) $params;
         return $this;
+    }
+
+    /**
+     * Get parameters for the callback
+     *
+     * @return array
+     */
+    public function getCallbackParams()
+    {
+        return $this->options['callback_params'];
     }
 
     /**
      * Calls the filter per callback
      *
-     * @param mixed $value Options for the set callback
-     * @return mixed       Result from the filter which was callbacked
+     * @param  mixed $value Options for the set callable
+     * @return mixed Result from the filter which was called
      */
     public function filter($value)
     {
-        $options = array();
+        $params = (array) $this->options['callback_params'];
+        array_unshift($params, $value);
 
-        if ($this->_options !== null) {
-            if (!is_array($this->_options)) {
-                $options = array($this->_options);
-            } else {
-                $options = $this->_options;
-            }
-        }
-
-        array_unshift($options, $value);
-
-        return call_user_func_array($this->_callback, $options);
+        return call_user_func_array($this->options['callback'], $params);
     }
 }

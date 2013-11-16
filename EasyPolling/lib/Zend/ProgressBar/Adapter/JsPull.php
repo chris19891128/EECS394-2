@@ -1,70 +1,48 @@
 <?php
 /**
- * LICENSE
+ * Zend Framework (http://framework.zend.com/)
  *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://framework.zend.com/license/new-bsd
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@zend.com so we can send you a copy immediately.
- *
- * @category   Zend
- * @package    Zend_ProgressBar
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: JsPull.php 24593 2012-01-05 20:35:02Z matthew $
+ * @link      http://github.com/zendframework/zf2 for the canonical source repository
+ * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
-/**
- * @see Zend_Json
- */
-require_once 'Zend/Json.php';
+namespace Zend\ProgressBar\Adapter;
+
+use Zend\Json\Json;
 
 /**
- * @see Zend_ProgressBar_Adapter
- */
-require_once 'Zend/ProgressBar/Adapter.php';
-
-/**
- * Zend_ProgressBar_Adapter_JsPull offers a simple method for updating a
+ * Zend\ProgressBar\Adapter\JsPull offers a simple method for updating a
  * progressbar in a browser.
- *
- * @category  Zend
- * @package   Zend_ProgressBar
- * @uses      Zend_ProgressBar_Adapter_Interface
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd     New BSD License
  */
-class Zend_ProgressBar_Adapter_JsPull extends Zend_ProgressBar_Adapter
+class JsPull extends AbstractAdapter
 {
     /**
-     * Wether to exit after json data send or not
+     * Whether to exit after json data send or not
      *
-     * @var boolean
+     * @var bool
      */
-    protected $_exitAfterSend = true;
+    protected $exitAfterSend = true;
 
     /**
-     * Set wether to exit after json data send or not
+     * Set whether to exit after json data send or not
      *
-     * @param  boolean $exitAfterSend
-     * @return Zend_ProgressBar_Adapter_JsPull
+     * @param  bool $exitAfterSend
+     * @return \Zend\ProgressBar\Adapter\JsPull
      */
     public function setExitAfterSend($exitAfterSend)
     {
-        $this->_exitAfterSend = $exitAfterSend;
+        $this->exitAfterSend = $exitAfterSend;
     }
 
     /**
-     * Defined by Zend_ProgressBar_Adapter_Interface
+     * Defined by Zend\ProgressBar\Adapter\AbstractAdapter
      *
      * @param  float   $current       Current progress value
      * @param  float   $max           Max progress value
      * @param  float   $percent       Current percent value
-     * @param  integer $timeTaken     Taken time in seconds
-     * @param  integer $timeRemaining Remaining time in seconds
+     * @param  int $timeTaken     Taken time in seconds
+     * @param  int $timeRemaining Remaining time in seconds
      * @param  string  $text          Status text
      * @return void
      */
@@ -80,20 +58,20 @@ class Zend_ProgressBar_Adapter_JsPull extends Zend_ProgressBar_Adapter
             'finished'      => false
         );
 
-        $data = Zend_Json::encode($arguments);
+        $data = Json::encode($arguments);
 
         // Output the data
         $this->_outputData($data);
     }
 
     /**
-     * Defined by Zend_ProgressBar_Adapter_Interface
+     * Defined by Zend\ProgressBar\Adapter\AbstractAdapter
      *
      * @return void
      */
     public function finish()
     {
-        $data = Zend_Json::encode(array('finished' => true));
+        $data = Json::encode(array('finished' => true));
 
         $this->_outputData($data);
     }
@@ -110,7 +88,7 @@ class Zend_ProgressBar_Adapter_JsPull extends Zend_ProgressBar_Adapter
     {
         echo $data;
 
-        if ($this->_exitAfterSend) {
+        if ($this->exitAfterSend) {
             exit;
         }
     }

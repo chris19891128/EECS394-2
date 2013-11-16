@@ -1,73 +1,162 @@
 <?php
 /**
- * Zend Framework
+ * Zend Framework (http://framework.zend.com/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://framework.zend.com/license/new-bsd
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@zend.com so we can send you a copy immediately.
- *
- * @category   Zend
- * @package    Zend_Form
- * @subpackage Element
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @link      http://github.com/zendframework/zf2 for the canonical source repository
+ * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
-/** Zend_Form_Element_Multi */
-require_once 'Zend/Form/Element/Multi.php';
+namespace Zend\Form\Element;
 
-/**
- * MultiCheckbox form element
- *
- * Allows specifyinc a (multi-)dimensional associative array of values to use
- * as labelled checkboxes; these will return an array of values for those
- * checkboxes selected.
- *
- * @category   Zend
- * @package    Zend_Form
- * @subpackage Element
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: MultiCheckbox.php 24963 2012-06-15 14:32:23Z adamlundrigan $
- */
-class Zend_Form_Element_MultiCheckbox extends Zend_Form_Element_Multi
+use Zend\Form\ElementInterface;
+use Zend\Form\Exception\InvalidArgumentException;
+use Zend\Validator\Explode as ExplodeValidator;
+use Zend\Validator\InArray as InArrayValidator;
+use Zend\Validator\ValidatorInterface;
+
+class MultiCheckbox extends Checkbox
 {
     /**
-     * Use formMultiCheckbox view helper by default
-     * @var string
+     * Seed attributes
+     *
+     * @var array
      */
-    public $helper = 'formMultiCheckbox';
+    protected $attributes = array(
+        'type' => 'multi_checkbox',
+    );
 
     /**
-     * MultiCheckbox is an array of values by default
      * @var bool
      */
-    protected $_isArray = true;
+    protected $useHiddenElement = false;
 
     /**
-     * Load default decorators
-     *
-     * @return Zend_Form_Element_MultiCheckbox
+     * @var string
      */
-    public function loadDefaultDecorators()
+    protected $uncheckedValue = '';
+
+    /**
+     * @var array
+     */
+    protected $valueOptions = array();
+
+    /**
+     * @return array
+     */
+    public function getValueOptions()
     {
-        if ($this->loadDefaultDecoratorsIsDisabled()) {
+        return $this->valueOptions;
+    }
+
+    /**
+     * @param  array $options
+     * @return MultiCheckbox
+     */
+    public function setValueOptions(array $options)
+    {
+        $this->valueOptions = $options;
+
+        // Update Explode validator haystack
+        if ($this->validator instanceof ExplodeValidator) {
+            $validator = $this->validator->getValidator();
+            $validator->setHaystack($this->getValueOptionsValues());
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set options for an element. Accepted options are:
+     * - label: label to associate with the element
+     * - label_attributes: attributes to use when the label is rendered
+     * - value_options: list of values and labels for the select options
+     *
+     * @param  array|\Traversable $options
+     * @return MultiCheckbox|ElementInterface
+     * @throws InvalidArgumentException
+     */
+    public function setOptions($options)
+    {
+        parent::setOptions($options);
+
+        if (isset($this->options['value_options'])) {
+            $this->setValueOptions($this->options['value_options']);
+        }
+        // Alias for 'value_options'
+        if (isset($this->options['options'])) {
+            $this->setValueOptions($this->options['options']);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set a single element attribute
+     *
+     * @param  string $key
+     * @param  mixed  $value
+     * @return MultiCheckbox|ElementInterface
+     */
+    public function setAttribute($key, $value)
+    {
+        // Do not include the options in the list of attributes
+        // TODO: Deprecate this
+        if ($key === 'options') {
+            $this->setValueOptions($value);
             return $this;
         }
+        return parent::setAttribute($key, $value);
+    }
 
-        parent::loadDefaultDecorators();
-
-        // Disable 'for' attribute
-        if (false !== $decorator = $this->getDecorator('label')) {
-            $decorator->setOption('disableFor', true);
+    /**
+     * Get validator
+     *
+     * @return ValidatorInterface
+     */
+    protected function getValidator()
+    {
+        if (null === $this->validator) {
+            $inArrayValidator = new InArrayValidator(array(
+                'haystack'  => $this->getValueOptionsValues(),
+                'strict'    => false,
+            ));
+            $this->validator = new ExplodeValidator(array(
+                'validator'      => $inArrayValidator,
+                'valueDelimiter' => null, // skip explode if only one value
+            ));
         }
+        return $this->validator;
+    }
 
+    /**
+     * Get only the values from the options attribute
+     *
+     * @return array
+     */
+    protected function getValueOptionsValues()
+    {
+        $values = array();
+        $options = $this->getValueOptions();
+        foreach ($options as $key => $optionSpec) {
+            $value = (is_array($optionSpec)) ? $optionSpec['value'] : $key;
+            $values[] = $value;
+        }
+        if ($this->useHiddenElement()) {
+            $values[] = $this->getUncheckedValue();
+        }
+        return $values;
+    }
+
+    /**
+     * Sets the value that should be selected.
+     *
+     * @param mixed $value The value to set.
+     * @return MultiCheckbox
+     */
+    public function setValue($value)
+    {
+        $this->value = $value;
         return $this;
     }
 }

@@ -1,290 +1,122 @@
 <?php
 /**
- * Zend Framework
+ * Zend Framework (http://framework.zend.com/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://framework.zend.com/license/new-bsd
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@zend.com so we can send you a copy immediately.
- *
- * @category   Zend
- * @package    Zend_Paginator
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: DbSelect.php 24754 2012-05-05 02:30:56Z adamlundrigan $
+ * @link      http://github.com/zendframework/zf2 for the canonical source repository
+ * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
-/**
- * @see Zend_Paginator_Adapter_Interface
- */
-require_once 'Zend/Paginator/Adapter/Interface.php';
+namespace Zend\Paginator\Adapter;
 
-/**
- * @see Zend_Db
- */
-require_once 'Zend/Db.php';
+use Zend\Db\Adapter\Adapter;
+use Zend\Db\Sql\Sql;
+use Zend\Db\Sql\Expression;
+use Zend\Db\Sql\Select;
+use Zend\Db\ResultSet\ResultSet;
+use Zend\Db\ResultSet\ResultSetInterface;
 
-/**
- * @see Zend_Db_Select
- */
-require_once 'Zend/Db/Select.php';
-
-/**
- * @category   Zend
- * @package    Zend_Paginator
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
- */
-class Zend_Paginator_Adapter_DbSelect implements Zend_Paginator_Adapter_Interface
+class DbSelect implements AdapterInterface
 {
-    /**
-     * Name of the row count column
-     *
-     * @var string
-     */
-    const ROW_COUNT_COLUMN = 'zend_paginator_row_count';
 
     /**
-     * The COUNT query
-     *
-     * @var Zend_Db_Select
+     * @var Sql
      */
-    protected $_countSelect = null;
+    protected $sql = null;
 
     /**
      * Database query
      *
-     * @var Zend_Db_Select
+     * @var Select
      */
-    protected $_select = null;
+    protected $select = null;
+
+    /**
+     * @var ResultSet
+     */
+    protected $resultSetPrototype = null;
 
     /**
      * Total item count
      *
-     * @var integer
+     * @var int
      */
-    protected $_rowCount = null;
-
-    /**
-     * Identifies this adapter for caching purposes.  This value will remain constant for
-     * the entire life of this adapter regardless of how many different pages are queried.
-     *
-     * @var string
-     */
-    protected $_cacheIdentifier = null;
+    protected $rowCount = null;
 
     /**
      * Constructor.
      *
-     * @param Zend_Db_Select $select The select query
+     * @param Select $select The select query
+     * @param Adapter|Sql $adapterOrSqlObject DB adapter or Sql object
+     * @param null|ResultSetInterface $resultSetPrototype
+     * @throws Exception\InvalidArgumentException
      */
-    public function __construct(Zend_Db_Select $select)
+    public function __construct(Select $select, $adapterOrSqlObject, ResultSetInterface $resultSetPrototype = null)
     {
-        $this->_select = $select;
-        $this->_cacheIdentifier = md5($select->assemble());
-    }
+        $this->select = $select;
 
-    /**
-     * Returns the cache identifier.
-     * 
-     * @return string
-     */
-    public function getCacheIdentifier()
-    {
-        return $this->_cacheIdentifier;
-    }
-    
-    /**
-     * Sets the total row count, either directly or through a supplied
-     * query.  Without setting this, {@link getPages()} selects the count
-     * as a subquery (SELECT COUNT ... FROM (SELECT ...)).  While this
-     * yields an accurate count even with queries containing clauses like
-     * LIMIT, it can be slow in some circumstances.  For example, in MySQL,
-     * subqueries are generally slow when using the InnoDB storage engine.
-     * Users are therefore encouraged to profile their queries to find
-     * the solution that best meets their needs.
-     *
-     * @param  Zend_Db_Select|integer $totalRowCount Total row count integer
-     *                                               or query
-     * @return Zend_Paginator_Adapter_DbSelect $this
-     * @throws Zend_Paginator_Exception
-     */
-    public function setRowCount($rowCount)
-    {
-        if ($rowCount instanceof Zend_Db_Select) {
-            $columns = $rowCount->getPart(Zend_Db_Select::COLUMNS);
-
-            $countColumnPart = empty($columns[0][2])
-                             ? $columns[0][1]
-                             : $columns[0][2];
-
-            if ($countColumnPart instanceof Zend_Db_Expr) {
-                $countColumnPart = $countColumnPart->__toString();
-            }
-
-            $rowCountColumn = $this->_select->getAdapter()->foldCase(self::ROW_COUNT_COLUMN);
-
-            // The select query can contain only one column, which should be the row count column
-            if (false === strpos($countColumnPart, $rowCountColumn)) {
-                /**
-                 * @see Zend_Paginator_Exception
-                 */
-                require_once 'Zend/Paginator/Exception.php';
-
-                throw new Zend_Paginator_Exception('Row count column not found');
-            }
-
-            $result = $rowCount->query(Zend_Db::FETCH_ASSOC)->fetch();
-
-            $this->_rowCount = count($result) > 0 ? $result[$rowCountColumn] : 0;
-        } else if (is_integer($rowCount)) {
-            $this->_rowCount = $rowCount;
-        } else {
-            /**
-             * @see Zend_Paginator_Exception
-             */
-            require_once 'Zend/Paginator/Exception.php';
-
-            throw new Zend_Paginator_Exception('Invalid row count');
+        if ($adapterOrSqlObject instanceof Adapter) {
+            $adapterOrSqlObject = new Sql($adapterOrSqlObject);
         }
 
-        return $this;
+        if (!$adapterOrSqlObject instanceof Sql) {
+            throw new Exception\InvalidArgumentException(
+                '$adapterOrSqlObject must be an instance of Zend\Db\Adapter\Adapter or Zend\Db\Sql\Sql'
+            );
+        }
+
+        $this->sql                = $adapterOrSqlObject;
+        $this->resultSetPrototype = ($resultSetPrototype) ?: new ResultSet;
     }
 
     /**
      * Returns an array of items for a page.
      *
-     * @param  integer $offset Page offset
-     * @param  integer $itemCountPerPage Number of items per page
+     * @param  int $offset           Page offset
+     * @param  int $itemCountPerPage Number of items per page
      * @return array
      */
     public function getItems($offset, $itemCountPerPage)
     {
-        $this->_select->limit($itemCountPerPage, $offset);
+        $select = clone $this->select;
+        $select->offset($offset);
+        $select->limit($itemCountPerPage);
 
-        return $this->_select->query()->fetchAll();
+        $statement = $this->sql->prepareStatementForSqlObject($select);
+        $result    = $statement->execute();
+
+        $resultSet = clone $this->resultSetPrototype;
+        $resultSet->initialize($result);
+
+        return $resultSet;
     }
 
     /**
      * Returns the total number of rows in the result set.
      *
-     * @return integer
+     * @return int
      */
     public function count()
     {
-        if ($this->_rowCount === null) {
-            $this->setRowCount(
-                $this->getCountSelect()
-            );
+        if ($this->rowCount !== null) {
+            return $this->rowCount;
         }
 
-        return $this->_rowCount;
-    }
+        $select = clone $this->select;
+        $select->reset(Select::LIMIT);
+        $select->reset(Select::OFFSET);
+        $select->reset(Select::ORDER);
 
-    /**
-     * Get the COUNT select object for the provided query
-     *
-     * TODO: Have a look at queries that have both GROUP BY and DISTINCT specified.
-     * In that use-case I'm expecting problems when either GROUP BY or DISTINCT
-     * has one column.
-     *
-     * @return Zend_Db_Select
-     */
-    public function getCountSelect()
-    {
-        /**
-         * We only need to generate a COUNT query once. It will not change for
-         * this instance.
-         */
-        if ($this->_countSelect !== null) {
-            return $this->_countSelect;
-        }
+        $countSelect = new Select;
+        $countSelect->columns(array('c' => new Expression('COUNT(1)')));
+        $countSelect->from(array('original_select' => $select));
 
-        $rowCount = clone $this->_select;
-        $rowCount->__toString(); // Workaround for ZF-3719 and related
+        $statement = $this->sql->prepareStatementForSqlObject($countSelect);
+        $result    = $statement->execute();
+        $row       = $result->current();
 
-        $db = $rowCount->getAdapter();
+        $this->rowCount = $row['c'];
 
-        $countColumn = $db->quoteIdentifier($db->foldCase(self::ROW_COUNT_COLUMN));
-        $countPart   = 'COUNT(1) AS ';
-        $groupPart   = null;
-        $unionParts  = $rowCount->getPart(Zend_Db_Select::UNION);
-
-        /**
-         * If we're dealing with a UNION query, execute the UNION as a subquery
-         * to the COUNT query.
-         */
-        if (!empty($unionParts)) {
-            $expression = new Zend_Db_Expr($countPart . $countColumn);
-
-            $rowCount = $db
-                            ->select()
-                            ->bind($rowCount->getBind())
-                            ->from($rowCount, $expression);
-        } else {
-            $columnParts = $rowCount->getPart(Zend_Db_Select::COLUMNS);
-            $groupParts  = $rowCount->getPart(Zend_Db_Select::GROUP);
-            $havingParts = $rowCount->getPart(Zend_Db_Select::HAVING);
-            $isDistinct  = $rowCount->getPart(Zend_Db_Select::DISTINCT);
-
-            /**
-             * If there is more than one column AND it's a DISTINCT query, more
-             * than one group, or if the query has a HAVING clause, then take
-             * the original query and use it as a subquery os the COUNT query.
-             */
-            if (($isDistinct && ((count($columnParts) == 1 && $columnParts[0][1] == Zend_Db_Select::SQL_WILDCARD) 
-                 || count($columnParts) > 1)) || count($groupParts) > 1 || !empty($havingParts)) {
-                $rowCount->reset(Zend_Db_Select::ORDER);
-                $rowCount = $db
-                               ->select()
-                               ->bind($rowCount->getBind())
-                               ->from($rowCount);
-            } else if ($isDistinct) {
-                $part = $columnParts[0];
-
-                if ($part[1] !== Zend_Db_Select::SQL_WILDCARD && !($part[1] instanceof Zend_Db_Expr)) {
-                    $column = $db->quoteIdentifier($part[1], true);
-
-                    if (!empty($part[0])) {
-                        $column = $db->quoteIdentifier($part[0], true) . '.' . $column;
-                    }
-
-                    $groupPart = $column;
-                }
-            } else if (!empty($groupParts)) {
-                $groupPart = $db->quoteIdentifier($groupParts[0], true);
-            }
-
-            /**
-             * If the original query had a GROUP BY or a DISTINCT part and only
-             * one column was specified, create a COUNT(DISTINCT ) query instead
-             * of a regular COUNT query.
-             */
-            if (!empty($groupPart)) {
-                $countPart = 'COUNT(DISTINCT ' . $groupPart . ') AS ';
-            }
-
-            /**
-             * Create the COUNT part of the query
-             */
-            $expression = new Zend_Db_Expr($countPart . $countColumn);
-
-            $rowCount->reset(Zend_Db_Select::COLUMNS)
-                     ->reset(Zend_Db_Select::ORDER)
-                     ->reset(Zend_Db_Select::LIMIT_OFFSET)
-                     ->reset(Zend_Db_Select::GROUP)
-                     ->reset(Zend_Db_Select::DISTINCT)
-                     ->reset(Zend_Db_Select::HAVING)
-                     ->columns($expression);
-        }
-
-        $this->_countSelect = $rowCount;
-
-        return $rowCount;
+        return $this->rowCount;
     }
 }

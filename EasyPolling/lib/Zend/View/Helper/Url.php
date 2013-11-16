@@ -1,51 +1,128 @@
 <?php
 /**
- * Zend Framework
+ * Zend Framework (http://framework.zend.com/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://framework.zend.com/license/new-bsd
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@zend.com so we can send you a copy immediately.
- *
- * @category   Zend
- * @package    Zend_View
- * @subpackage Helper
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @version    $Id: Url.php 24593 2012-01-05 20:35:02Z matthew $
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @link      http://github.com/zendframework/zf2 for the canonical source repository
+ * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
-/** Zend_View_Helper_Abstract.php */
-require_once 'Zend/View/Helper/Abstract.php';
+namespace Zend\View\Helper;
+
+use Traversable;
+use Zend\Mvc\ModuleRouteListener;
+use Zend\Mvc\Router\RouteMatch;
+use Zend\Mvc\Router\RouteStackInterface;
+use Zend\Stdlib\ArrayUtils;
+use Zend\View\Exception;
+use Zend\Stdlib\Exception as StdlibException;
 
 /**
- * Helper for making easy links and getting urls that depend on the routes and router
- *
- * @package    Zend_View
- * @subpackage Helper
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * Helper for making easy links and getting urls that depend on the routes and router.
  */
-class Zend_View_Helper_Url extends Zend_View_Helper_Abstract
+class Url extends AbstractHelper
 {
+    /**
+     * RouteStackInterface instance.
+     *
+     * @var RouteStackInterface
+     */
+    protected $router;
+
+    /**
+     * RouteInterface match returned by the router.
+     *
+     * @var RouteMatch.
+     */
+    protected $routeMatch;
+
     /**
      * Generates an url given the name of a route.
      *
-     * @access public
-     *
-     * @param  array $urlOptions Options passed to the assemble method of the Route object.
-     * @param  mixed $name The name of a Route to use. If null it will use the current Route
-     * @param  bool $reset Whether or not to reset the route defaults with those provided
-     * @return string Url for the link href attribute.
+     * @see    Zend\Mvc\Router\RouteInterface::assemble()
+     * @param  string               $name               Name of the route
+     * @param  array                $params             Parameters for the link
+     * @param  array|Traversable    $options            Options for the route
+     * @param  bool                 $reuseMatchedParams Whether to reuse matched parameters
+     * @return string Url                         For the link href attribute
+     * @throws Exception\RuntimeException         If no RouteStackInterface was provided
+     * @throws Exception\RuntimeException         If no RouteMatch was provided
+     * @throws Exception\RuntimeException         If RouteMatch didn't contain a matched route name
+     * @throws Exception\InvalidArgumentException If the params object was not an array or \Traversable object
      */
-    public function url(array $urlOptions = array(), $name = null, $reset = false, $encode = true)
+    public function __invoke($name = null, $params = array(), $options = array(), $reuseMatchedParams = false)
     {
-        $router = Zend_Controller_Front::getInstance()->getRouter();
-        return $router->assemble($urlOptions, $name, $reset, $encode);
+        if (null === $this->router) {
+            throw new Exception\RuntimeException('No RouteStackInterface instance provided');
+        }
+
+        if (3 == func_num_args() && is_bool($options)) {
+            $reuseMatchedParams = $options;
+            $options = array();
+        }
+
+        if ($name === null) {
+            if ($this->routeMatch === null) {
+                throw new Exception\RuntimeException('No RouteMatch instance provided');
+            }
+
+            $name = $this->routeMatch->getMatchedRouteName();
+
+            if ($name === null) {
+                throw new Exception\RuntimeException('RouteMatch does not contain a matched route name');
+            }
+        }
+
+        if (!is_array($params)) {
+            if (!$params instanceof Traversable) {
+                throw new Exception\InvalidArgumentException(
+                    'Params is expected to be an array or a Traversable object'
+                );
+            }
+            $params = iterator_to_array($params);
+        }
+
+        if ($reuseMatchedParams && $this->routeMatch !== null) {
+            $routeMatchParams = $this->routeMatch->getParams();
+
+            if (isset($routeMatchParams[ModuleRouteListener::ORIGINAL_CONTROLLER])) {
+                $routeMatchParams['controller'] = $routeMatchParams[ModuleRouteListener::ORIGINAL_CONTROLLER];
+                unset($routeMatchParams[ModuleRouteListener::ORIGINAL_CONTROLLER]);
+            }
+
+            if (isset($routeMatchParams[ModuleRouteListener::MODULE_NAMESPACE])) {
+                unset($routeMatchParams[ModuleRouteListener::MODULE_NAMESPACE]);
+            }
+
+            $params = array_merge($routeMatchParams, $params);
+        }
+
+        $options['name'] = $name;
+
+        return $this->router->assemble($params, $options);
+    }
+
+    /**
+     * Set the router to use for assembling.
+     *
+     * @param RouteStackInterface $router
+     * @return Url
+     */
+    public function setRouter(RouteStackInterface $router)
+    {
+        $this->router = $router;
+        return $this;
+    }
+
+    /**
+     * Set route match returned by the router.
+     *
+     * @param  RouteMatch $routeMatch
+     * @return Url
+     */
+    public function setRouteMatch(RouteMatch $routeMatch)
+    {
+        $this->routeMatch = $routeMatch;
+        return $this;
     }
 }
