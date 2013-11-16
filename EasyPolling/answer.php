@@ -62,8 +62,7 @@ $survey = get_survey_by_id ( $_GET ['id'] );
 	echo '<div class="container">
 		<h1> $survey["question"] </h1>';
 	foreach ( $survey ['answer'] as $choice ) {
-		echo '<p><button class="choiceButton btn btn-default" type="button"' . 
-		'onClick="submitIt("$choice")">' . '$choice</button></p>';
+		echo '<p><button class="choiceButton btn btn-default" type="button"' . 'onClick="submitIt("' . $choice . '")">' . $choice . '</button></p>';
 	}
 	
 	include ("footer.inc");
