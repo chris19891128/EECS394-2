@@ -1,3 +1,28 @@
+<?php
+function get_survey_by_id($survey_id) {
+	$link = new mysqli ( 'localhost', 'root', 'stu.fudan2013', 'EasyPolling' ) or die ( 'Cannot connect to Database' );
+	$query = "select * from Poll where ID='$survey_id'";
+	$result = mysqli_query ( $link, $query );
+	$row = mysqli_fetch_array ( $result );
+	
+	if ($row) {
+		$content = $row ['Content'];
+		// echo $content;
+		$json = json_decode ( $content, true );
+	} else {
+		echo mysqli_error ( $link );
+		$json = NULL;
+	}
+	mysqli_close ( $link );
+	return $json;
+}
+?>
+
+<?php
+$survey_id = $_GET ['id'];
+$survey = get_survey_by_id ( $_GET ['id'] );
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,13 +39,7 @@
 <script type="text/javascript"
 	src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 
-	<?php
-	require_once ('extract.php');
-	$survey_id = $_GET ['id'];
-	$survey = get_survey_by_id ( $_GET ['id'] );
-	?>
-
-	<script type="text/javascript">
+<script type="text/javascript">
 	function submitIt(choice){
 		var data = {
 	        	id: <?php echo "'$survey_id'"; ?>,
@@ -35,19 +54,19 @@
     	}
     });
 	}
-	</script>
+</script>
 </head>
-<body>
 
-	<div class="container">
-		<h1> <?php echo($survey['question']); ?> </h1>
-	
+<body>
 	<?php
+	echo '<div class="container">
+		<h1> $survey["question"] </h1>';
 	foreach ( $survey ['answer'] as $choice ) {
-		echo "<p><button class='choiceButton btn btn-default' type='button' onClick=\"submitIt('$choice')\"'>$choice</button></p>";
+		echo "<p><button class='choiceButton btn btn-default' type='button' onClick='submitIt('$choice')'>$choice</button></p>";
 	}
+	
+	include ("footer.inc");
+	echo '</div>';
 	?>
-	<?php include ("footer.inc");?>
-	</div>
 </body>
 </html>
