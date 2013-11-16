@@ -1,6 +1,6 @@
 <?php
+require_once 'lib/all_error.php';
 ini_set ( 'include_path', './lib' );
-require_once 'all_error.php';
 require_once 'google-api-php-client/src/Google_Client.php';
 require_once 'Zend/Mail/Protocol/Imap.php';
 require_once 'Zend/Mail/Storage/Imap.php';
