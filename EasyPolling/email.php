@@ -91,8 +91,8 @@ function tryImapLogin($email, $accessToken) {
 	/**
 	 * Make the IMAP connection and send the auth request
 	 */
-	$imap = new Zend_Mail_Protocol_Imap ( 'imap.gmail.com', '993', true );
-	if (oauth2Authenticate ( $imap, $email, $accessToken )) {
+	$imap = new Zend_Mail_Protocol_Smtp ( 'smtp.gmail.com', '465');
+	if (oauth2Authenticate ( $smpt, $email, $accessToken )) {
 		echo '<h1>Successfully authenticated!</h1>';
 		showInbox ( $imap );
 	} else {
