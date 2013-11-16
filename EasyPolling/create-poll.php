@@ -36,7 +36,7 @@ if ($_POST) {
 	
 	<div class="container">		
 		<form action="" method="" id="create">
-			<div id="options">
+			<div id="poll">
 				<div class="form-group" id="recipient-group">
 					<label for="recepients">To:</label> <input type="text"
 						class="form-control" id="recepient"
@@ -86,10 +86,5 @@ if ($_POST) {
 </body>
 </html>';
 }
-// <p>Congrats! Your poll has been created. Copy this url to share with
-// your friends!</p>
-// <div class="form-group">
-// <input type="text" class="form-control" id="answerUrl" />
-// </div>
 ?>
 
