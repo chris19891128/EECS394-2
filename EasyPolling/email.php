@@ -119,11 +119,14 @@ function displayForm($email, $accessToken) {
 <hr>
 END;
 }
-
-$email = $_SESSION ['google_user'] ['email'];
-$accessToken = $_SESSION ['token'];
-$tok = json_decode ( mb_convert_encoding ( $accessToken, 'utf-8' ) );
-$tok2 = $tok->{'access_token'};
+function authenticate() {
+	$client = new Google_Client ();
+	$client->setApplicationName ( 'EasyPolling' );
+	$client->setClientId ( '519869230344.apps.googleusercontent.com' );
+	$client->setClientSecret ( '-wESR-1Mwr7y6h2QOoNcXaRR' );
+	$client->setRedirectUri ( 'http://orange394.cloudapp.net/EasyPolling/login.php' );
+	$client->setDeveloperKey ( 'AIzaSyBMs1qCCwvCJyvgxEkJkGxaIVcUOmzU8dI' );
+}
 
 displayForm ( $email, $tok2 );
 
