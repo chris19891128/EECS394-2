@@ -14,21 +14,46 @@
 
 </head>
 <body>
-	<div class="container">
-		<h1>Here's the Result of the Poll</h1>
-		<table class="table">
-			<tr>
-				<th>Answer</th>
-				<th>Graphic</th>
-				<th>Statistic</th>
-			</tr>
+<?php
+    function get_survey_by_id($survey_id) {
+        $link = new mysqli ( 'localhost', 'root', 'stu.fudan2013', 'EasyPolling' ) or die ( 'Cannot connect to Database' );
+        $query = "select * from Poll where ID='$survey_id'";
+        $result = mysqli_query ( $link, $query );
+        $row = mysqli_fetch_array ( $result );
+        
+        if ($row) {
+            $content = $row ['Content'];
+                // echo $content;
+            $json = json_decode ( $content, true );
+        } else {
+            echo mysqli_error ( $link );
+            $json = NULL;
+        }
+        mysqli_close ( $link );
+        return $json;
+    }
+?>
+<?php
+    $survey_id = $_GET ['id'];
+    $survey = get_survey_by_id ( $_GET ['id'] );
+    ?>
+<div class="container">
+<h1><?php echo $survey ['question']; ?></h1>
+<table class="table">
+<tr>
+<th>Answer</th>
+<th>Graphic</th>
+<th>Statistic</th>
+</tr>
+
+
+
 			<?php
 			$mysql = new mysqli ( 'localhost', 'root', 'stu.fudan2013', 'EasyPolling' ) or die ( 'Cannot connect to Database' );
 			$query = "SELECT Answer from Answer where Poll_ID='$_GET[id]'";
 			$result = mysqli_query ( $mysql, $query );
 			$stat = array ();
 			$totalNumber = 0;
-			
 			while ( $row = mysqli_fetch_array ( $result ) ) {
 				$answer = $row ['Answer'];
 				if (! array_key_exists ( $answer, $stat )) {
