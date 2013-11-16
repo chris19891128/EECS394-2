@@ -19,10 +19,6 @@ function addOption() {
  * @returns {The json encoding poll}
  */
 function encodePoll() {
-	/*
-	 * Collect all the emails
-	 */
-	var emails = $('#recepient').val().replace(/\s+/g, '').split(',');
 
 	/*
 	 * Collect the question
@@ -50,6 +46,11 @@ function encodePoll() {
 
 function newPoll() {
 
+	/*
+	 * Collect all the emails
+	 */
+	var emails = $('#recepient').val().replace(/\s+/g, '').split(',');
+	
 	var json = encodePoll();
 
 	var guid = GUID();
