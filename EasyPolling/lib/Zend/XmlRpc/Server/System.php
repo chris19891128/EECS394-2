@@ -1,50 +1,32 @@
 <?php
 /**
- * Zend Framework
+ * Zend Framework (http://framework.zend.com/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://framework.zend.com/license/new-bsd
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@zend.com so we can send you a copy immediately.
- *
- * @category   Zend
- * @package    Zend_XmlRpc
- * @subpackage Server
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: System.php 24593 2012-01-05 20:35:02Z matthew $
+ * @link      http://github.com/zendframework/zf2 for the canonical source repository
+ * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
+
+namespace Zend\XmlRpc\Server;
 
 /**
  * XML-RPC system.* methods
- *
- * @category   Zend
- * @package    Zend_XmlRpc
- * @subpackage Server
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class Zend_XmlRpc_Server_System
+class System
 {
     /**
-     * @var Zend_XmlRpc_Server
+     * @var \Zend\XmlRpc\Server
      */
-    protected $_server;
+    protected $server;
 
     /**
      * Constructor
      *
-     * @param  Zend_XmlRpc_Server $server
-     * @return void
+     * @param \Zend\XmlRpc\Server $server
      */
-    public function __construct(Zend_XmlRpc_Server $server)
+    public function __construct(\Zend\XmlRpc\Server $server)
     {
-        $this->_server = $server;
+        $this->server = $server;
     }
 
     /**
@@ -56,7 +38,7 @@ class Zend_XmlRpc_Server_System
      */
     public function listMethods()
     {
-        $table = $this->_server->getDispatchTable()->getMethods();
+        $table = $this->server->getDispatchTable()->getMethods();
         return array_keys($table);
     }
 
@@ -64,14 +46,14 @@ class Zend_XmlRpc_Server_System
      * Display help message for an XMLRPC method
      *
      * @param string $method
+     * @throws Exception\InvalidArgumentException
      * @return string
      */
     public function methodHelp($method)
     {
-        $table = $this->_server->getDispatchTable();
+        $table = $this->server->getDispatchTable();
         if (!$table->hasMethod($method)) {
-            require_once 'Zend/XmlRpc/Server/Exception.php';
-            throw new Zend_XmlRpc_Server_Exception('Method "' . $method . '" does not exist', 640);
+            throw new Exception\InvalidArgumentException('Method "' . $method . '" does not exist', 640);
         }
 
         return $table->getMethod($method)->getMethodHelp();
@@ -81,14 +63,14 @@ class Zend_XmlRpc_Server_System
      * Return a method signature
      *
      * @param string $method
+     * @throws Exception\InvalidArgumentException
      * @return array
      */
     public function methodSignature($method)
     {
-        $table = $this->_server->getDispatchTable();
+        $table = $this->server->getDispatchTable();
         if (!$table->hasMethod($method)) {
-            require_once 'Zend/XmlRpc/Server/Exception.php';
-            throw new Zend_XmlRpc_Server_Exception('Method "' . $method . '" does not exist', 640);
+            throw new Exception\InvalidArgumentException('Method "' . $method . '" does not exist', 640);
         }
         $method = $table->getMethod($method)->toArray();
         return $method['prototypes'];
@@ -117,35 +99,35 @@ class Zend_XmlRpc_Server_System
         foreach ($methods as $method) {
             $fault = false;
             if (!is_array($method)) {
-                $fault = $this->_server->fault('system.multicall expects each method to be a struct', 601);
+                $fault = $this->server->fault('system.multicall expects each method to be a struct', 601);
             } elseif (!isset($method['methodName'])) {
-                $fault = $this->_server->fault('Missing methodName: ' . var_export($methods, 1), 602);
+                $fault = $this->server->fault('Missing methodName: ' . var_export($methods, 1), 602);
             } elseif (!isset($method['params'])) {
-                $fault = $this->_server->fault('Missing params', 603);
+                $fault = $this->server->fault('Missing params', 603);
             } elseif (!is_array($method['params'])) {
-                $fault = $this->_server->fault('Params must be an array', 604);
+                $fault = $this->server->fault('Params must be an array', 604);
             } else {
                 if ('system.multicall' == $method['methodName']) {
                     // don't allow recursive calls to multicall
-                    $fault = $this->_server->fault('Recursive system.multicall forbidden', 605);
+                    $fault = $this->server->fault('Recursive system.multicall forbidden', 605);
                 }
             }
 
             if (!$fault) {
                 try {
-                    $request = new Zend_XmlRpc_Request();
+                    $request = new \Zend\XmlRpc\Request();
                     $request->setMethod($method['methodName']);
                     $request->setParams($method['params']);
-                    $response = $this->_server->handle($request);
-                    if ($response instanceof Zend_XmlRpc_Fault
+                    $response = $this->server->handle($request);
+                    if ($response instanceof \Zend\XmlRpc\Fault
                         || $response->isFault()
                     ) {
                         $fault = $response;
                     } else {
                         $responses[] = $response->getReturnValue();
                     }
-                } catch (Exception $e) {
-                    $fault = $this->_server->fault($e);
+                } catch (\Exception $e) {
+                    $fault = $this->server->fault($e);
                 }
             }
 

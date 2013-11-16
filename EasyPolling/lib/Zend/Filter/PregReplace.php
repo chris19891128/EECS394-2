@@ -1,174 +1,162 @@
 <?php
 /**
- * Zend Framework
+ * Zend Framework (http://framework.zend.com/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://framework.zend.com/license/new-bsd
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@zend.com so we can send you a copy immediately.
- *
- * @category   Zend
- * @package    Zend_Filter
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: PregReplace.php 24593 2012-01-05 20:35:02Z matthew $
+ * @link      http://github.com/zendframework/zf2 for the canonical source repository
+ * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
-/**
- * @see Zend_Filter_Interface
- */
-require_once 'Zend/Filter/Interface.php';
+namespace Zend\Filter;
 
-/**
- * @category   Zend
- * @package    Zend_Filter
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
- */
-class Zend_Filter_PregReplace implements Zend_Filter_Interface
+use Traversable;
+
+class PregReplace extends AbstractFilter
 {
-    /**
-     * Pattern to match
-     * @var mixed
-     */
-    protected $_matchPattern = null;
-
-    /**
-     * Replacement pattern
-     * @var mixed
-     */
-    protected $_replacement = '';
-
-    /**
-     * Is unicode enabled?
-     *
-     * @var bool
-     */
-    static protected $_unicodeSupportEnabled = null;
-
-    /**
-     * Is Unicode Support Enabled Utility function
-     *
-     * @return bool
-     */
-    static public function isUnicodeSupportEnabled()
-    {
-        if (self::$_unicodeSupportEnabled === null) {
-            self::_determineUnicodeSupport();
-        }
-
-        return self::$_unicodeSupportEnabled;
-    }
-
-    /**
-     * Method to cache the regex needed to determine if unicode support is available
-     *
-     * @return bool
-     */
-    static protected function _determineUnicodeSupport()
-    {
-        self::$_unicodeSupportEnabled = (@preg_match('/\pL/u', 'a')) ? true : false;
-    }
+    protected $options = array(
+        'pattern'     => null,
+        'replacement' => '',
+    );
 
     /**
      * Constructor
      * Supported options are
-     *     'match'   => matching pattern
-     *     'replace' => replace with this
+     *     'pattern'     => matching pattern
+     *     'replacement' => replace with this
      *
-     * @param  string|array $options
-     * @return void
+     * @param  array|Traversable|string|null $options
      */
     public function __construct($options = null)
     {
-        if ($options instanceof Zend_Config) {
-            $options = $options->toArray();
-        } else if (!is_array($options)) {
-            $options = func_get_args();
-            $temp    = array();
-            if (!empty($options)) {
-                $temp['match'] = array_shift($options);
-            }
-
-            if (!empty($options)) {
-                $temp['replace'] = array_shift($options);
-            }
-
-            $options = $temp;
+        if ($options instanceof Traversable) {
+            $options = iterator_to_array($options);
         }
 
-        if (array_key_exists('match', $options)) {
-            $this->setMatchPattern($options['match']);
-        }
-
-        if (array_key_exists('replace', $options)) {
-            $this->setReplacement($options['replace']);
+        if (!is_array($options)
+            || (!isset($options['pattern']) && !isset($options['replacement'])))
+        {
+            $args = func_get_args();
+            if (isset($args[0])) {
+                $this->setPattern($args[0]);
+            }
+            if (isset($args[1])) {
+                $this->setReplacement($args[1]);
+            }
+        } else {
+            $this->setOptions($options);
         }
     }
 
     /**
-     * Set the match pattern for the regex being called within filter()
+     * Set the regex pattern to search for
+     * @see preg_replace()
      *
-     * @param mixed $match - same as the first argument of preg_replace
-     * @return Zend_Filter_PregReplace
+     * @param  string|array $pattern - same as the first argument of preg_replace
+     * @return self
+     * @throws Exception\InvalidArgumentException
      */
-    public function setMatchPattern($match)
+    public function setPattern($pattern)
     {
-        $this->_matchPattern = $match;
+        if (!is_array($pattern) && !is_string($pattern)) {
+            throw new Exception\InvalidArgumentException(sprintf(
+                '%s expects pattern to be array or string; received "%s"',
+                __METHOD__,
+                (is_object($pattern) ? get_class($pattern) : gettype($pattern))
+            ));
+        }
+
+        if (is_array($pattern)) {
+            foreach ($pattern as $p) {
+                $this->validatePattern($p);
+            }
+        }
+
+        if (is_string($pattern)) {
+            $this->validatePattern($pattern);
+        }
+
+        $this->options['pattern'] = $pattern;
         return $this;
     }
 
     /**
      * Get currently set match pattern
      *
-     * @return string
+     * @return string|array
      */
-    public function getMatchPattern()
+    public function getPattern()
     {
-        return $this->_matchPattern;
+        return $this->options['pattern'];
     }
 
     /**
-     * Set the Replacement pattern/string for the preg_replace called in filter
+     * Set the replacement array/string
+     * @see preg_replace()
      *
-     * @param mixed $replacement - same as the second argument of preg_replace
-     * @return Zend_Filter_PregReplace
+     * @param  array|string $replacement - same as the second argument of preg_replace
+     * @return self
+     * @throws Exception\InvalidArgumentException
      */
     public function setReplacement($replacement)
     {
-        $this->_replacement = $replacement;
+        if (!is_array($replacement) && !is_string($replacement)) {
+            throw new Exception\InvalidArgumentException(sprintf(
+                '%s expects replacement to be array or string; received "%s"',
+                __METHOD__,
+                (is_object($replacement) ? get_class($replacement) : gettype($replacement))
+            ));
+        }
+        $this->options['replacement'] = $replacement;
         return $this;
     }
 
     /**
      * Get currently set replacement value
      *
-     * @return string
+     * @return string|array
      */
     public function getReplacement()
     {
-        return $this->_replacement;
+        return $this->options['replacement'];
     }
 
     /**
      * Perform regexp replacement as filter
      *
-     * @param  string $value
-     * @return string
+     * @param  mixed $value
+     * @return mixed
+     * @throws Exception\RuntimeException
      */
     public function filter($value)
     {
-        if ($this->_matchPattern == null) {
-            require_once 'Zend/Filter/Exception.php';
-            throw new Zend_Filter_Exception(get_class($this) . ' does not have a valid MatchPattern set.');
+        if ($this->options['pattern'] === null) {
+            throw new Exception\RuntimeException(sprintf(
+                'Filter %s does not have a valid pattern set',
+                get_class($this)
+            ));
         }
 
-        return preg_replace($this->_matchPattern, $this->_replacement, $value);
+        return preg_replace($this->options['pattern'], $this->options['replacement'], $value);
     }
 
+    /**
+     * Validate a pattern and ensure it does not contain the "e" modifier
+     *
+     * @param  string $pattern
+     * @return bool
+     * @throws Exception\InvalidArgumentException
+     */
+    protected function validatePattern($pattern)
+    {
+        if (!preg_match('/(?<modifier>[imsxeADSUXJu]+)$/', $pattern, $matches)) {
+            return true;
+        }
+
+        if (false !== strstr($matches['modifier'], 'e')) {
+            throw new Exception\InvalidArgumentException(sprintf(
+                'Pattern for a PregReplace filter may not contain the "e" pattern modifier; received "%s"',
+                $pattern
+            ));
+        }
+    }
 }

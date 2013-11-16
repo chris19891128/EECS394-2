@@ -1,82 +1,54 @@
 <?php
 /**
- * Zend Framework
+ * Zend Framework (http://framework.zend.com/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://framework.zend.com/license/new-bsd
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@zend.com so we can send you a copy immediately.
- *
- * @category   Zend
- * @package    Zend_Feed_Pubsubhubbub
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Callback.php 24593 2012-01-05 20:35:02Z matthew $
+ * @link      http://github.com/zendframework/zf2 for the canonical source repository
+ * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
-/**
- * @see Zend_Feed_Pubsubhubbub
- */
-require_once 'Zend/Feed/Pubsubhubbub.php';
+namespace Zend\Feed\PubSubHubbub\Subscriber;
 
-/**
- * @see Zend_Feed_Pubsubhubbub
- */
-require_once 'Zend/Feed/Pubsubhubbub/CallbackAbstract.php';
+use Zend\Feed\PubSubHubbub;
+use Zend\Feed\PubSubHubbub\Exception;
+use Zend\Feed\Uri;
 
-/**
- * @see Zend_Feed_Reader
- */
-require_once 'Zend/Feed/Reader.php';
-
-/**
- * @category   Zend
- * @package    Zend_Feed_Pubsubhubbub
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
- */
-class Zend_Feed_Pubsubhubbub_Subscriber_Callback
-    extends Zend_Feed_Pubsubhubbub_CallbackAbstract
+class Callback extends PubSubHubbub\AbstractCallback
 {
     /**
      * Contains the content of any feeds sent as updates to the Callback URL
      *
      * @var string
      */
-    protected $_feedUpdate = null;
+    protected $feedUpdate = null;
 
     /**
      * Holds a manually set subscription key (i.e. identifies a unique
      * subscription) which is typical when it is not passed in the query string
      * but is part of the Callback URL path, requiring manual retrieval e.g.
-     * using a route and the Zend_Controller_Action::_getParam() method.
+     * using a route and the \Zend\Mvc\Router\RouteMatch::getParam() method.
      *
      * @var string
      */
-    protected $_subscriptionKey = null;
+    protected $subscriptionKey = null;
 
     /**
      * After verification, this is set to the verified subscription's data.
      *
      * @var array
      */
-    protected $_currentSubscriptionData = null;
+    protected $currentSubscriptionData = null;
 
     /**
      * Set a subscription key to use for the current callback request manually.
      * Required if usePathParameter is enabled for the Subscriber.
      *
      * @param  string $key
-     * @return Zend_Feed_Pubsubhubbub_Subscriber_Callback
+     * @return \Zend\Feed\PubSubHubbub\Subscriber\Callback
      */
     public function setSubscriptionKey($key)
     {
-        $this->_subscriptionKey = $key;
+        $this->subscriptionKey = $key;
         return $this;
     }
 
@@ -112,25 +84,39 @@ class Zend_Feed_Pubsubhubbub_Subscriber_Callback
                 || stripos($contentType, 'application/rdf+xml') === 0)
         ) {
             $this->setFeedUpdate($this->_getRawBody());
-            $this->getHttpResponse()
-                 ->setHeader('X-Hub-On-Behalf-Of', $this->getSubscriberCount());
+            $this->getHttpResponse()->setHeader('X-Hub-On-Behalf-Of', $this->getSubscriberCount());
         /**
          * Handle any (un)subscribe confirmation requests
          */
         } elseif ($this->isValidHubVerification($httpGetData)) {
-            $data = $this->_currentSubscriptionData;
-            $this->getHttpResponse()->setBody($httpGetData['hub_challenge']);
-            $data['subscription_state'] = Zend_Feed_Pubsubhubbub::SUBSCRIPTION_VERIFIED;
-            if (isset($httpGetData['hub_lease_seconds'])) {
-                $data['lease_seconds'] = $httpGetData['hub_lease_seconds'];
+            $this->getHttpResponse()->setContent($httpGetData['hub_challenge']);
+
+            switch (strtolower($httpGetData['hub_mode'])) {
+                case 'subscribe':
+                    $data = $this->currentSubscriptionData;
+                    $data['subscription_state'] = PubSubHubbub\PubSubHubbub::SUBSCRIPTION_VERIFIED;
+                    if (isset($httpGetData['hub_lease_seconds'])) {
+                        $data['lease_seconds'] = $httpGetData['hub_lease_seconds'];
+                    }
+                    $this->getStorage()->setSubscription($data);
+                    break;
+                case 'unsubscribe':
+                    $verifyTokenKey = $this->_detectVerifyTokenKey($httpGetData);
+                    $this->getStorage()->deleteSubscription($verifyTokenKey);
+                    break;
+                default:
+                    throw new Exception\RuntimeException(sprintf(
+                        'Invalid hub_mode ("%s") provided',
+                        $httpGetData['hub_mode']
+                    ));
             }
-            $this->getStorage()->setSubscription($data);
         /**
          * Hey, C'mon! We tried everything else!
          */
         } else {
-            $this->getHttpResponse()->setHttpResponseCode(404);
+            $this->getHttpResponse()->setStatusCode(404);
         }
+
         if ($sendResponseNow) {
             $this->sendResponse();
         }
@@ -175,7 +161,7 @@ class Zend_Feed_Pubsubhubbub_Subscriber_Callback
         ) {
             return false;
         }
-        if (!Zend_Uri::check($httpGetData['hub_topic'])) {
+        if (!Uri::factory($httpGetData['hub_topic'])->isValid()) {
             return false;
         }
 
@@ -194,11 +180,11 @@ class Zend_Feed_Pubsubhubbub_Subscriber_Callback
      * Topic we've subscribed to.
      *
      * @param  string $feed
-     * @return Zend_Feed_Pubsubhubbub_Subscriber_Callback
+     * @return \Zend\Feed\PubSubHubbub\Subscriber\Callback
      */
     public function setFeedUpdate($feed)
     {
-        $this->_feedUpdate = $feed;
+        $this->feedUpdate = $feed;
         return $this;
     }
 
@@ -209,7 +195,7 @@ class Zend_Feed_Pubsubhubbub_Subscriber_Callback
      */
     public function hasFeedUpdate()
     {
-        if ($this->_feedUpdate === null) {
+        if ($this->feedUpdate === null) {
             return false;
         }
         return true;
@@ -223,7 +209,7 @@ class Zend_Feed_Pubsubhubbub_Subscriber_Callback
      */
     public function getFeedUpdate()
     {
-        return $this->_feedUpdate;
+        return $this->feedUpdate;
     }
 
     /**
@@ -250,7 +236,7 @@ class Zend_Feed_Pubsubhubbub_Subscriber_Callback
             if ($verifyToken !== hash('sha256', $httpGetData['hub_verify_token'])) {
                 return false;
             }
-            $this->_currentSubscriptionData = $data;
+            $this->currentSubscriptionData = $data;
             return true;
         }
         return true;
@@ -269,8 +255,8 @@ class Zend_Feed_Pubsubhubbub_Subscriber_Callback
         /**
          * Available when sub keys encoding in Callback URL path
          */
-        if (isset($this->_subscriptionKey)) {
-            return $this->_subscriptionKey;
+        if (isset($this->subscriptionKey)) {
+            return $this->subscriptionKey;
         }
 
         /**

@@ -1,37 +1,21 @@
 <?php
 /**
- * Zend Framework
+ * Zend Framework (http://framework.zend.com/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://framework.zend.com/license/new-bsd
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@zend.com so we can send you a copy immediately.
- *
- * @category   Zend
- * @package    Zend_Feed_Writer
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Feed.php 24593 2012-01-05 20:35:02Z matthew $
+ * @link      http://github.com/zendframework/zf2 for the canonical source repository
+ * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
-/**
- * @see Zend_Feed_Writer_Extension_RendererAbstract
- */
-require_once 'Zend/Feed/Writer/Extension/RendererAbstract.php';
+namespace Zend\Feed\Writer\Extension\ITunes\Renderer;
+
+use DOMDocument;
+use DOMElement;
+use Zend\Feed\Writer\Extension;
 
 /**
- * @category   Zend
- * @package    Zend_Feed_Writer
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
- */
-class Zend_Feed_Writer_Extension_ITunes_Renderer_Feed
-    extends Zend_Feed_Writer_Extension_RendererAbstract
+*/
+class Feed extends Extension\AbstractRenderer
 {
 
     /**
@@ -41,7 +25,7 @@ class Zend_Feed_Writer_Extension_ITunes_Renderer_Feed
      *
      * @var bool
      */
-    protected $_called = false;
+    protected $called = false;
 
     /**
      * Render feed
@@ -50,18 +34,18 @@ class Zend_Feed_Writer_Extension_ITunes_Renderer_Feed
      */
     public function render()
     {
-        $this->_setAuthors($this->_dom, $this->_base);
-        $this->_setBlock($this->_dom, $this->_base);
-        $this->_setCategories($this->_dom, $this->_base);
-        $this->_setImage($this->_dom, $this->_base);
-        $this->_setDuration($this->_dom, $this->_base);
-        $this->_setExplicit($this->_dom, $this->_base);
-        $this->_setKeywords($this->_dom, $this->_base);
-        $this->_setNewFeedUrl($this->_dom, $this->_base);
-        $this->_setOwners($this->_dom, $this->_base);
-        $this->_setSubtitle($this->_dom, $this->_base);
-        $this->_setSummary($this->_dom, $this->_base);
-        if ($this->_called) {
+        $this->_setAuthors($this->dom, $this->base);
+        $this->_setBlock($this->dom, $this->base);
+        $this->_setCategories($this->dom, $this->base);
+        $this->_setImage($this->dom, $this->base);
+        $this->_setDuration($this->dom, $this->base);
+        $this->_setExplicit($this->dom, $this->base);
+        $this->_setKeywords($this->dom, $this->base);
+        $this->_setNewFeedUrl($this->dom, $this->base);
+        $this->_setOwners($this->dom, $this->base);
+        $this->_setSubtitle($this->dom, $this->base);
+        $this->_setSummary($this->dom, $this->base);
+        if ($this->called) {
             $this->_appendNamespaces();
         }
     }
@@ -96,7 +80,7 @@ class Zend_Feed_Writer_Extension_ITunes_Renderer_Feed
             $el->appendChild($text);
             $root->appendChild($el);
         }
-        $this->_called = true;
+        $this->called = true;
     }
 
     /**
@@ -116,7 +100,7 @@ class Zend_Feed_Writer_Extension_ITunes_Renderer_Feed
         $text = $dom->createTextNode($block);
         $el->appendChild($text);
         $root->appendChild($el);
-        $this->_called = true;
+        $this->called = true;
     }
 
     /**
@@ -132,7 +116,7 @@ class Zend_Feed_Writer_Extension_ITunes_Renderer_Feed
         if (!$cats || empty($cats)) {
             return;
         }
-        foreach ($cats as $key=>$cat) {
+        foreach ($cats as $key => $cat) {
             if (!is_array($cat)) {
                 $el = $dom->createElement('itunes:category');
                 $el->setAttribute('text', $cat);
@@ -148,7 +132,7 @@ class Zend_Feed_Writer_Extension_ITunes_Renderer_Feed
                 }
             }
         }
-        $this->_called = true;
+        $this->called = true;
     }
 
     /**
@@ -167,7 +151,7 @@ class Zend_Feed_Writer_Extension_ITunes_Renderer_Feed
         $el = $dom->createElement('itunes:image');
         $el->setAttribute('href', $image);
         $root->appendChild($el);
-        $this->_called = true;
+        $this->called = true;
     }
 
     /**
@@ -187,7 +171,7 @@ class Zend_Feed_Writer_Extension_ITunes_Renderer_Feed
         $text = $dom->createTextNode($duration);
         $el->appendChild($text);
         $root->appendChild($el);
-        $this->_called = true;
+        $this->called = true;
     }
 
     /**
@@ -207,7 +191,7 @@ class Zend_Feed_Writer_Extension_ITunes_Renderer_Feed
         $text = $dom->createTextNode($explicit);
         $el->appendChild($text);
         $root->appendChild($el);
-        $this->_called = true;
+        $this->called = true;
     }
 
     /**
@@ -227,7 +211,7 @@ class Zend_Feed_Writer_Extension_ITunes_Renderer_Feed
         $text = $dom->createTextNode(implode(',', $keywords));
         $el->appendChild($text);
         $root->appendChild($el);
-        $this->_called = true;
+        $this->called = true;
     }
 
     /**
@@ -247,7 +231,7 @@ class Zend_Feed_Writer_Extension_ITunes_Renderer_Feed
         $text = $dom->createTextNode($url);
         $el->appendChild($text);
         $root->appendChild($el);
-        $this->_called = true;
+        $this->called = true;
     }
 
     /**
@@ -275,7 +259,7 @@ class Zend_Feed_Writer_Extension_ITunes_Renderer_Feed
             $el->appendChild($name);
             $el->appendChild($email);
         }
-        $this->_called = true;
+        $this->called = true;
     }
 
     /**
@@ -295,7 +279,7 @@ class Zend_Feed_Writer_Extension_ITunes_Renderer_Feed
         $text = $dom->createTextNode($subtitle);
         $el->appendChild($text);
         $root->appendChild($el);
-        $this->_called = true;
+        $this->called = true;
     }
 
     /**
@@ -315,6 +299,6 @@ class Zend_Feed_Writer_Extension_ITunes_Renderer_Feed
         $text = $dom->createTextNode($summary);
         $el->appendChild($text);
         $root->appendChild($el);
-        $this->_called = true;
+        $this->called = true;
     }
 }

@@ -1,41 +1,21 @@
 <?php
 /**
- * Zend Framework
+ * Zend Framework (http://framework.zend.com/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://framework.zend.com/license/new-bsd
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@zend.com so we can send you a copy immediately.
- *
- * @category   Zend
- * @package    Zend_Feed_Reader
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: FeedSet.php 24593 2012-01-05 20:35:02Z matthew $
+ * @link      http://github.com/zendframework/zf2 for the canonical source repository
+ * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
-/**
- * @see Zend_Feed_Reader
- */
-require_once 'Zend/Feed/Reader.php';
+namespace Zend\Feed\Reader;
+
+use ArrayObject;
+use DOMNodeList;
+use Zend\Feed\Uri;
 
 /**
- * @see Zend_Uri
- */
-require_once 'Zend/Uri.php';
-
-/**
- * @category   Zend
- * @package    Zend_Feed_Reader
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
- */
-class Zend_Feed_Reader_FeedSet extends ArrayObject
+*/
+class FeedSet extends ArrayObject
 {
 
     public $rss = null;
@@ -68,16 +48,16 @@ class Zend_Feed_Reader_FeedSet extends ArrayObject
                 continue;
             }
             if (!isset($this->rss) && $link->getAttribute('type') == 'application/rss+xml') {
-                $this->rss = $this->_absolutiseUri(trim($link->getAttribute('href')), $uri);
-            } elseif(!isset($this->atom) && $link->getAttribute('type') == 'application/atom+xml') {
-                $this->atom = $this->_absolutiseUri(trim($link->getAttribute('href')), $uri);
-            } elseif(!isset($this->rdf) && $link->getAttribute('type') == 'application/rdf+xml') {
-                $this->rdf = $this->_absolutiseUri(trim($link->getAttribute('href')), $uri);
+                $this->rss = $this->absolutiseUri(trim($link->getAttribute('href')), $uri);
+            } elseif (!isset($this->atom) && $link->getAttribute('type') == 'application/atom+xml') {
+                $this->atom = $this->absolutiseUri(trim($link->getAttribute('href')), $uri);
+            } elseif (!isset($this->rdf) && $link->getAttribute('type') == 'application/rdf+xml') {
+                $this->rdf = $this->absolutiseUri(trim($link->getAttribute('href')), $uri);
             }
-            $this[] = new self(array(
+            $this[] = new static(array(
                 'rel' => 'alternate',
                 'type' => $link->getAttribute('type'),
-                'href' => $this->_absolutiseUri(trim($link->getAttribute('href')), $uri),
+                'href' => $this->absolutiseUri(trim($link->getAttribute('href')), $uri),
             ));
         }
     }
@@ -85,18 +65,19 @@ class Zend_Feed_Reader_FeedSet extends ArrayObject
     /**
      *  Attempt to turn a relative URI into an absolute URI
      */
-    protected function _absolutiseUri($link, $uri = null)
+    protected function absolutiseUri($link, $uri = null)
     {
-        if (!Zend_Uri::check($link)) {
+        $linkUri = Uri::factory($link);
+        if (!$linkUri->isAbsolute() or !$linkUri->isValid()) {
             if ($uri !== null) {
-                $uri = Zend_Uri::factory($uri);
+                $uri = Uri::factory($uri);
 
                 if ($link[0] !== '/') {
                     $link = $uri->getPath() . '/' . $link;
                 }
 
-                $link = $uri->getScheme() . '://' . $uri->getHost() . '/' . $this->_canonicalizePath($link);
-                if (!Zend_Uri::check($link)) {
+                $link = $uri->getScheme() . '://' . $uri->getHost() . '/' . $this->canonicalizePath($link);
+                if (!Uri::factory($link)->isValid()) {
                     $link = null;
                 }
             }
@@ -107,7 +88,7 @@ class Zend_Feed_Reader_FeedSet extends ArrayObject
     /**
      *  Canonicalize relative path
      */
-    protected function _canonicalizePath($path)
+    protected function canonicalizePath($path)
     {
         $parts = array_filter(explode('/', $path));
         $absolutes = array();
@@ -125,12 +106,11 @@ class Zend_Feed_Reader_FeedSet extends ArrayObject
     }
 
     /**
-     * Supports lazy loading of feeds using Zend_Feed_Reader::import() but
+     * Supports lazy loading of feeds using Reader::import() but
      * delegates any other operations to the parent class.
      *
      * @param string $offset
      * @return mixed
-     * @uses Zend_Feed_Reader
      */
     public function offsetGet($offset)
     {
@@ -138,11 +118,10 @@ class Zend_Feed_Reader_FeedSet extends ArrayObject
             if (!$this->offsetExists('href')) {
                 return null;
             }
-            $feed = Zend_Feed_Reader::import($this->offsetGet('href'));
+            $feed = Reader::import($this->offsetGet('href'));
             $this->offsetSet('feed', $feed);
             return $feed;
         }
         return parent::offsetGet($offset);
     }
-
 }

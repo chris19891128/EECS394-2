@@ -1,46 +1,31 @@
 <?php
 /**
- * Zend Framework
+ * Zend Framework (http://framework.zend.com/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://framework.zend.com/license/new-bsd
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@zend.com so we can send you a copy immediately.
- *
- * @category   Zend
- * @package    Zend_Feed_Writer
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Rss.php 24593 2012-01-05 20:35:02Z matthew $
+ * @link      http://github.com/zendframework/zf2 for the canonical source repository
+ * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
-/**
- * @see Zend_Feed_Writer_Renderer_RendererAbstract
- */
-require_once 'Zend/Feed/Writer/Renderer/RendererAbstract.php';
+namespace Zend\Feed\Writer\Renderer\Entry;
+
+use DateTime;
+use DOMDocument;
+use DOMElement;
+use Zend\Feed\Uri;
+use Zend\Feed\Writer;
+use Zend\Feed\Writer\Renderer;
 
 /**
- * @category   Zend
- * @package    Zend_Feed_Writer
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
- */
-class Zend_Feed_Writer_Renderer_Entry_Rss
-    extends Zend_Feed_Writer_Renderer_RendererAbstract
-    implements Zend_Feed_Writer_Renderer_RendererInterface
+*/
+class Rss extends Renderer\AbstractRenderer implements Renderer\RendererInterface
 {
     /**
      * Constructor
      *
-     * @param  Zend_Feed_Writer_Entry $container
-     * @return void
+     * @param  Writer\Entry $container
      */
-    public function __construct (Zend_Feed_Writer_Entry $container)
+    public function __construct(Writer\Entry $container)
     {
         parent::__construct($container);
     }
@@ -48,30 +33,30 @@ class Zend_Feed_Writer_Renderer_Entry_Rss
     /**
      * Render RSS entry
      *
-     * @return Zend_Feed_Writer_Renderer_Entry_Rss
+     * @return Rss
      */
     public function render()
     {
-        $this->_dom = new DOMDocument('1.0', $this->_container->getEncoding());
-        $this->_dom->formatOutput = true;
-        $this->_dom->substituteEntities = false;
-        $entry = $this->_dom->createElement('item');
-        $this->_dom->appendChild($entry);
+        $this->dom = new DOMDocument('1.0', $this->container->getEncoding());
+        $this->dom->formatOutput = true;
+        $this->dom->substituteEntities = false;
+        $entry = $this->dom->createElement('item');
+        $this->dom->appendChild($entry);
 
-        $this->_setTitle($this->_dom, $entry);
-        $this->_setDescription($this->_dom, $entry);
-        $this->_setDateCreated($this->_dom, $entry);
-        $this->_setDateModified($this->_dom, $entry);
-        $this->_setLink($this->_dom, $entry);
-        $this->_setId($this->_dom, $entry);
-        $this->_setAuthors($this->_dom, $entry);
-        $this->_setEnclosure($this->_dom, $entry);
-        $this->_setCommentLink($this->_dom, $entry);
-        $this->_setCategories($this->_dom, $entry);
-        foreach ($this->_extensions as $ext) {
+        $this->_setTitle($this->dom, $entry);
+        $this->_setDescription($this->dom, $entry);
+        $this->_setDateCreated($this->dom, $entry);
+        $this->_setDateModified($this->dom, $entry);
+        $this->_setLink($this->dom, $entry);
+        $this->_setId($this->dom, $entry);
+        $this->_setAuthors($this->dom, $entry);
+        $this->_setEnclosure($this->dom, $entry);
+        $this->_setCommentLink($this->dom, $entry);
+        $this->_setCategories($this->dom, $entry);
+        foreach ($this->extensions as $ext) {
             $ext->setType($this->getType());
             $ext->setRootElement($this->getRootElement());
-            $ext->setDomDocument($this->getDomDocument(), $entry);
+            $ext->setDOMDocument($this->getDOMDocument(), $entry);
             $ext->render();
         }
 
@@ -84,20 +69,20 @@ class Zend_Feed_Writer_Renderer_Entry_Rss
      * @param  DOMDocument $dom
      * @param  DOMElement $root
      * @return void
+     * @throws Writer\Exception\InvalidArgumentException
      */
     protected function _setTitle(DOMDocument $dom, DOMElement $root)
     {
-        if(!$this->getDataContainer()->getDescription()
+        if (!$this->getDataContainer()->getDescription()
         && !$this->getDataContainer()->getTitle()) {
-            require_once 'Zend/Feed/Exception.php';
             $message = 'RSS 2.0 entry elements SHOULD contain exactly one'
             . ' title element but a title has not been set. In addition, there'
             . ' is no description as required in the absence of a title.';
-            $exception = new Zend_Feed_Exception($message);
-            if (!$this->_ignoreExceptions) {
+            $exception = new Writer\Exception\InvalidArgumentException($message);
+            if (!$this->ignoreExceptions) {
                 throw $exception;
             } else {
-                $this->_exceptions[] = $exception;
+                $this->exceptions[] = $exception;
                 return;
             }
         }
@@ -113,21 +98,21 @@ class Zend_Feed_Writer_Renderer_Entry_Rss
      * @param  DOMDocument $dom
      * @param  DOMElement $root
      * @return void
+     * @throws Writer\Exception\InvalidArgumentException
      */
     protected function _setDescription(DOMDocument $dom, DOMElement $root)
     {
-        if(!$this->getDataContainer()->getDescription()
+        if (!$this->getDataContainer()->getDescription()
         && !$this->getDataContainer()->getTitle()) {
-            require_once 'Zend/Feed/Exception.php';
             $message = 'RSS 2.0 entry elements SHOULD contain exactly one'
             . ' description element but a description has not been set. In'
             . ' addition, there is no title element as required in the absence'
             . ' of a description.';
-            $exception = new Zend_Feed_Exception($message);
-            if (!$this->_ignoreExceptions) {
+            $exception = new Writer\Exception\InvalidArgumentException($message);
+            if (!$this->ignoreExceptions) {
                 throw $exception;
             } else {
-                $this->_exceptions[] = $exception;
+                $this->exceptions[] = $exception;
                 return;
             }
         }
@@ -149,14 +134,14 @@ class Zend_Feed_Writer_Renderer_Entry_Rss
      */
     protected function _setDateModified(DOMDocument $dom, DOMElement $root)
     {
-        if(!$this->getDataContainer()->getDateModified()) {
+        if (!$this->getDataContainer()->getDateModified()) {
             return;
         }
 
         $updated = $dom->createElement('pubDate');
         $root->appendChild($updated);
         $text = $dom->createTextNode(
-            $this->getDataContainer()->getDateModified()->get(Zend_Date::RSS)
+            $this->getDataContainer()->getDateModified()->format(DateTime::RSS)
         );
         $updated->appendChild($text);
     }
@@ -189,12 +174,12 @@ class Zend_Feed_Writer_Renderer_Entry_Rss
      */
     protected function _setAuthors(DOMDocument $dom, DOMElement $root)
     {
-        $authors = $this->_container->getAuthors();
+        $authors = $this->container->getAuthors();
         if ((!$authors || empty($authors))) {
             return;
         }
         foreach ($authors as $data) {
-            $author = $this->_dom->createElement('author');
+            $author = $this->dom->createElement('author');
             $name = $data['name'];
             if (array_key_exists('email', $data)) {
                 $name = $data['email'] . ' (' . $data['name'] . ')';
@@ -211,45 +196,43 @@ class Zend_Feed_Writer_Renderer_Entry_Rss
      * @param  DOMDocument $dom
      * @param  DOMElement $root
      * @return void
+     * @throws Writer\Exception\InvalidArgumentException
      */
     protected function _setEnclosure(DOMDocument $dom, DOMElement $root)
     {
-        $data = $this->_container->getEnclosure();
+        $data = $this->container->getEnclosure();
         if ((!$data || empty($data))) {
             return;
         }
         if (!isset($data['type'])) {
-            require_once 'Zend/Feed/Exception.php';
-            $exception = new Zend_Feed_Exception('Enclosure "type" is not set');
-            if (!$this->_ignoreExceptions) {
+            $exception = new Writer\Exception\InvalidArgumentException('Enclosure "type" is not set');
+            if (!$this->ignoreExceptions) {
                 throw $exception;
             } else {
-                $this->_exceptions[] = $exception;
+                $this->exceptions[] = $exception;
                 return;
             }
         }
         if (!isset($data['length'])) {
-            require_once 'Zend/Feed/Exception.php';
-            $exception = new Zend_Feed_Exception('Enclosure "length" is not set');
-            if (!$this->_ignoreExceptions) {
+            $exception = new Writer\Exception\InvalidArgumentException('Enclosure "length" is not set');
+            if (!$this->ignoreExceptions) {
                 throw $exception;
             } else {
-                $this->_exceptions[] = $exception;
+                $this->exceptions[] = $exception;
                 return;
             }
         }
         if (isset($data['length']) && (int) $data['length'] <= 0) {
-            require_once 'Zend/Feed/Exception.php';
-            $exception = new Zend_Feed_Exception('Enclosure "length" must be an integer'
+            $exception = new Writer\Exception\InvalidArgumentException('Enclosure "length" must be an integer'
             . ' indicating the content\'s length in bytes');
-            if (!$this->_ignoreExceptions) {
+            if (!$this->ignoreExceptions) {
                 throw $exception;
             } else {
-                $this->_exceptions[] = $exception;
+                $this->exceptions[] = $exception;
                 return;
             }
         }
-        $enclosure = $this->_dom->createElement('enclosure');
+        $enclosure = $this->dom->createElement('enclosure');
         $enclosure->setAttribute('type', $data['type']);
         $enclosure->setAttribute('length', $data['length']);
         $enclosure->setAttribute('url', $data['uri']);
@@ -265,7 +248,7 @@ class Zend_Feed_Writer_Renderer_Entry_Rss
      */
     protected function _setLink(DOMDocument $dom, DOMElement $root)
     {
-        if(!$this->getDataContainer()->getLink()) {
+        if (!$this->getDataContainer()->getLink()) {
             return;
         }
         $link = $dom->createElement('link');
@@ -283,7 +266,7 @@ class Zend_Feed_Writer_Renderer_Entry_Rss
      */
     protected function _setId(DOMDocument $dom, DOMElement $root)
     {
-        if(!$this->getDataContainer()->getId()
+        if (!$this->getDataContainer()->getId()
         && !$this->getDataContainer()->getLink()) {
             return;
         }
@@ -296,7 +279,7 @@ class Zend_Feed_Writer_Renderer_Entry_Rss
         }
         $text = $dom->createTextNode($this->getDataContainer()->getId());
         $id->appendChild($text);
-        if (!Zend_Uri::check($this->getDataContainer()->getId())) {
+        if (!Uri::factory($this->getDataContainer()->getId())->isValid()) {
             $id->setAttribute('isPermaLink', 'false');
         }
     }
@@ -314,7 +297,7 @@ class Zend_Feed_Writer_Renderer_Entry_Rss
         if (!$link) {
             return;
         }
-        $clink = $this->_dom->createElement('comments');
+        $clink = $this->dom->createElement('comments');
         $text = $dom->createTextNode($link);
         $clink->appendChild($text);
         $root->appendChild($clink);

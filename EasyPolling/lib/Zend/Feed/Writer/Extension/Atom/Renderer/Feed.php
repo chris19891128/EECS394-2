@@ -1,37 +1,21 @@
 <?php
 /**
- * Zend Framework
+ * Zend Framework (http://framework.zend.com/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://framework.zend.com/license/new-bsd
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@zend.com so we can send you a copy immediately.
- *
- * @category   Zend
- * @package    Zend_Feed_Writer
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Feed.php 24593 2012-01-05 20:35:02Z matthew $
+ * @link      http://github.com/zendframework/zf2 for the canonical source repository
+ * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
-/**
- * @see Zend_Feed_Writer_Extension_RendererAbstract
- */
-require_once 'Zend/Feed/Writer/Extension/RendererAbstract.php';
+namespace Zend\Feed\Writer\Extension\Atom\Renderer;
+
+use DOMDocument;
+use DOMElement;
+use Zend\Feed\Writer\Extension;
 
 /**
- * @category   Zend
- * @package    Zend_Feed_Writer
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
- */
-class Zend_Feed_Writer_Extension_Atom_Renderer_Feed
-    extends Zend_Feed_Writer_Extension_RendererAbstract
+*/
+class Feed extends Extension\AbstractRenderer
 {
 
     /**
@@ -41,7 +25,7 @@ class Zend_Feed_Writer_Extension_Atom_Renderer_Feed
      *
      * @var bool
      */
-    protected $_called = false;
+    protected $called = false;
 
     /**
      * Render feed
@@ -57,9 +41,9 @@ class Zend_Feed_Writer_Extension_Atom_Renderer_Feed
         if (strtolower($this->getType()) == 'atom') {
             return;
         }
-        $this->_setFeedLinks($this->_dom, $this->_base);
-        $this->_setHubs($this->_dom, $this->_base);
-        if ($this->_called) {
+        $this->_setFeedLinks($this->dom, $this->base);
+        $this->_setHubs($this->dom, $this->base);
+        if ($this->called) {
             $this->_appendNamespaces();
         }
     }
@@ -85,18 +69,20 @@ class Zend_Feed_Writer_Extension_Atom_Renderer_Feed
     protected function _setFeedLinks(DOMDocument $dom, DOMElement $root)
     {
         $flinks = $this->getDataContainer()->getFeedLinks();
-        if(!$flinks || empty($flinks)) {
+        if (!$flinks || empty($flinks)) {
             return;
         }
         foreach ($flinks as $type => $href) {
-            $mime  = 'application/' . strtolower($type) . '+xml';
-            $flink = $dom->createElement('atom:link');
-            $root->appendChild($flink);
-            $flink->setAttribute('rel', 'self');
-            $flink->setAttribute('type', $mime);
-            $flink->setAttribute('href', $href);
+            if (strtolower($type) == $this->getType()) { // issue 2605
+                $mime  = 'application/' . strtolower($type) . '+xml';
+                $flink = $dom->createElement('atom:link');
+                $root->appendChild($flink);
+                $flink->setAttribute('rel', 'self');
+                $flink->setAttribute('type', $mime);
+                $flink->setAttribute('href', $href);
+            }
         }
-        $this->_called = true;
+        $this->called = true;
     }
 
     /**
@@ -118,6 +104,6 @@ class Zend_Feed_Writer_Extension_Atom_Renderer_Feed
             $hub->setAttribute('href', $hubUrl);
             $root->appendChild($hub);
         }
-        $this->_called = true;
+        $this->called = true;
     }
 }

@@ -1,119 +1,72 @@
 <?php
 /**
- * Zend Framework
+ * Zend Framework (http://framework.zend.com/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://framework.zend.com/license/new-bsd
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@zend.com so we can send you a copy immediately.
- *
- * @category   Zend
- * @package    Zend_Filter
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: StringToUpper.php 24593 2012-01-05 20:35:02Z matthew $
+ * @link      http://github.com/zendframework/zf2 for the canonical source repository
+ * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
-/**
- * @see Zend_Filter_Interface
- */
-require_once 'Zend/Filter/Interface.php';
+namespace Zend\Filter;
 
-/**
- * @category   Zend
- * @package    Zend_Filter
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
- */
-class Zend_Filter_StringToUpper implements Zend_Filter_Interface
+use Traversable;
+
+class StringToUpper extends AbstractUnicode
 {
     /**
-     * Encoding for the input string
-     *
-     * @var string
+     * @var array
      */
-    protected $_encoding = null;
+    protected $options = array(
+        'encoding' => null,
+    );
 
     /**
      * Constructor
      *
-     * @param string|array $options OPTIONAL
+     * @param string|array|Traversable $encodingOrOptions OPTIONAL
      */
-    public function __construct($options = null)
+    public function __construct($encodingOrOptions = null)
     {
-        if ($options instanceof Zend_Config) {
-            $options = $options->toArray();
-        } else if (!is_array($options)) {
-            $options = func_get_args();
-            $temp    = array();
-            if (!empty($options)) {
-                $temp['encoding'] = array_shift($options);
+        if ($encodingOrOptions !== null) {
+            if (!static::isOptions($encodingOrOptions)) {
+                $this->setEncoding($encodingOrOptions);
+            } else {
+                $this->setOptions($encodingOrOptions);
             }
-            $options = $temp;
-        }
-
-        if (!array_key_exists('encoding', $options) && function_exists('mb_internal_encoding')) {
-            $options['encoding'] = mb_internal_encoding();
-        }
-
-        if (array_key_exists('encoding', $options)) {
-            $this->setEncoding($options['encoding']);
         }
     }
 
     /**
-     * Returns the set encoding
-     *
-     * @return string
-     */
-    public function getEncoding()
-    {
-        return $this->_encoding;
-    }
-
-    /**
-     * Set the input encoding for the given string
-     *
-     * @param  string $encoding
-     * @return Zend_Filter_StringToUpper Provides a fluent interface
-     * @throws Zend_Filter_Exception
-     */
-    public function setEncoding($encoding = null)
-    {
-        if ($encoding !== null) {
-            if (!function_exists('mb_strtoupper')) {
-                require_once 'Zend/Filter/Exception.php';
-                throw new Zend_Filter_Exception('mbstring is required for this feature');
-            }
-
-            $encoding = (string) $encoding;
-            if (!in_array(strtolower($encoding), array_map('strtolower', mb_list_encodings()))) {
-                require_once 'Zend/Filter/Exception.php';
-                throw new Zend_Filter_Exception("The given encoding '$encoding' is not supported by mbstring");
-            }
-        }
-
-        $this->_encoding = $encoding;
-        return $this;
-    }
-
-    /**
-     * Defined by Zend_Filter_Interface
+     * Defined by Zend\Filter\FilterInterface
      *
      * Returns the string $value, converting characters to uppercase as necessary
      *
+     * If the value provided is non-scalar, the value will remain unfiltered
+     * and an E_USER_WARNING will be raised indicating it's unfilterable.
+     *
      * @param  string $value
-     * @return string
+     * @return string|mixed
      */
     public function filter($value)
     {
-        if ($this->_encoding) {
-            return mb_strtoupper((string) $value, $this->_encoding);
+        if (null === $value) {
+            return null;
+        }
+
+        if (!is_scalar($value)) {
+            trigger_error(
+                sprintf(
+                    '%s expects parameter to be scalar, "%s" given; cannot filter',
+                    __METHOD__,
+                    (is_object($value) ? get_class($value) : gettype($value))
+                ),
+                E_USER_WARNING
+            );
+            return $value;
+        }
+
+        if ($this->options['encoding'] !== null) {
+            return mb_strtoupper((string) $value,  $this->options['encoding']);
         }
 
         return strtoupper((string) $value);

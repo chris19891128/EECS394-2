@@ -1,30 +1,13 @@
 <?php
 /**
- * Zend Framework
+ * Zend Framework (http://framework.zend.com/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://framework.zend.com/license/new-bsd
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@zend.com so we can send you a copy immediately.
- *
- * @category   Zend
- * @package    Zend_XmlRpc
- * @subpackage Server
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Fault.php 24593 2012-01-05 20:35:02Z matthew $
+ * @link      http://github.com/zendframework/zf2 for the canonical source repository
+ * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
-/**
- * Zend_XmlRpc_Fault
- */
-require_once 'Zend/XmlRpc/Fault.php';
-
+namespace Zend\XmlRpc\Server;
 
 /**
  * XMLRPC Server Faults
@@ -39,45 +22,38 @@ require_once 'Zend/XmlRpc/Fault.php';
  * need only implement a static 'observe' method.
  *
  * To allow method chaining, you may use the {@link getInstance()} factory
- * to instantiate a Zend_XmlRpc_Server_Fault.
- *
- * @category   Zend
- * @package    Zend_XmlRpc
- * @subpackage Server
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * to instantiate a Zend\XmlRpc\Server\Fault.
  */
-class Zend_XmlRpc_Server_Fault extends Zend_XmlRpc_Fault
+class Fault extends \Zend\XmlRpc\Fault
 {
     /**
-     * @var Exception
+     * @var \Exception
      */
-    protected $_exception;
+    protected $exception;
 
     /**
      * @var array Array of exception classes that may define xmlrpc faults
      */
-    protected static $_faultExceptionClasses = array('Zend_XmlRpc_Server_Exception' => true);
+    protected static $faultExceptionClasses = array('Zend\\XmlRpc\\Server\\Exception\\ExceptionInterface' => true);
 
     /**
      * @var array Array of fault observers
      */
-    protected static $_observers = array();
+    protected static $observers = array();
 
     /**
      * Constructor
      *
-     * @param Exception $e
-     * @return Zend_XmlRpc_Server_Fault
+     * @param  \Exception $e
+     * @return Fault
      */
-    public function __construct(Exception $e)
+    public function __construct(\Exception $e)
     {
-        $this->_exception = $e;
+        $this->exception = $e;
         $code             = 404;
         $message          = 'Unknown error';
-        $exceptionClass   = get_class($e);
 
-        foreach (array_keys(self::$_faultExceptionClasses) as $class) {
+        foreach (array_keys(static::$faultExceptionClasses) as $class) {
             if ($e instanceof $class) {
                 $code    = $e->getCode();
                 $message = $e->getMessage();
@@ -88,22 +64,22 @@ class Zend_XmlRpc_Server_Fault extends Zend_XmlRpc_Fault
         parent::__construct($code, $message);
 
         // Notify exception observers, if present
-        if (!empty(self::$_observers)) {
-            foreach (array_keys(self::$_observers) as $observer) {
-                call_user_func(array($observer, 'observe'), $this);
+        if (!empty(static::$observers)) {
+            foreach (array_keys(static::$observers) as $observer) {
+                $observer::observe($this);
             }
         }
     }
 
     /**
-     * Return Zend_XmlRpc_Server_Fault instance
+     * Return Zend\XmlRpc\Server\Fault instance
      *
-     * @param Exception $e
-     * @return Zend_XmlRpc_Server_Fault
+     * @param \Exception $e
+     * @return Fault
      */
-    public static function getInstance(Exception $e)
+    public static function getInstance(\Exception $e)
     {
-        return new self($e);
+        return new static($e);
     }
 
     /**
@@ -120,7 +96,7 @@ class Zend_XmlRpc_Server_Fault extends Zend_XmlRpc_Fault
 
         foreach ($classes as $class) {
             if (is_string($class) && class_exists($class)) {
-                self::$_faultExceptionClasses[$class] = true;
+                static::$faultExceptionClasses[$class] = true;
             }
         }
     }
@@ -138,8 +114,8 @@ class Zend_XmlRpc_Server_Fault extends Zend_XmlRpc_Fault
         }
 
         foreach ($classes as $class) {
-            if (is_string($class) && isset(self::$_faultExceptionClasses[$class])) {
-                unset(self::$_faultExceptionClasses[$class]);
+            if (is_string($class) && isset(static::$faultExceptionClasses[$class])) {
+                unset(static::$faultExceptionClasses[$class]);
             }
         }
     }
@@ -154,7 +130,7 @@ class Zend_XmlRpc_Server_Fault extends Zend_XmlRpc_Fault
      * 'observe' that accepts an exception as its sole argument.
      *
      * @param string $class
-     * @return boolean
+     * @return bool
      */
     public static function attachObserver($class)
     {
@@ -165,8 +141,8 @@ class Zend_XmlRpc_Server_Fault extends Zend_XmlRpc_Fault
             return false;
         }
 
-        if (!isset(self::$_observers[$class])) {
-            self::$_observers[$class] = true;
+        if (!isset(static::$observers[$class])) {
+            static::$observers[$class] = true;
         }
 
         return true;
@@ -176,15 +152,15 @@ class Zend_XmlRpc_Server_Fault extends Zend_XmlRpc_Fault
      * Detach an observer
      *
      * @param string $class
-     * @return boolean
+     * @return bool
      */
     public static function detachObserver($class)
     {
-        if (!isset(self::$_observers[$class])) {
+        if (!isset(static::$observers[$class])) {
             return false;
         }
 
-        unset(self::$_observers[$class]);
+        unset(static::$observers[$class]);
         return true;
     }
 
@@ -192,10 +168,10 @@ class Zend_XmlRpc_Server_Fault extends Zend_XmlRpc_Fault
      * Retrieve the exception
      *
      * @access public
-     * @return Exception
+     * @return \Exception
      */
     public function getException()
     {
-        return $this->_exception;
+        return $this->exception;
     }
 }

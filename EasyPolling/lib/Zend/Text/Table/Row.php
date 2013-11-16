@@ -1,54 +1,41 @@
 <?php
 /**
- * Zend Framework
+ * Zend Framework (http://framework.zend.com/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://framework.zend.com/license/new-bsd
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@zend.com so we can send you a copy immediately.
- *
- * @category  Zend
- * @package   Zend_Text_Table
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd     New BSD License
- * @version   $Id: Row.php 24593 2012-01-05 20:35:02Z matthew $
+ * @link      http://github.com/zendframework/zf2 for the canonical source repository
+ * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
+namespace Zend\Text\Table;
+
+use Zend\Text\Table\Decorator\DecoratorInterface as Decorator;
+
 /**
- * Row class for Zend_Text_Table
- *
- * @category  Zend
- * @package   Zend_Text_Table
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd     New BSD License
+ * Row class for Zend\Text\Table
  */
-class Zend_Text_Table_Row
+class Row
 {
     /**
      * List of all columns
      *
      * @var array
      */
-    protected $_columns = array();
+    protected $columns = array();
 
     /**
      * Temporary stored column widths
      *
      * @var array
      */
-    protected $_columnWidths = null;
+    protected $columnWidths = null;
 
     /**
      * Create a new column and append it to the row
      *
      * @param  string $content
      * @param  array  $options
-     * @return Zend_Text_Table_Row
+     * @return Row
      */
     public function createColumn($content, array $options = null)
     {
@@ -60,9 +47,7 @@ class Zend_Text_Table_Row
             extract($options, EXTR_IF_EXISTS);
         }
 
-        require_once 'Zend/Text/Table/Column.php';
-
-        $column = new Zend_Text_Table_Column($content, $align, $colSpan, $encoding);
+        $column = new Column($content, $align, $colSpan, $encoding);
 
         $this->appendColumn($column);
 
@@ -72,12 +57,12 @@ class Zend_Text_Table_Row
     /**
      * Append a column to the row
      *
-     * @param  Zend_Text_Table_Column $column The column to append to the row
-     * @return Zend_Text_Table_Row
+     * @param  \Zend\Text\Table\Column $column The column to append to the row
+     * @return Row
      */
-    public function appendColumn(Zend_Text_Table_Column $column)
+    public function appendColumn(Column $column)
     {
-        $this->_columns[] = $column;
+        $this->columns[] = $column;
 
         return $this;
     }
@@ -87,16 +72,16 @@ class Zend_Text_Table_Row
      *
      * Returns null, when the index is out of range
      *
-     * @param  integer $index
-     * @return Zend_Text_Table_Column|null
+     * @param  int $index
+     * @return Column|null
      */
     public function getColumn($index)
     {
-        if (!isset($this->_columns[$index])) {
+        if (!isset($this->columns[$index])) {
             return null;
         }
 
-        return $this->_columns[$index];
+        return $this->columns[$index];
     }
 
     /**
@@ -106,60 +91,55 @@ class Zend_Text_Table_Row
      */
     public function getColumns()
     {
-        return $this->_columns;
+        return $this->columns;
     }
 
     /**
      * Get the widths of all columns, which were rendered last
      *
-     * @throws Zend_Text_Table_Exception When no columns were rendered yet
-     * @return integer
+     * @throws Exception\UnexpectedValueException When no columns were rendered yet
+     * @return int
      */
     public function getColumnWidths()
     {
-        if ($this->_columnWidths === null) {
-            require_once 'Zend/Text/Table/Exception.php';
-            throw new Zend_Text_Table_Exception('No columns were rendered yet');
+        if ($this->columnWidths === null) {
+            throw new Exception\UnexpectedValueException('render() must be called before columnWidths can be populated');
         }
 
-        return $this->_columnWidths;
+        return $this->columnWidths;
     }
 
     /**
      * Render the row
      *
      * @param  array                               $columnWidths Width of all columns
-     * @param  Zend_Text_Table_Decorator_Interface $decorator    Decorator for the row borders
-     * @param  integer                             $padding      Padding for the columns
-     * @throws Zend_Text_Table_Exception When there are too many columns
+     * @param  Decorator $decorator    Decorator for the row borders
+     * @param  int                             $padding      Padding for the columns
+     * @throws Exception\OverflowException When there are too many columns
      * @return string
      */
-    public function render(array $columnWidths,
-                           Zend_Text_Table_Decorator_Interface $decorator,
-                           $padding = 0)
+    public function render(array $columnWidths, Decorator $decorator, $padding = 0)
     {
         // Prepare an array to store all column widths
-        $this->_columnWidths = array();
+        $this->columnWidths = array();
 
         // If there is no single column, create a column which spans over the
         // entire row
-        if (count($this->_columns) === 0) {
-            require_once 'Zend/Text/Table/Column.php';
-            $this->appendColumn(new Zend_Text_Table_Column(null, null, count($columnWidths)));
+        if (count($this->columns) === 0) {
+            $this->appendColumn(new Column(null, null, count($columnWidths)));
         }
 
         // First we have to render all columns, to get the maximum height
         $renderedColumns = array();
         $maxHeight       = 0;
         $colNum          = 0;
-        foreach ($this->_columns as $column) {
+        foreach ($this->columns as $column) {
             // Get the colspan of the column
             $colSpan = $column->getColSpan();
 
             // Verify if there are enough column widths defined
             if (($colNum + $colSpan) > count($columnWidths)) {
-                require_once 'Zend/Text/Table/Exception.php';
-                throw new Zend_Text_Table_Exception('Too many columns');
+                throw new Exception\OverflowException('Too many columns');
             }
 
             // Calculate the column width
@@ -171,7 +151,7 @@ class Zend_Text_Table_Row
             $result = explode("\n", $column->render($columnWidth, $padding));
 
             // Store the width of the rendered column
-            $this->_columnWidths[] = $columnWidth;
+            $this->columnWidths[] = $columnWidth;
 
             // Store the rendered column and calculate the new max height
             $renderedColumns[] = $result;
@@ -189,7 +169,7 @@ class Zend_Text_Table_Row
                                                      $colNum));
             $renderedColumns[] = array(str_repeat(' ', $remainingWidth));
 
-            $this->_columnWidths[] = $remainingWidth;
+            $this->columnWidths[] = $remainingWidth;
         }
 
         // Add each single column line to the result
@@ -201,7 +181,7 @@ class Zend_Text_Table_Row
                 if (isset($renderedColumn[$line]) === true) {
                     $result .= $renderedColumn[$line];
                 } else {
-                    $result .= str_repeat(' ', $this->_columnWidths[$index]);
+                    $result .= str_repeat(' ', $this->columnWidths[$index]);
                 }
 
                 $result .= $decorator->getVertical();

@@ -1,42 +1,19 @@
 <?php
 /**
- * Zend Framework
+ * Zend Framework (http://framework.zend.com/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://framework.zend.com/license/new-bsd
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@zend.com so we can send you a copy immediately.
- *
- * @category   Zend
- * @package    Zend_Feed_Reader
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Entry.php 24593 2012-01-05 20:35:02Z matthew $
+ * @link      http://github.com/zendframework/zf2 for the canonical source repository
+ * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
-/**
- * @see Zend_Feed_Reader
- */
-require_once 'Zend/Feed/Reader.php';
+namespace Zend\Feed\Reader\Extension\Slash;
+
+use Zend\Feed\Reader\Extension;
 
 /**
- * @see Zend_Feed_Reader_Extension_EntryAbstract
- */
-require_once 'Zend/Feed/Reader/Extension/EntryAbstract.php';
-
-/**
- * @category   Zend
- * @package    Zend_Feed_Reader
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
- */
-class Zend_Feed_Reader_Extension_Slash_Entry
-    extends Zend_Feed_Reader_Extension_EntryAbstract
+*/
+class Entry extends Extension\AbstractEntry
 {
     /**
      * Get the entry section
@@ -45,7 +22,7 @@ class Zend_Feed_Reader_Extension_Slash_Entry
      */
     public function getSection()
     {
-        return $this->_getData('section');
+        return $this->getData('section');
     }
 
     /**
@@ -55,7 +32,7 @@ class Zend_Feed_Reader_Extension_Slash_Entry
      */
     public function getDepartment()
     {
-        return $this->_getData('department');
+        return $this->getData('department');
     }
 
     /**
@@ -67,11 +44,11 @@ class Zend_Feed_Reader_Extension_Slash_Entry
     {
         $name = 'hit_parade';
 
-        if (isset($this->_data[$name])) {
-            return $this->_data[$name];
+        if (isset($this->data[$name])) {
+            return $this->data[$name];
         }
 
-        $stringParade = $this->_getData($name);
+        $stringParade = $this->getData($name);
         $hitParade    = array();
 
         if (!empty($stringParade)) {
@@ -81,7 +58,7 @@ class Zend_Feed_Reader_Extension_Slash_Entry
                 $hitParade[] = $hit + 0; //cast to integer
         }
 
-        $this->_data[$name] = $hitParade;
+        $this->data[$name] = $hitParade;
         return $hitParade;
     }
 
@@ -94,15 +71,15 @@ class Zend_Feed_Reader_Extension_Slash_Entry
     {
         $name = 'comments';
 
-        if (isset($this->_data[$name])) {
-            return $this->_data[$name];
+        if (isset($this->data[$name])) {
+            return $this->data[$name];
         }
 
-        $comments = $this->_getData($name, 'string');
+        $comments = $this->getData($name, 'string');
 
         if (!$comments) {
-            $this->_data[$name] = null;
-            return $this->_data[$name];
+            $this->data[$name] = null;
+            return $this->data[$name];
         }
 
         return $comments;
@@ -115,19 +92,19 @@ class Zend_Feed_Reader_Extension_Slash_Entry
      *
      * @return mixed|null
      */
-    protected function _getData($name, $type = 'string')
+    protected function getData($name, $type = 'string')
     {
-        if (array_key_exists($name, $this->_data)) {
-            return $this->_data[$name];
+        if (array_key_exists($name, $this->data)) {
+            return $this->data[$name];
         }
 
-        $data = $this->_xpath->evaluate($type . '(' . $this->getXpathPrefix() . '/slash10:' . $name . ')');
+        $data = $this->xpath->evaluate($type . '(' . $this->getXpathPrefix() . '/slash10:' . $name . ')');
 
         if (!$data) {
             $data = null;
         }
 
-        $this->_data[$name] = $data;
+        $this->data[$name] = $data;
 
         return $data;
     }
@@ -137,8 +114,8 @@ class Zend_Feed_Reader_Extension_Slash_Entry
      *
      * @return void
      */
-    protected function _registerNamespaces()
+    protected function registerNamespaces()
     {
-        $this->_xpath->registerNamespace('slash10', 'http://purl.org/rss/1.0/modules/slash/');
+        $this->xpath->registerNamespace('slash10', 'http://purl.org/rss/1.0/modules/slash/');
     }
 }

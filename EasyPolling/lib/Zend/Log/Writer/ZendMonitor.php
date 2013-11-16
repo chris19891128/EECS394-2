@@ -1,74 +1,46 @@
 <?php
 /**
- * Zend Framework
+ * Zend Framework (http://framework.zend.com/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://framework.zend.com/license/new-bsd
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@zend.com so we can send you a copy immediately.
- *
- * @category   Zend
- * @package    Zend_Log
- * @subpackage Writer
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: ZendMonitor.php 24593 2012-01-05 20:35:02Z matthew $
+ * @link      http://github.com/zendframework/zf2 for the canonical source repository
+ * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
-/** Zend_Log_Writer_Abstract */
-require_once 'Zend/Log/Writer/Abstract.php';
+namespace Zend\Log\Writer;
 
-/**
- * @category   Zend
- * @package    Zend_Log
- * @subpackage Writer
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: ZendMonitor.php 24593 2012-01-05 20:35:02Z matthew $
- */
-class Zend_Log_Writer_ZendMonitor extends Zend_Log_Writer_Abstract
+class ZendMonitor extends AbstractWriter
 {
     /**
      * Is Zend Monitor enabled?
      *
-     * @var boolean
+     * @var bool
      */
-    protected $_isEnabled = true;
+    protected $isEnabled = true;
 
     /**
-     * Is this for a Zend Server intance?
+     * Is this for a Zend Server instance?
      *
-     * @var boolean
+     * @var bool
      */
-    protected $_isZendServer = false;
+    protected $isZendServer = false;
 
     /**
-     * @return void
+     * Constructor
+     *
+     * @param array|\Traversable|null $options
+     * @return ZendMonitor
      */
-    public function __construct()
+    public function __construct($options = null)
     {
+        parent::__construct($options);
+
         if (!function_exists('monitor_custom_event')) {
-            $this->_isEnabled = false;
+            $this->isEnabled = false;
         }
         if (function_exists('zend_monitor_custom_event')) {
-            $this->_isZendServer = true;
+            $this->isZendServer = true;
         }
-    }
-
-    /**
-     * Create a new instance of Zend_Log_Writer_ZendMonitor
-     *
-     * @param  array|Zend_Config $config
-     * @return Zend_Log_Writer_ZendMonitor
-     */
-    static public function factory($config)
-    {
-        return new self();
     }
 
     /**
@@ -78,20 +50,20 @@ class Zend_Log_Writer_ZendMonitor extends Zend_Log_Writer_Abstract
      * fail silently. You can query this method to determine if the log
      * writer is enabled.
      *
-     * @return boolean
+     * @return bool
      */
     public function isEnabled()
     {
-        return $this->_isEnabled;
+        return $this->isEnabled;
     }
 
     /**
      * Log a message to this writer.
      *
-     * @param  array $event log data event
+     * @param array $event log data event
      * @return void
      */
-    public function write($event)
+    public function write(array $event)
     {
         if (!$this->isEnabled()) {
             return;
@@ -103,17 +75,17 @@ class Zend_Log_Writer_ZendMonitor extends Zend_Log_Writer_Abstract
     /**
      * Write a message to the log.
      *
-     * @param  array  $event log data event
+     * @param array $event log data event
      * @return void
      */
-    protected function _write($event)
+    protected function doWrite(array $event)
     {
         $priority = $event['priority'];
         $message  = $event['message'];
         unset($event['priority'], $event['message']);
 
         if (!empty($event)) {
-            if ($this->_isZendServer) {
+            if ($this->isZendServer) {
                 // On Zend Server; third argument should be the event
                 zend_monitor_custom_event($priority, $message, $event);
             } else {

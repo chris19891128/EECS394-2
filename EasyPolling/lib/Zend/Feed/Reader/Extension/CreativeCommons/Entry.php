@@ -1,45 +1,23 @@
 <?php
 /**
- * Zend Framework
+ * Zend Framework (http://framework.zend.com/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://framework.zend.com/license/new-bsd
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@zend.com so we can send you a copy immediately.
- *
- * @category   Zend
- * @package    Zend_Feed_Reader
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Entry.php 24593 2012-01-05 20:35:02Z matthew $
+ * @link      http://github.com/zendframework/zf2 for the canonical source repository
+ * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
-/**
- * @see Zend_Feed_Reader_Extension_EntryAbstract
- */
-require_once 'Zend/Feed/Reader/Extension/EntryAbstract.php';
+namespace Zend\Feed\Reader\Extension\CreativeCommons;
 
-/**
- * @see Zend_Feed_Reader_Extension_CreativeCommons_Feed
- */
-require_once 'Zend/Feed/Reader/Extension/CreativeCommons/Feed.php';
+use Zend\Feed\Reader;
+use Zend\Feed\Reader\Extension;
 
-/**
- * @category   Zend
- * @package    Zend_Feed_Reader
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
- */
-class Zend_Feed_Reader_Extension_CreativeCommons_Entry extends Zend_Feed_Reader_Extension_EntryAbstract
+class Entry extends Extension\AbstractEntry
 {
     /**
      * Get the entry license
      *
+     * @param int $index
      * @return string|null
      */
     public function getLicense($index = 0)
@@ -61,12 +39,12 @@ class Zend_Feed_Reader_Extension_CreativeCommons_Entry extends Zend_Feed_Reader_
     public function getLicenses()
     {
         $name = 'licenses';
-        if (array_key_exists($name, $this->_data)) {
-            return $this->_data[$name];
+        if (array_key_exists($name, $this->data)) {
+            return $this->data[$name];
         }
 
         $licenses = array();
-        $list = $this->_xpath->evaluate($this->getXpathPrefix() . '//cc:license');
+        $list = $this->xpath->evaluate($this->getXpathPrefix() . '//cc:license');
 
         if ($list->length) {
             foreach ($list as $license) {
@@ -75,23 +53,21 @@ class Zend_Feed_Reader_Extension_CreativeCommons_Entry extends Zend_Feed_Reader_
 
             $licenses = array_unique($licenses);
         } else {
-            $cc = new Zend_Feed_Reader_Extension_CreativeCommons_Feed(
-                $this->_domDocument, $this->_data['type'], $this->_xpath
-            );
+            $cc = new Feed();
             $licenses = $cc->getLicenses();
         }
 
-        $this->_data[$name] = $licenses;
+        $this->data[$name] = $licenses;
 
-        return $this->_data[$name];
+        return $this->data[$name];
     }
 
     /**
      * Register Creative Commons namespaces
      *
      */
-    protected function _registerNamespaces()
+    protected function registerNamespaces()
     {
-        $this->_xpath->registerNamespace('cc', 'http://backend.userland.com/creativeCommonsRssModule');
+        $this->xpath->registerNamespace('cc', 'http://backend.userland.com/creativeCommonsRssModule');
     }
 }

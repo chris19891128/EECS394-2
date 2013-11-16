@@ -1,41 +1,23 @@
 <?php
 /**
- * Zend Framework
+ * Zend Framework (http://framework.zend.com/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://framework.zend.com/license/new-bsd
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@zend.com so we can send you a copy immediately.
- *
- * @category   Zend
- * @package    Zend_View
- * @subpackage Helper
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @version    $Id: DeclareVars.php 24593 2012-01-05 20:35:02Z matthew $
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @link      http://github.com/zendframework/zf2 for the canonical source repository
+ * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
-/** Zend_View_Helper_Abstract.php */
-require_once 'Zend/View/Helper/Abstract.php';
+namespace Zend\View\Helper;
 
 /**
  * Helper for declaring default values of template variables
- *
- * @package    Zend_View
- * @subpackage Helper
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class Zend_View_Helper_DeclareVars extends Zend_View_Helper_Abstract
+class DeclareVars extends AbstractHelper
 {
     /**
      * The view object that created this helper object.
-     * @var Zend_View
+     *
+     * @var \Zend\View\View
      */
     public $view;
 
@@ -63,16 +45,17 @@ class Zend_View_Helper_DeclareVars extends Zend_View_Helper_Abstract
      * @param string|array variable number of arguments, all string names of variables to test
      * @return void
      */
-    public function declareVars()
+    public function __invoke()
     {
+        $view = $this->getView();
         $args = func_get_args();
-        foreach($args as $key) {
+        foreach ($args as $key) {
             if (is_array($key)) {
                 foreach ($key as $name => $value) {
-                    $this->_declareVar($name, $value);
+                    $this->declareVar($name, $value);
                 }
-            } else if (!isset($view->$key)) {
-                $this->_declareVar($key);
+            } elseif (!isset($view->vars()->$key)) {
+                $this->declareVar($key);
             }
         }
     }
@@ -86,10 +69,12 @@ class Zend_View_Helper_DeclareVars extends Zend_View_Helper_Abstract
      * @param  string $value Defaults to an empty string
      * @return void
      */
-    protected function _declareVar($key, $value = '')
+    protected function declareVar($key, $value = '')
     {
-        if (!isset($this->view->$key)) {
-            $this->view->$key = $value;
+        $view = $this->getView();
+        $vars = $view->vars();
+        if (!isset($vars->$key)) {
+            $vars->$key = $value;
         }
     }
 }

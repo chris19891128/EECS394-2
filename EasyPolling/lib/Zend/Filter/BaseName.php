@@ -1,50 +1,45 @@
 <?php
-
 /**
- * Zend Framework
+ * Zend Framework (http://framework.zend.com/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://framework.zend.com/license/new-bsd
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@zend.com so we can send you a copy immediately.
- *
- * @category   Zend
- * @package    Zend_Filter
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: BaseName.php 24593 2012-01-05 20:35:02Z matthew $
+ * @link      http://github.com/zendframework/zf2 for the canonical source repository
+ * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
+namespace Zend\Filter;
 
-/**
- * @see Zend_Filter_Interface
- */
-require_once 'Zend/Filter/Interface.php';
-
-
-/**
- * @category   Zend
- * @package    Zend_Filter
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
- */
-class Zend_Filter_BaseName implements Zend_Filter_Interface
+class BaseName extends AbstractFilter
 {
     /**
-     * Defined by Zend_Filter_Interface
+     * Defined by Zend\Filter\FilterInterface
      *
-     * Returns basename($value)
+     * Returns basename($value).
+     *
+     * If the value provided is non-scalar, the value will remain unfiltered
+     * and an E_USER_WARNING will be raised indicating it's unfilterable.
      *
      * @param  string $value
-     * @return string
+     * @return string|mixed
      */
     public function filter($value)
     {
+        if (null === $value) {
+            return null;
+        }
+
+        if (!is_scalar($value)) {
+            trigger_error(
+                sprintf(
+                    '%s expects parameter to be scalar, "%s" given; cannot filter',
+                    __METHOD__,
+                    (is_object($value) ? get_class($value) : gettype($value))
+                ),
+                E_USER_WARNING
+            );
+            return $value;
+        }
+
         return basename((string) $value);
     }
 }

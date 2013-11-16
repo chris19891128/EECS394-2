@@ -1,42 +1,23 @@
 <?php
 /**
- * Zend Framework
+ * Zend Framework (http://framework.zend.com/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://framework.zend.com/license/new-bsd
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@zend.com so we can send you a copy immediately.
- *
- * @category   Zend
- * @package    Zend_Barcode
- * @subpackage Object
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Error.php 24593 2012-01-05 20:35:02Z matthew $
+ * @link      http://github.com/zendframework/zf2 for the canonical source repository
+ * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
-/** @see Zend_Barcode_Object_ObjectAbstract */
-require_once 'Zend/Barcode/Object/ObjectAbstract.php';
+namespace Zend\Barcode\Object;
 
 /**
  * Class for generate Barcode
- *
- * @category   Zend
- * @package    Zend_Barcode
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class Zend_Barcode_Object_Error extends Zend_Barcode_Object_ObjectAbstract
+class Error extends AbstractObject
 {
     /**
      * All texts are accepted
      * @param string $value
-     * @return boolean
+     * @return bool
      */
     public function validateText($value)
     {
@@ -45,7 +26,8 @@ class Zend_Barcode_Object_Error extends Zend_Barcode_Object_ObjectAbstract
 
     /**
      * Height is forced
-     * @return integer
+     * @param bool $recalculate
+     * @return int
      */
     public function getHeight($recalculate = false)
     {
@@ -54,7 +36,8 @@ class Zend_Barcode_Object_Error extends Zend_Barcode_Object_ObjectAbstract
 
     /**
      * Width is forced
-     * @return integer
+     * @param bool $recalculate
+     * @return int
      */
     public function getWidth($recalculate = false)
     {
@@ -68,17 +51,17 @@ class Zend_Barcode_Object_Error extends Zend_Barcode_Object_ObjectAbstract
      */
     public function draw()
     {
-        $this->_instructions = array();
-        $this->_addText('ERROR:', 10, array(5 , 18), $this->_font, 0, 'left');
-        $this->_addText($this->_text, 10, array(5 , 32), $this->_font, 0, 'left');
-        return $this->_instructions;
+        $this->instructions = array();
+        $this->addText('ERROR:', 10, array(5, 18), $this->font, 0, 'left');
+        $this->addText($this->text, 10, array(5, 32), $this->font, 0, 'left');
+        return $this->instructions;
     }
 
     /**
      * For compatibility reason
      * @return void
      */
-    protected function _prepareBarcode()
+    protected function prepareBarcode()
     {
     }
 
@@ -86,7 +69,7 @@ class Zend_Barcode_Object_Error extends Zend_Barcode_Object_ObjectAbstract
      * For compatibility reason
      * @return void
      */
-    protected function _checkParams()
+    protected function checkSpecificParams()
     {
     }
 
@@ -94,7 +77,7 @@ class Zend_Barcode_Object_Error extends Zend_Barcode_Object_ObjectAbstract
      * For compatibility reason
      * @return void
      */
-    protected function _calculateBarcodeWidth()
+    protected function calculateBarcodeWidth()
     {
     }
 }
