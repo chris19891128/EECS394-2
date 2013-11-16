@@ -113,7 +113,7 @@ function constructAuthString($email, $accessToken) {
 function sendEmail($email, $accessToken) {
 	$smtpInitClientRequestEncoded = constructAuthString ( $email, $accessToken );
 	$config = array (
-			'ssl' => 'ssl',
+			'ssl' => 'tls',
 			'port' => '465',
 			'auth' => 'xoauth',
 			'xoauth_request' => $smtpInitClientRequestEncoded 
