@@ -50,7 +50,7 @@ $survey = get_survey_by_id ( $_GET ['id'] );
         	url: "response.php",
         	data: data,
         	success:function(data){
-        		location.replace("stat.php?id=" + <?php echo '"$survey_id"'; ?>);
+        		location.replace("stat.php?id=" + <?php echo "'$survey_id'"; ?>);
     		}
    	 	});
 	}
@@ -62,7 +62,6 @@ $survey = get_survey_by_id ( $_GET ['id'] );
 	echo '<div class="container">
 		<h1> $survey["question"] </h1>';
 	foreach ( $survey ['answer'] as $choice ) {
-		echo '$choice';
 		echo '<p><button class="choiceButton btn btn-default" type="button"' . 'onClick="submitIt(\'' . $choice . '\')">' . $choice . '</button></p>';
 	}
 	
