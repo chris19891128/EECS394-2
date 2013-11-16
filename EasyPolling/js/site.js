@@ -6,9 +6,10 @@ function GUID() { // NotMoreThan1million
 function addOption() {
 	var options = $('#option-group');
 	var n = options.children().length;
-	var nextOption = '<div class="form-group"><label for="option#">Option ' + n
+	var nextOption = '<div class="form-group"><label for="option#">Option '
+			+ (n + 1)
 			+ ':</label><input type="text" class="form-control" id="option_'
-			+ n + '_input"placeholder="" /></div>';
+			+ (n + 1) + '_input"placeholder="" /></div>';
 	options.append(nextOption);
 }
 
