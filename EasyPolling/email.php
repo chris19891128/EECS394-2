@@ -108,7 +108,7 @@ function tryImapLogin($email, $accessToken) {
 <body>
 <?php
 if ($_SESSION['token']) {
-	tryImapLogin ( 'chris19891128@gmail.com', $accessToken );
+	tryImapLogin ( 'chris19891128@gmail.com', $_SESSION['token'] );
 }
 ?>
 </body>
