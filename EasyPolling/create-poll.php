@@ -37,19 +37,25 @@ if ($_POST) {
 	<div class="container">		
 		<form action="" method="" id="create">
 			<div id="options">
-				<div class="form-group">
+				<div class="form-group" id="recipient-group">
 					<label for="recepients">To:</label> <input type="text"
 						class="form-control" id="recepient"
 						placeholder="Email list here separated by comma" />
 				</div>
-				<div class="form-group">
+				<div class="form-group" id="question-group">
 					<label for="question">Question:</label> <input type="text"
 						class="form-control" id="question"
 						placeholder="Enter your question here" />
 				</div>
-				<div class="form-group" id="option_group">
-					<label for="option_1_input">Option 1:</label> <input type="text"
-						class="form-control" id="option_1_input" placeholder="" />
+				<div class="form-group" id="option-group">
+					<div class="form-group">
+						<label for="option_1_input">Option 1:</label> 
+						<input type="text" class="form-control" id="option_1_input" placeholder="" />
+					</div>
+					<div class="form-group">
+						<label for="option_2_input">Option 2:</label> 
+						<input type="text" class="form-control" id="option_2_input" placeholder="" />
+					</div>
 				</div>
 			</div>
 			<button type="button" class="btn btn-default" onclick="addOption()">Add
