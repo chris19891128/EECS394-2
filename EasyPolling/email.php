@@ -1,9 +1,8 @@
 <?php
 require_once 'lib/all_error.php';
-ini_set ( 'include_path', './lib' );
-require_once 'google-api-php-client/src/Google_Client.php';
-require_once 'Zend/Mail/Protocol/Imap.php';
-require_once 'Zend/Mail/Storage/Imap.php';
+require_once 'lib/google-api-php-client/src/Google_Client.php';
+require_once 'lib/Zend/Mail/Protocol/Imap.php';
+require_once 'lib/Zend/Mail/Storage/Imap.php';
 session_start ();
 
 if (! isset ( $_SESSION ['token'] )) {
