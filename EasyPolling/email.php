@@ -3,7 +3,6 @@ ini_set ( 'include_path', './lib' );
 require_once 'all_error.php';
 require_once 'google-api-php-client/src/Google_Client.php';
 require_once 'Zend/Mail/Protocol/Imap.php';
-require_once 'Zend/Mail/Protocol/Smtp.php';
 require_once 'Zend/Mail/Storage/Imap.php';
 session_start ();
 
@@ -92,8 +91,8 @@ function tryImapLogin($email, $accessToken) {
 	/**
 	 * Make the IMAP connection and send the auth request
 	 */
-	$smtp = new Zend_Mail_Protocol_Smtp ( 'smtp.gmail.com', '465');
-	if (oauth2Authenticate ( smtp, $email, $accessToken )) {
+	$imap = new Zend_Mail_Protocol_Imap ( 'imap.gmail.com', '993', true );
+	if (oauth2Authenticate ( $imap, $email, $accessToken )) {
 		echo '<h1>Successfully authenticated!</h1>';
 		showInbox ( $imap );
 	} else {
