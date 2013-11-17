@@ -15,9 +15,14 @@ $client->setClientId ( '519869230344.apps.googleusercontent.com' );
 $client->setClientSecret ( '-wESR-1Mwr7y6h2QOoNcXaRR' );
 $client->setRedirectUri ( 'http://orange394.cloudapp.net/EasyPolling/login.php' );
 $client->setDeveloperKey ( 'AIzaSyBMs1qCCwvCJyvgxEkJkGxaIVcUOmzU8dI' );
+$client->setAccessType ( 'offline' );
+$client->setScopes ( array (
+		'https://mail.google.com/' 
+) );
 // $scopes = $client->getScopes ();
-// array_push ( $scopes, 'https://mail.google.com/' );
-// $client->setScopes ( $scopes );
+// array_push ( $scopes, '
+https: // mail.google.com/' );
+       // $client->setScopes ( $scopes );
 $oauth = new Google_Oauth2Service ( $client );
 
 if (isset ( $_GET ['logout'] )) {
@@ -62,11 +67,11 @@ if ($client->getAccessToken ()) {
 </head>
 
 <body>
-<div class="container">
-	<h1>Welcome to EasyPolling, please connect your Gmail account first.</h1>
+	<div class="container">
+		<h1>Welcome to EasyPolling, please connect your Gmail account first.</h1>
 	<?php print "<a class='login btn btn-primary btn-lg' href='$authUrl'>Connect Me!</a>"; ?>
 </div>
-<script type="text/javascript"
+	<script type="text/javascript"
 		src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 	<script type="text/javascript"
 		src="http://www.parsecdn.com/js/parse-1.2.12.min.js"></script>
