@@ -15,10 +15,10 @@ $client->setClientId ( '519869230344.apps.googleusercontent.com' );
 $client->setClientSecret ( '-wESR-1Mwr7y6h2QOoNcXaRR' );
 $client->setRedirectUri ( 'http://orange394.cloudapp.net/EasyPolling/login.php' );
 $client->setDeveloperKey ( 'AIzaSyBMs1qCCwvCJyvgxEkJkGxaIVcUOmzU8dI' );
-$client->setAccessType ( 'offline' );
-$client->setScopes ( array (
-		'https://mail.google.com/mail/feed/atom/' 
-) );
+// $client->setAccessType ( 'offline' );
+// $client->setScopes ( array (
+// 		'https://mail.google.com/mail/feed/atom/' 
+// ) );
 // $scopes = $client->getScopes ();
 // array_push ( $scopes, '
 https: // mail.google.com/' );
