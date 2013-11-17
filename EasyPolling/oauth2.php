@@ -17,6 +17,13 @@
  * https://code.google.com/p/google-mail-oauth2-tools/wiki/PhpSampleCode
  * for documentation.
  * -->
+<?php
+require_once 'lib/all_error.php';
+set_include_path ( get_include_path () . ":lib" );
+require_once 'Zend/Mail/Protocol/Imap.php';
+require_once 'Zend/Mail/Storage/Imap.php';
+session_start ();
+?>
 <html>
 <head>
 <title>OAuth2 IMAP example with Gmail</title>
@@ -24,10 +31,6 @@
 <body>
 
 <?php
-require_once 'lib/all_error.php';
-set_include_path ( get_include_path () . ":lib" );
-require_once 'Zend/Mail/Protocol/Imap.php';
-require_once 'Zend/Mail/Storage/Imap.php';
 
 /**
  * Builds an OAuth2 authentication string for the given email address and access
