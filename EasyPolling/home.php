@@ -21,18 +21,19 @@ if (! isset ( $_SESSION ['token'] )) {
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<div class="container">
+	<div class="container">
 	<?php
+		echo "your token is $_SESSION['token']";
 		echo "<h1> Welcome " . $_SESSION ['google_user'] ['name'] . "</h1>";
 	?>
 	<form method="GET">
-		<button type="submit" class="btn btn-primary btn-lg"
-			formaction="create-poll.php">New Poll</button>
-		<button type="submit" class="btn btn-default btn-lg"
-			formaction="history-poll.php">History Polls</button>
-	</form>
-</div>
-<script type="text/javascript"
+			<button type="submit" class="btn btn-primary btn-lg"
+				formaction="create-poll.php">New Poll</button>
+			<button type="submit" class="btn btn-default btn-lg"
+				formaction="history-poll.php">History Polls</button>
+		</form>
+	</div>
+	<script type="text/javascript"
 		src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 	<script type="text/javascript"
 		src="http://www.parsecdn.com/js/parse-1.2.12.min.js"></script>
