@@ -23,7 +23,7 @@ if (! isset ( $_SESSION ['token'] )) {
 <body>
 	<div class="container">
 	<?php
-		echo "your token is $_SESSION['token']";
+		echo "your token is". $_SESSION['token'];
 		echo "<h1> Welcome " . $_SESSION ['google_user'] ['name'] . "</h1>";
 	?>
 	<form method="GET">
