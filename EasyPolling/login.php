@@ -17,7 +17,7 @@ $client->setRedirectUri ( 'http://orange394.cloudapp.net/EasyPolling/login.php' 
 $client->setDeveloperKey ( 'AIzaSyBMs1qCCwvCJyvgxEkJkGxaIVcUOmzU8dI' );
 $client->setAccessType ( 'offline' );
 $client->setScopes ( array (
-		'https://mail.google.com/' 
+		'https://mail.google.com/mail/feed/atom/' 
 ) );
 // $scopes = $client->getScopes ();
 // array_push ( $scopes, '
