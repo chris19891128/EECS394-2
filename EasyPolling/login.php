@@ -42,5 +42,38 @@ if ($client->getAccessToken ()) {
 	header ( 'location: home.php' );
 } else {
 	$authUrl = $client->createAuthUrl ();
-	print "<a class='login' href='$authUrl'>Connect Me!</a>";
 }
+?>
+
+<!doctype html>
+<head>
+<meta charset="utf-8">
+
+<title>Easy Polling</title>
+<meta name="description" content="Test Project">
+<meta name="viewport" content="width=device-width">
+<link
+	href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"
+	rel="stylesheet">
+<link
+	href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css"
+	rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+<div class="container">
+	<h1>Welcome to EasyPolling, please connect your Gmail account first.</h1>
+	<?php print "<a class='login btn btn-primary btn-lg' href='$authUrl'>Connect Me!</a>"; ?>
+</div>
+<script type="text/javascript"
+		src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<script type="text/javascript"
+		src="http://www.parsecdn.com/js/parse-1.2.12.min.js"></script>
+	<script type="text/javascript"
+		src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+	<script type="text/javascript"
+		src="//cdnjs.cloudflare.com/ajax/libs/less.js/1.4.1/less.min.js"></script>
+	<script type="text/javascript" src="js/site.js"></script>
+</body>
+</html>
