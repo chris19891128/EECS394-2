@@ -16,7 +16,7 @@
 <body>
 <?php
     function get_survey_by_id($survey_id) {
-        $link = new mysqli ( 'localhost', 'root', '', 'EasyPolling' ) or die ( 'Cannot connect to Database' );
+        $link = new mysqli ( 'localhost', 'root', 'stu.fudan2013', 'EasyPolling' ) or die ( 'Cannot connect to Database' );
         $query = "select * from Poll where ID='$survey_id'";
         $result = mysqli_query ( $link, $query );
         $row = mysqli_fetch_array ( $result );
