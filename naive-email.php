@@ -2,9 +2,6 @@
 require_once 'lib/all_error.php';
 require_once 'lib/swift/lib/swift_required.php';
 
-if ($_POST) {
-	send_email ( $_POST ['me'], $_POST ['pwd'], $_POST ['recipient'], $_POST ['id'] );
-}
 function send_email($me, $pwd, $emails, $survey_id) {
 	$transport = Swift_SmtpTransport::newInstance ( 'smtp.gmail.com', 465, "ssl" )->setUsername ( $me )->setPassword ( $pwd );
 	
