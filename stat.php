@@ -71,7 +71,7 @@ mysqli_close ( $mysql );
 			echo <<<END
 			<tr>
 				<td style="width:100px">$choice</td> 
-				<td style="width:">
+				<td style="width:400px">
 					<table width="100%">
 						<td style="width:"$percent1" bgcolor="DarkCyan" height="20px"/>
 						<td style="width:"$percent2" height="20px"/>
