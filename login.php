@@ -14,7 +14,8 @@ $client->setRedirectUri ( $authRedirect );
 $client->setDeveloperKey ( 'AIzaSyBMs1qCCwvCJyvgxEkJkGxaIVcUOmzU8dI' );
 $client->setAccessType ( 'offline' );
 $client->setScopes ( array (
-		'https://mail.google.com/' 
+		'https://mail.google.com/',
+		'https://www.googleapis.com/auth/userinfo.email' 
 ) );
 
 if (isset ( $_GET ['logout'] )) {
