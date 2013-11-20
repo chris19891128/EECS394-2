@@ -70,16 +70,16 @@ mysqli_close ( $mysql );
 			}
 			echo <<<END
 			<tr>
-				<td style=\"width:100px\">$choice</td> 
-				<td style=\"width:\">
-					<table width=\"100%\">
-						<td style=\"width:" . "$percent1" . "\" bgcolor=\"DarkCyan\" height=\"20px\"/>
-					<td style=\"width:" . "$percent2" . "\" height=\"20px\"/>
+				<td style="width:100px">$choice</td> 
+				<td style="width:">
+					<table width="100%">
+						<td style="width:"$percent1" bgcolor="DarkCyan" height="20px"/>
+						<td style="width:"$percent2" height="20px"/>
 					</table>
 				</td>
-				<td style=\"width:100px\">$count</td> 
-				<td style=\"width:100px\">";
-					<table width=\"100%\">
+				<td style="width:100px">$count</td> 
+				<td style="width:100px">
+					<table width="100%">
 END;
 			
 			foreach ( $res [$i] as $single_email ) {
