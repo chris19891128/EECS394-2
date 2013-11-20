@@ -1,20 +1,27 @@
 <?php
 require_once 'lib/all_error.php';
 require_once 'lib/swift/lib/swift_required.php';
+
 if ($_POST) {
-	$transport = Swift_SmtpTransport::newInstance ( 'smtp.gmail.com', 465, "ssl" )->setUsername ( $_POST ['me'] )->setPassword ( $_POST ['pwd'] );
+	send_email ( $_POST ['me'], $_POST ['pwd'], $_POST ['recepient'], $_POST ['id'] );
+}
+function send_email($me, $pwd, $emails, $survey_id) {
+	$transport = Swift_SmtpTransport::newInstance ( 'smtp.gmail.com', 465, "ssl" )->setUsername ( $me )->setPassword ( $pwd );
 	
 	$mailer = Swift_Mailer::newInstance ( $transport );
 	
-	//$emails = json_decode ( $_POST ['recepient'], true );
-	$emails = $_POST['recepient'];
+	if (gettype ( $emails ) == 'string') {
+		$emails = json_decode ( $emails, true );
+	}
 	
 	foreach ( $emails as $email ) {
+		$url = 'http://' . $_SERVER ['HTTP_HOST'] . $_SERVER ['PHP_SELF'] . '/../answser.php?id=' . $survey_id . '&responder=' . $email;
+		
 		$message = Swift_Message::newInstance ( 'You have a new poll' )->setFrom ( array (
 				$_POST ['me'] 
 		) )->setTo ( array (
 				$email 
-		) )->setBody ( 'http://orange394.cloudapp.net/EasyPolling/answer.php?id=' . $_POST ['id'] . '&responder=' . $email );
+		) )->setBody ( $url );
 		
 		$result = $mailer->send ( $message );
 	}

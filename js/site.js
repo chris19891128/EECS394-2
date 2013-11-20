@@ -50,10 +50,13 @@ function newPoll() {
 	 * Collect all the emails
 	 */
 	var emails = $('#recepient').val().replace(/\s+/g, '').split(',');
-	
+
 	var json = encodePoll();
 
 	var guid = GUID();
+
+	// TODO to be removed
+	var pwd = askForPwd();
 
 	$.ajax({
 		type : "POST",
@@ -61,22 +64,11 @@ function newPoll() {
 		data : {
 			id : guid,
 			recepient : emails,
-			data : json
+			data : json,
+			pwd : pwd
 		},
 		success : function(data) {
-			$('#create').hide();
-			$('#answerUrl').val(
-					'http://orange394.cloudapp.net/EasyPolling/answer.php?id='
-							+ guid);
-			$('#statUrl').val(
-					'http://orange394.cloudapp.net/EasyPolling/stat.php?id='
-							+ guid);
-			$('#success').show();
 
-			// TODO to be removed
-			var pwd = askForPwd();
-			console.log(pwd);
-			sendEmail(guid, emails, $('#meEmail').val(), pwd);
 		}
 	});
 }
