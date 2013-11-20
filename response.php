@@ -7,7 +7,6 @@ $mysql = new mysqli ( 'localhost', 'root', 'stu.fudan2013', 'EasyPolling' ) or d
 $query = "SELECT COUNT(*) as total FROM Answer where Poll_ID='" . $_POST [id] . "' and Respondant='" . $_POST ['respondant'] . "'";
 echo $query;
 $result = mysqli_query ( $mysql, $query );
-echo 'result is ' . $result . '  ';
 $data = mysql_fetch_assoc ( $result );
 echo $data ['total'] . ' hello\n';
 if ($data ['total'] > 0) {
