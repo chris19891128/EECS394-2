@@ -69,6 +69,7 @@ function newPoll() {
 	// TODO to be removed
 	var pwd = askForPwd();
 
+	// TODO Magic here, how did you get me
 	$.ajax({
 		type : "POST",
 		url : $('#create').attr('action'),
@@ -76,7 +77,7 @@ function newPoll() {
 			id : guid,
 			recipient : emails,
 			data : json,
-			me : 'chris19891128@gmail.com',
+			me : $('#emailHidden').val(),
 			pwd : pwd
 		},
 		success : function(data) {
