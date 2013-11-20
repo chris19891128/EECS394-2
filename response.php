@@ -1,7 +1,7 @@
 <?php
-echo $_POST [id];
-echo $_POST [choice];
-echo $_POST [respondant];
+// echo $_POST [id];
+// echo $_POST [choice];
+// echo $_POST [respondant];
 $mysql = new mysqli ( 'localhost', 'root', 'stu.fudan2013', 'EasyPolling' ) or die ( 'Cannot connect to Database' );
 $query = "SELECT COUNT(*) as total FROM Answer where id='" . $_POST [id] . "' and respondant='" . $_POST ['respondant'];
 $result = mysqli_query ( $mysql, $query );
