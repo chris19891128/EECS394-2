@@ -23,7 +23,11 @@ if (! isset ( $_SESSION ['token'] )) {
 <body>
 	<div class="container">
 
-		<h1>Welcome !</h1>
+		<h1>Welcome 
+		<?php
+		echo $_SESSION ['email'];
+		//echo "<div><img src='" . $_SESSION ['image'] . "?sz=50'></div>";
+		?></h1>
 
 		<form method="GET">
 			<button type="submit" class="btn btn-primary btn-lg"

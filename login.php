@@ -18,6 +18,8 @@ $client->setScopes ( array (
 		'https://www.googleapis.com/auth/userinfo.email' 
 ) );
 
+$oauth2 = new Google_Oauth2Service ( $client );
+
 if (isset ( $_GET ['logout'] )) {
 	unset ( $_SESSION ['token'] );
 	unset ( $_SESSION ['user'] );
@@ -35,6 +37,11 @@ if (isset ( $_SESSION ['token'] )) {
 }
 
 if ($client->getAccessToken ()) {
+	$user = $oauth2->userinfo->get ();
+	$email = filter_var ( $user ['email'], FILTER_SANITIZE_EMAIL );
+	$img = filter_var ( $user ['picture'], FILTER_VALIDATE_URL );
+	$_SESSION ['email'] = $email;
+	$_SESSION ['image'] = $img;
 	$_SESSION ['token'] = $client->getAccessToken ();
 	header ( 'location: home.php' );
 } else {
