@@ -45,6 +45,7 @@ if ($_POST) {
 	echo <<<END
 	<div class="container">
 		<form action="create-poll.php" method="" id="create">
+			<input type="hidden" id="emailHidden" value="$_SESSION[email]"/>
 			<div id="poll">
 				<div class="form-group" id="recipient-group">
 					<label for="recipient">To:</label> <input type="text"
