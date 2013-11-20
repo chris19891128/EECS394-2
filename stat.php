@@ -43,20 +43,21 @@ mysqli_close ( $mysql );
 ?>
 
 <div class="container">
-	<h1><?php echo $survey ['question']; ?></h1>
-	<table class="table">
-		<tr>
-			<th>Answer</th>
-			<th>Graphic</th>
-			<th>Statistic</th>
-			<th>Respondants</th>
-		</tr>
+		<h1><?php echo $survey ['question']; ?></h1>
+		<table class="table">
+			<tr>
+				<th>Answer</th>
+				<th>Graphic</th>
+				<th>Statistic</th>
+				<th>Respondants</th>
+			</tr>
 		<?php
 		
 		echo "<script type='text/javascript'>show();</script>";
 		
 		for($i = 0; $i < count ( $survey ['answer'] ); $i ++) {
 			$choice = $survey ['answer'] [$i];
+			$count = $stat [$i];
 			if ($totalNumber > 0) {
 				$percent1 = $count / $totalNumber * 100;
 				$percent1 = $percent1 . '%';
