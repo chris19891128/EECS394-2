@@ -34,7 +34,7 @@ $result = mysqli_query ( $mysql, $query );
 while ( $row = mysqli_fetch_array ( $result ) ) {
 	$index = intval ( $row ['Answer'] );
 	$stat [$index] ++;
-	$res [$i] [count ( $res [$i] )] = $row ['Respondant'];
+	$res [$index] [count ( $res [$i] )] = $row ['Respondant'];
 }
 
 $totalNumber = 0;
