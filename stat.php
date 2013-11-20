@@ -15,6 +15,7 @@
 </head>
 <body>
 <?php
+
     function get_survey_by_id($survey_id) {
         $link = new mysqli ( 'localhost', 'root', 'stu.fudan2013', 'EasyPolling' ) or die ( 'Cannot connect to Database' );
         $query = "select * from Poll where ID='$survey_id'";
@@ -23,7 +24,6 @@
         
         if ($row) {
             $content = $row ['Content'];
-                // echo $content;
             $json = json_decode ( $content, true );
         } else {
             echo mysqli_error ( $link );

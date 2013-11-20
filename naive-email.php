@@ -15,7 +15,7 @@ function send_email($me, $pwd, $emails, $survey_id) {
 	}
 	
 	foreach ( $emails as $email ) {
-		$url = 'http://' . $_SERVER ['HTTP_HOST'] . $_SERVER ['PHP_SELF'] . '/../answser.php?id=' . $survey_id . '&responder=' . $email;
+		$url = 'http://' . $_SERVER ['HTTP_HOST'] . $_SERVER ['PHP_SELF'] . '/../answer.php?id=' . $survey_id . '&responder=' . $email;
 		
 		$message = Swift_Message::newInstance ( 'You have a new poll' )->setFrom ( array (
 				$_POST ['me'] 

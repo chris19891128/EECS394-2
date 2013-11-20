@@ -21,8 +21,8 @@ function get_survey_by_id($survey_id) {
 <?php
 $survey_id = $_GET ['id'];
 $survey = get_survey_by_id ( $_GET ['id'] );
-$respondant = $_GET['responder'];
-    echo ($respondant);
+$respondant = $_GET ['responder'];
+echo ($respondant);
 ?>
 
 <!DOCTYPE html>
@@ -46,7 +46,7 @@ $respondant = $_GET['responder'];
 		var data = {
 	        	id: <?php echo "'$survey_id'"; ?>,
 	            choice: choice,
-        respondant: <?php echo "'$respondant'"; ?>
+        		respondant: <?php echo "'$respondant'"; ?>
 	    };
 		$.ajax({
         	type: "POST",
@@ -63,8 +63,9 @@ $respondant = $_GET['responder'];
 <body>
 	<?php
 	echo "<div class='container'><h1>" . $survey ['question'] . "</h1>";
+	$count = 0;
 	foreach ( $survey ['answer'] as $choice ) {
-		echo '<p><button class="choiceButton btn btn-default" type="button"' . 'onClick="submitIt(\'' . $choice . '\')">' . $choice . '</button></p>';
+		echo '<p><button class="choiceButton btn btn-default" type="button"' . 'onClick="submitIt(\'' . $count ++ . '\')">' . $choice . '</button></p>';
 	}
 	
 	include ("footer.inc");
