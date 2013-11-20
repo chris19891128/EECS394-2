@@ -48,7 +48,7 @@ mysqli_close ( $mysql );
 			if (! array_key_exists ( $res, $stat )) {
 				echo "<td>Not Responded</td>";
 			} else {
-				echo "<td>" . $survey ['Answer'] [$stat [$res]] . "</td>";
+				echo "<td>" . $survey ['answer'] [$stat [$res]] . "</td>";
 			}
 			echo "</tr>";
 		}
