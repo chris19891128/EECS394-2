@@ -61,7 +61,7 @@ mysqli_close ( $mysql );
 			if ($totalNumber > 0) {
 				$percent1 = $count / $totalNumber * 100;
 				$percent1 = $percent1 . '%';
-				$percent2 = 1 - $count / $totalNumber * 100;
+				$percent2 = (1 - $count / $totalNumber) * 100;
 				$percent2 = $percent2 . '%';
 			} else {
 				$percent1 = '0%';
