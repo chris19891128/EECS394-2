@@ -4,6 +4,7 @@
 // echo $_POST [respondant];
 $mysql = new mysqli ( 'localhost', 'root', 'stu.fudan2013', 'EasyPolling' ) or die ( 'Cannot connect to Database' );
 $query = "SELECT COUNT(*) as total FROM Answer where Poll_ID='" . $_POST [id] . "' and Respondant='" . $_POST ['respondant'];
+echo $query;
 $result = mysqli_query ( $mysql, $query );
 echo 'result is '.$result.'  ';
 $data = mysql_fetch_assoc ( $result );
