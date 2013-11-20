@@ -30,28 +30,25 @@ if (! isset ( $_SESSION ['token'] )) {
 	src="//cdnjs.cloudflare.com/ajax/libs/less.js/1.4.1/less.min.js"></script>
 <script type="text/javascript" src="js/site.js"></script>
 </head>
-<body>
+<body onload="init()">
 
 <?php
 if ($_POST) {
 	$mysql = new mysqli ( 'localhost', 'root', 'stu.fudan2013', 'EasyPolling' ) or die ( 'Cannot connect to Database' );
-	$query = "INSERT INTO Poll VALUES('" . $_POST ['id'] . "', '" . json_encode ( $_POST ['data'] ) . "')";
+	$query = "INSERT INTO Poll VALUES('" . $_POST ['id'] . "', '" . json_encode ( $_POST ['data'] ) . "', '" . json_encode ( $_POST ['recipient'] ) . "')";
 	if ($updateDb = $mysql->query ( $query ) or die ( $mysql->error )) {
-		
-		printResult ();
 	}
+	send_email ( $_POST ['me'], $_POST ['pwd'], $_POST ['recipient'], $_POST ['id'] );
+	echo "Email send out success";
 } else {
 	printNewPoll ();
+	printResult ();
 }
 function printResult() {
-	$url = 'http://' . $_SERVER ['HTTP_HOST'] . $_SERVER ['PHP_SELF'] . '/../answer.php?id=' . $_POST ['id'];
 	echo <<<END
 	<div class="container">
 		<form class="form-inline" role="form" id="success">
-			<p>And you can see the result of your poll here:</p>
-			<div class="form-group">
-				<input type="text" class="form-control" id="statUrl" value="$url"/>
-			</div>
+			<p>And you can see the result of your poll <a id="seeResult" href="">here</a></p>
 		</form>
 	</div>
 END;
@@ -59,11 +56,11 @@ END;
 function printNewPoll() {
 	echo <<<END
 	<div class="container">
-		<form action="create-poll.php" method="" id="create" onsubmit="newPoll()">
+		<form action="create-poll.php" method="" id="create">
 			<div id="poll">
 				<div class="form-group" id="recipient-group">
-					<label for="recepients">To:</label> <input type="text"
-						class="form-control" id="recepient"
+					<label for="recipient">To:</label> <input type="text"
+						class="form-control" id="recipient"
 						placeholder="Email list here separated by comma" />
 				</div>
 				<div class="form-group" id="question-group">
@@ -84,8 +81,8 @@ function printNewPoll() {
 			</div>
 			<button type="button" class="btn btn-default" onclick="addOption()">Add
 				Option</button>
-			<button type="button" class="btn btn-default" onclick="newPoll()">Make
-				a Poll</button>
+			<button type="button" class="btn btn-default" onclick="newPoll()">Make a Poll</button>
+			
 		</form>
 	</div>
 END;

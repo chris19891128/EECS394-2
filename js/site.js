@@ -1,6 +1,15 @@
+function init() {
+	$('#create').show();
+	$('#success').hide();
+}
+
 function GUID() { // NotMoreThan1million
 	return ("0000" + (Math.random() * Math.pow(36, 4) << 0).toString(36))
 			.substr(-4);
+}
+
+function addQuestion() {
+
 }
 
 function addOption() {
@@ -45,11 +54,7 @@ function encodePoll() {
 }
 
 function newPoll() {
-
-	/*
-	 * Collect all the emails
-	 */
-	var emails = $('#recepient').val().replace(/\s+/g, '').split(',');
+	var emails = $('#recipient').val().replace(/\s+/g, '').split(',');
 
 	var json = encodePoll();
 
@@ -60,31 +65,20 @@ function newPoll() {
 
 	$.ajax({
 		type : "POST",
-		url : "create-poll.php",
+		url : $('#create').attr('action'),
 		data : {
 			id : guid,
-			recepient : emails,
+			recipient : emails,
 			data : json,
+			me : 'chris19891128@gmail.com',
 			pwd : pwd
 		},
 		success : function(data) {
+			alert(data);
+			$('#create').hide();
+			$('#seeResult').attr('href', 'stat.php?id=' + guid);
+			$('#success').show();
 
-		}
-	});
-}
-
-function sendEmail(guid, emails, me, pwd) {
-	$.ajax({
-		type : "POST",
-		url : "naive-email.php",
-		data : {
-			id : guid,
-			recepient : emails,
-			me : me,
-			pwd : pwd
-		},
-		success : function(data) {
-			alert("Your email has been sent out");
 		}
 	});
 }
