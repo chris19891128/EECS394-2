@@ -4,12 +4,13 @@ require_once 'lib/google-api-php-client/src/Google_Client.php';
 require_once 'lib/google-api-php-client/src/contrib/Google_Oauth2Service.php';
 
 session_start ();
+$authRedirect = 'http://' . $_SERVER ['HTTP_HOST'] . $_SERVER ['PHP_SELF'];
 
 $client = new Google_Client ();
 $client->setApplicationName ( 'EasyPolling' );
 $client->setClientId ( '519869230344.apps.googleusercontent.com' );
 $client->setClientSecret ( '-wESR-1Mwr7y6h2QOoNcXaRR' );
-$client->setRedirectUri ( 'http://localhost/EECS394-2/login.php' );
+$client->setRedirectUri ( $authRedirect );
 $client->setDeveloperKey ( 'AIzaSyBMs1qCCwvCJyvgxEkJkGxaIVcUOmzU8dI' );
 $client->setAccessType ( 'offline' );
 $client->setScopes ( array (
