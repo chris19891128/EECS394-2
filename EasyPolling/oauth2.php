@@ -136,7 +136,7 @@ END;
 }
 
 $email = 'chris19891128@gmail.com';
-$accessToken = $_SESSION ['token'];
+$accessToken = $_SESSION ['token']['access_token'];
 
 displayForm ( $email, $accessToken );
 
