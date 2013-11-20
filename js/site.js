@@ -55,6 +55,11 @@ function encodePoll() {
 }
 
 function newPoll() {
+
+	if (!validate()) {
+		return;
+	}
+
 	var emails = $('#recipient').val().replace(/\s+/g, '').split(',');
 
 	var json = encodePoll();
@@ -86,6 +91,28 @@ function newPoll() {
 	$('#create').hide();
 	$('#success').hide();
 	$('#progress').show();
+}
+
+function validate() {
+	if ($('#recipient').val() == '') {
+		alert('you cannot have empty recipients');
+		return false;
+	}
+
+	if ($('#question').val() == '') {
+		alert('you cannot have empty question');
+		return false;
+	}
+
+	var options = $("[id^='option_']").filter("[id$='_input']");
+	for (var i = 0; i < options.length; i++) {
+		if (options[i].value == '') {
+			alert('you cannot have empty option ' + (i + 1));
+			return false;
+		}
+	}
+
+	return true;
 }
 
 function askForPwd() {
