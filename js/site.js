@@ -1,6 +1,7 @@
 function init() {
 	$('#create').show();
 	$('#success').hide();
+	$('#progress').hide();
 }
 
 function GUID() { // NotMoreThan1million
@@ -76,11 +77,15 @@ function newPoll() {
 		success : function(data) {
 			alert(data);
 			$('#create').hide();
-			$('#seeResult').attr('href', 'stat.php?id=' + guid);
+			$('#progress').hide();
 			$('#success').show();
-
+			$('#seeResult').attr('href', 'stat.php?id=' + guid);
 		}
 	});
+
+	$('#create').hide();
+	$('#success').hide();
+	$('#progress').show();
 }
 
 function askForPwd() {

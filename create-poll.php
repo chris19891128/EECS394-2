@@ -41,19 +41,6 @@ if ($_POST) {
 	send_email ( $_POST ['me'], $_POST ['pwd'], $_POST ['recipient'], $_POST ['id'] );
 	echo "Email send out success";
 } else {
-	printNewPoll ();
-	printResult ();
-}
-function printResult() {
-	echo <<<END
-	<div class="container">
-		<form class="form-inline" role="form" id="success">
-			<p>And you can see the result of your poll <a id="seeResult" href="">here</a></p>
-		</form>
-	</div>
-END;
-}
-function printNewPoll() {
 	echo <<<END
 	<div class="container">
 		<form action="create-poll.php" method="" id="create">
@@ -82,9 +69,22 @@ function printNewPoll() {
 			<button type="button" class="btn btn-default" onclick="addOption()">Add
 				Option</button>
 			<button type="button" class="btn btn-default" onclick="newPoll()">Make a Poll</button>
-			
+		
 		</form>
 	</div>
+	
+	<div class="container">
+		<form class="form-inline" role="form" id="success">
+			<p>And you can see the result of your poll <a id="seeResult" href="">here</a></p>
+		</form>
+	</div>
+	
+	<div class="container">
+		<form class="form-inline" role="form" id="progress">
+			<p>Sending Emails</p>
+		</form>
+	</div>
+	
 END;
 }
 
