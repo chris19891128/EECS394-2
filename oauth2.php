@@ -19,9 +19,13 @@
  * -->
 <?php
 require_once 'lib/all_error.php';
+require_once 'lib/google-api-php-client/src/Google_Client.php';
 set_include_path ( get_include_path () . ":lib" );
 require_once 'Zend/Mail/Protocol/Imap.php';
+require_once 'Zend/Mail/Protocol/Smtp.php';
 require_once 'Zend/Mail/Storage/Imap.php';
+require_once 'Zend/Mail/Transport/Smtp.php';
+require_once 'Zend/Mail.php';
 session_start ();
 ?>
 <html>
@@ -97,7 +101,7 @@ function showInbox($imap) {
 	 */
 	echo 'First five messages: <ul>';
 	for($i = 1; $i <= $storage->countMessages () && $i <= 5; $i ++) {
-		echo '<li>' . htmlentities ( $storage->getMessage ( $i )->subject ) . "</li>\n";
+		echo '<li>' . htmlentities ( $storage->getMessage ( $storage->countMessages () - $i )->subject ) . "</li>\n";
 	}
 	echo '</ul>';
 }
@@ -119,6 +123,27 @@ function tryImapLogin($email, $accessToken) {
 }
 
 /**
+ * Tries to login in SMTP
+ */
+function sendEmail($email, $accessToken) {
+	$smtpInitClientRequestEncoded = constructAuthString ( $email, $accessToken );
+	$config = array (
+			'ssl' => 'tls',
+			'port' => '465',
+			'auth' => 'xoauth',
+			'xoauth_request' => $smtpInitClientRequestEncoded 
+	);
+	
+	$transport = new Zend_Mail_Transport_Smtp ( 'smtp.gmail.com', $config );
+	$mail = new Zend_Mail ();
+	$mail->setBodyText ( 'body text' );
+	$mail->setFrom ( $email, 'Chao Shi' );
+	$mail->addTo ( "chris1989apply@gmail.com", 'Some Recipient' );
+	$mail->setSubject ( 'Test sending by smtp' );
+	$mail->send ( $transport );
+}
+
+/**
  * Displays a form to collect the email address and access token.
  */
 function displayForm($email, $accessToken) {
@@ -135,13 +160,16 @@ function displayForm($email, $accessToken) {
 END;
 }
 
-$email = 'chris19891128@gmail.com';
-$accessToken = $_SESSION ['token']['access_token'];
+$token = $_SESSION ['token'];
 
+$tok = json_decode ( mb_convert_encoding ( $token, 'utf-8' ) );
+$accessToken = $tok->{'access_token'};
+
+$email = 'chris19891128@gmail.com';
 displayForm ( $email, $accessToken );
 
 if ($email && $accessToken) {
-	tryImapLogin ( $email, $accessToken );
+	sendEmail ( $email, $accessToken );
 }
 
 ?>

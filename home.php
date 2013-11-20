@@ -22,11 +22,10 @@ if (! isset ( $_SESSION ['token'] )) {
 </head>
 <body>
 	<div class="container">
-	<?php
-		echo "your token is". $_SESSION['token'];
-		echo "<h1> Welcome " . $_SESSION ['google_user'] ['name'] . "</h1>";
-	?>
-	<form method="GET">
+
+		<h1>Welcome !</h1>
+
+		<form method="GET">
 			<button type="submit" class="btn btn-primary btn-lg"
 				formaction="create-poll.php">New Poll</button>
 			<button type="submit" class="btn btn-default btn-lg"
