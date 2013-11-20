@@ -1,8 +1,5 @@
 <?php
 require_once 'lib/all_error.php';
-// echo $_POST [id];
-// echo $_POST [choice];
-// echo $_POST [respondant];
 $mysql = new mysqli ( 'localhost', 'root', 'stu.fudan2013', 'EasyPolling' ) or die ( 'Cannot connect to Database' );
 $query = "SELECT * FROM Answer where Poll_ID='" . $_POST ['id'] . "' and Respondant='" . $_POST ['respondant'] . "'";
 $result = mysqli_query ( $mysql, $query );

@@ -53,6 +53,9 @@ echo ($respondant);
         	url: "response.php",
         	data: data,
         	success:function(data){
+            	if(data=='error'){
+                	alert('You cannot vote twice');
+            	}
         		location.replace("stat.php?id=" + <?php echo "'$survey_id'"; ?>);
     		}
    	 	});
