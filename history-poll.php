@@ -15,7 +15,7 @@
 </head>
 <body>
 	<div class="container">
-		<table>
+		<table class="table">
 <?php
 require_once 'lib/all_error.php';
 session_start ();
