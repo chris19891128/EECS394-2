@@ -66,7 +66,7 @@ $respondant = $_GET ['responder'];
 	<?php
 	echo "<h1>" . $survey ['question'] . "</h1>";
 	echo "<p> (Other recipients: ";
-	for($i = 0; i < count ( $survey_res ) - 1; $i ++) {
+	for($i = 0; $i < count ( $survey_res ) - 1; $i ++) {
 		echo $survey_res [$i] . ", ";
 	}
 	echo $survey_res [$i] . " )</p>";
