@@ -14,6 +14,8 @@
 
 </head>
 <body>
+<a href="home.php" id="home_link">Home</a>
+
 <?php
 require_once 'lib/all_error.php';
 require_once 'survey_db.php';

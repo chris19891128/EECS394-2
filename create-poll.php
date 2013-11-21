@@ -31,6 +31,7 @@ if (! isset ( $_SESSION ['token'] )) {
 <script type="text/javascript" src="js/site.js"></script>
 </head>
 <body onload="init()">
+<a href="home.php" id="home_link">Home</a>
 
 <?php
 if ($_POST) {
@@ -92,6 +93,7 @@ END;
 }
 
 ?>
-<footer>- EasyPolling, Powered by the Orange Team, EECS394 2013</footer>
+
+	<footer>- EasyPolling, Powered by the Orange Team, EECS394 2013</footer>
 </body>
 </html>

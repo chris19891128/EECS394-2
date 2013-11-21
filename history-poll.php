@@ -14,6 +14,8 @@
 
 </head>
 <body>
+<a href="home.php" id="home_link">Home</a>
+
 	<div class="container">
 		<table class="table">
 <?php
