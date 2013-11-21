@@ -65,7 +65,12 @@ $respondant = $_GET ['responder'];
 	<div class='container'>
 	<?php
 	echo "<h1>" . $survey ['question'] . "</h1>";
-	echo "<button class='choiceButton btn btn-default' type='button' onClick='otherRes()'>Who else receive it?</button>";
+	echo "<p> (Other recipients: ";
+	foreach ( $survey_res as $res ) {
+		echo $res . ",";
+	}
+	echo ")</p>";
+	
 	$count = 0;
 	foreach ( $survey ['answer'] as $choice ) {
 		echo '<p><button class="choiceButton btn btn-default" type="button"' . 'onClick="submitIt(\'' . $count ++ . '\')">' . $choice . '</button></p>';
@@ -74,11 +79,7 @@ $respondant = $_GET ['responder'];
 	
 	<div id="dialog" title="Basic dialog">
 			<p>
-		<?php
-		foreach ( $survey_res as $res ) {
-			echo $res . ",";
-		}
-		?>
+		
 		</p>
 		</div>
 	
