@@ -66,10 +66,10 @@ $respondant = $_GET ['responder'];
 	<?php
 	echo "<h1>" . $survey ['question'] . "</h1>";
 	echo "<p> (Other recipients: ";
-	foreach ( $survey_res as $res ) {
-		echo $res . ",";
+	for($i = 0; i < count ( $survey_res ) - 1; $i ++) {
+		echo $survey_res [$i] . ", ";
 	}
-	echo ")</p>";
+	echo $survey_res [$i] . " )</p>";
 	
 	$count = 0;
 	foreach ( $survey ['answer'] as $choice ) {
@@ -78,9 +78,7 @@ $respondant = $_GET ['responder'];
 	?>
 	
 	<div id="dialog" title="Basic dialog">
-			<p>
-		
-		</p>
+			<p></p>
 		</div>
 	
 	<?php
