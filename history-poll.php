@@ -19,7 +19,7 @@
 require_once 'lib/all_error.php';
 
 $mysql = new mysqli ( 'localhost', 'root', 'stu.fudan2013', 'EasyPolling' ) or die ( 'Cannot connect to Database' );
-$query = "SELECT * from Poll where Creator='$_SESSION[email]'";
+$query = "SELECT * from Poll where Creator='" . $_SESSION ['email'] . "'";
 $result = mysqli_query ( $mysql, $query );
 
 while ( $row = mysqli_fetch_array ( $result ) ) {
