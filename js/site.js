@@ -81,7 +81,7 @@ function newPoll() {
 			pwd : pwd
 		},
 		success : function(data) {
-			alert(data);
+			alert('Email is sent');
 			$('#create').hide();
 			$('#progress').hide();
 			$('#success').show();

@@ -84,7 +84,7 @@ if ($_POST) {
 	
 	<div class="container">
 		<form class="form-inline" role="form" id="progress">
-			<p>Sending Emails</p>
+			<p>Sending Emails....... Please Wait</p>
 		</form>
 	</div>
 	

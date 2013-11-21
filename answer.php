@@ -5,7 +5,6 @@ require_once 'survey_db.php';
 $survey_id = $_GET ['id'];
 $survey = get_survey_by_id ( $_GET ['id'] );
 $respondant = $_GET ['responder'];
-echo ($respondant);
 ?>
 
 <!DOCTYPE html>
