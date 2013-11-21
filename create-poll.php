@@ -77,7 +77,8 @@ if ($_POST) {
 	
 	<div class="container">
 		<form class="form-inline" role="form" id="success">
-			<p>And you can see the result of your poll <a id="seeResult" href="">here</a></p>
+			<p>See the statistical result, click <a id="seeResult" href="">here</a></p>
+			<p>See the result by each recipient, click <a id="seeResult2" href="">here</a></p>
 		</form>
 	</div>
 	

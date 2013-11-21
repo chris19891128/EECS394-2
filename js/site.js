@@ -86,6 +86,7 @@ function newPoll() {
 			$('#progress').hide();
 			$('#success').show();
 			$('#seeResult').attr('href', 'stat.php?id=' + guid);
+			$('#seeResult2').attr('href', 'stat2.php?id=' + guid);
 		}
 	});
 
