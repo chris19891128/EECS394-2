@@ -21,8 +21,14 @@ $respondant = $_GET ['responder'];
 	href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css"
 	rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet"
+	href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+<link rel="stylesheet" href="/resources/demos/style.css" />
 <script type="text/javascript"
 	src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+
 
 <script type="text/javascript">
 	function submitIt(choice){
@@ -67,14 +73,14 @@ $respondant = $_GET ['responder'];
 	?>
 	
 	<div id="dialog" title="Basic dialog">
-		<p>
+			<p>
 		<?php
 		foreach ( $survey_res as $res ) {
 			echo $res . ",";
 		}
 		?>
 		</p>
-	</div>
+		</div>
 	
 	<?php
 	include ("footer.inc");
