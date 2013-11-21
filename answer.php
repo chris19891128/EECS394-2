@@ -4,6 +4,7 @@ require_once 'survey_db.php';
 
 $survey_id = $_GET ['id'];
 $survey = get_survey_by_id ( $_GET ['id'] );
+$survey_res = get_survey_recipient_by_id ( $survey_id );
 $respondant = $_GET ['responder'];
 ?>
 
@@ -42,19 +43,42 @@ $respondant = $_GET ['responder'];
     		}
    	 	});
 	}
+
+	function otherRes(){
+		$("#others").show();
+		$("#others").dialog();
+	}
+
+	function init(){
+		$("#others").hide();
+	}
 </script>
 </head>
 
-<body>
+<body onload="init()">
+	<div class='container'>
 	<?php
-	echo "<div class='container'><h1>" . $survey ['question'] . "</h1>";
+	echo "<h1>" . $survey ['question'] . "</h1>";
+	echo "<button class='choiceButton btn btn-default' type='button' onClick='otherRes()'>Who else receive it?</button>";
 	$count = 0;
 	foreach ( $survey ['answer'] as $choice ) {
 		echo '<p><button class="choiceButton btn btn-default" type="button"' . 'onClick="submitIt(\'' . $count ++ . '\')">' . $choice . '</button></p>';
 	}
-	
-	include ("footer.inc");
-	echo '</div>';
 	?>
+	
+	<div id="dialog" title="Basic dialog">
+		<p>
+		<?php
+		foreach ( $survey_res as $res ) {
+			echo $res . ",";
+		}
+		?>
+		</p>
+	</div>
+	
+	<?php
+	include ("footer.inc");
+	?>
+	</div>
 </body>
 </html>
