@@ -14,10 +14,11 @@
 
 </head>
 <body>
-	<table>
+	<div class="container">
+		<table>
 <?php
 require_once 'lib/all_error.php';
-session_start();
+session_start ();
 
 $mysql = new mysqli ( 'localhost', 'root', 'stu.fudan2013', 'EasyPolling' ) or die ( 'Cannot connect to Database' );
 $query = "SELECT * from Poll where Creator='" . $_SESSION ['email'] . "'";
@@ -36,4 +37,5 @@ while ( $row = mysqli_fetch_array ( $result ) ) {
 
 </table>
 <?php include ("footer.inc");?>
+</div>
 </body>
