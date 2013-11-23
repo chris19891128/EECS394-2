@@ -11,16 +11,19 @@
 <script type="text/javascript" src="js/external/d3.v3/d3.v3.min.js"></script>
 <script type="text/javascript" src="js/external/d3.v3/d3.v3.js"></script>
 
+<?php
+    require_once 'lib/all_error.php';
+    require_once 'survey_db.php';
+    
+    $survey_id = $_GET ['id'];
+?>
 
 </head>
 <body>
 <a href="home.php" id="home_link">Home</a>
+<a href="stat.php?id= <?php echo $survey_id?>">View Results</a>
 
 <?php
-require_once 'lib/all_error.php';
-require_once 'survey_db.php';
-
-$survey_id = $_GET ['id'];
 $survey = get_survey_by_id ( $_GET ['id'] );
 $survey_res = get_survey_recipient_by_id ( $_GET ['id'] );
 
