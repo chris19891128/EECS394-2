@@ -21,7 +21,7 @@
 </head>
 <body>
 <a href="home.php" id="home_link">Home</a>
-<a href="stat.php?id= <?php echo $survey_id?>">View Results</a>
+<a href="stat.php?id=<?php echo $survey_id?>">View Results</a>
 
 <?php
 $survey = get_survey_by_id ( $_GET ['id'] );
