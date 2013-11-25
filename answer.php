@@ -12,7 +12,7 @@ if(isset($_GET['responder']))
     $resp = "true";
 }
 $number = count ( $survey_res ) -1;
-        //echo $resp;
+echo $number;
 ?>
 
 <!DOCTYPE html>
@@ -40,7 +40,8 @@ $number = count ( $survey_res ) -1;
 <script type="text/javascript">
 	function submitIt(choice){
         var allow = "false";
-        var t = <?php echo "'$resp'"; ?>;
+            //var t = <?php echo "'$resp'"; ?>;
+        var t = "<?php echo $resp; ?>";
         alert(t);
         if (t == "false")
         {
@@ -48,13 +49,13 @@ $number = count ( $survey_res ) -1;
         }
         else
         {
-            var sumOfResponder = <?php echo "'$number'"; ?>;
+            var sumOfResponder = "<?php echo $number; ?>";
             alert(sumOfResponder);
-            var responder = <?php echo "'$respondant'"; ?>;
+            var responder = "<?php echo $respondant; ?>";
             alert(responder);
             for(var i = 0;i <= sumOfResponder; i++)
             {
-                if (<?php echo "'$survey_res['"+i+"']'"; ?> == responder)
+                if (<?php echo "$survey_res["+i+"]"; ?> == responder)
                 {
                     allow = "true";
                 }
@@ -69,16 +70,17 @@ $number = count ( $survey_res ) -1;
                 };
                 $.ajax(
                     {
-                    type: "POST",
-                    url: "response.php",
-                    data: data,
-                    success:function(data){
-                    if(data=='error')
-                    {
-                        alert('You cannot vote twice');
-                    }
-                    location.replace("stat.php?id=" + <?php echo "'$survey_id'"; ?>);
-                    }
+                       type: "POST",
+                       url: "response.php",
+                       data: data,
+                       success:function(data)
+                       {
+                            if(data=='error')
+                            {
+                                alert('You cannot vote twice');
+                            }
+                            location.replace("stat.php?id=" + <?php echo "'$survey_id'"; ?>);
+                       }
                     });
             }
             else
