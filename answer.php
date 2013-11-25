@@ -5,11 +5,11 @@ require_once 'survey_db.php';
 $survey_id = $_GET ['id'];
 $survey = get_survey_by_id ( $_GET ['id'] );
 $survey_res = get_survey_recipient_by_id ( $survey_id );
-$resp = true;
+$resp = false;
 if(isset($_GET['responder']))
 {
     $respondant = $_GET ['responder'];
-    $resp = false;
+    $resp = true;
 }
 ?>
 
