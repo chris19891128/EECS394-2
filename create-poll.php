@@ -31,7 +31,6 @@ if (! isset ( $_SESSION ['token'] )) {
 <script type="text/javascript" src="js/site.js"></script>
 </head>
 <body onload="init()">
-<a href="home.php" id="home_link">Home</a>
 
 <?php
 if ($_POST) {
@@ -45,6 +44,7 @@ if ($_POST) {
 } else {
 	echo <<<END
 	<div class="container">
+		<a href="home.php" id="home_link" class="btn btn-default">Home</a>
 		<form action="create-poll.php" method="" id="create">
 			<input type="hidden" id="emailHidden" value="$_SESSION[email]"/>
 			<div id="poll">
