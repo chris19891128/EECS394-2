@@ -13,7 +13,6 @@ if(isset($_GET['responder']))
     $resp = "true";
 }
 $number = count ( $survey_res ) -1;
-echo $respondant;
 ?>
 
 <!DOCTYPE html>
@@ -87,14 +86,13 @@ function submitIt(choice){
     alert(t);
     if (t == "false")
         {
-        alert("You cannot vote");
+            alert("You cannot vote");
+            break;
         }
     else
         {
         var sumOfResponder = "<?php echo $number; ?>";
-        alert(sumOfResponder);
         var responder = "<?php echo $allow; ?>";
-        alert(responder);
         if (responder == "true")
             {
             var data =
