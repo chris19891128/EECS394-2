@@ -51,9 +51,11 @@ $number = count ( $survey_res ) -1;
     if (isset($_GET['responder']))
     {
         for($i = 0; $i < count ( $survey_res ) - 1; $i ++) {
+            echo ($survey_res[$i])." ";
             if ($survey_res [$i] == $respondant)
             {
                 $allow = "true";
+                break;
             }
         }
     }
