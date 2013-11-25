@@ -21,6 +21,7 @@
 	<table class="table">
 <?php
 require_once 'lib/all_error.php';
+require_once 'survey_db.php';
 session_start ();
 
 $mysql = new mysqli ( 'localhost', 'root', 'stu.fudan2013', 'EasyPolling' ) or die ( 'Cannot connect to Database' );
@@ -29,9 +30,10 @@ $result = mysqli_query ( $mysql, $query );
 
 while ( $row = mysqli_fetch_array ( $result ) ) {
 	$id = $row ['ID'];
+    $survey = get_survey_by_id ( $id );
 	
 	echo "<tr>";
-	echo "<td>Poll_$id</td>";
+	echo "<td>". $survey ['question'] ."</td>";
 	echo "<td><a href='stat.php?id=$id'>See statistic result</a></td>";
 	// echo "<td><a href='stat2.php?id=$id'>See individual result</a></td>";
 	echo "</tr>";
