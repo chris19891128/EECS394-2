@@ -65,7 +65,16 @@ $number = count ( $survey_res ) -1;
 	?>
 	<ul class="nav nav-tabs">
 		<li class="active"><a href="#">Vote</a></li>
-		<li><a href="stat.php?id=<?php echo $survey_id; ?>">See Result</a></li>
+        <?php
+            if ($resp == "true")
+            {
+                echo '<li><a href="stat.php?id='.$survey_id.'&responder='.$respondant.'">See Result</a></li>';
+            }
+            else
+            {
+                echo '<li><a href="stat.php?id='.$survey_id.'">See Result</a></li>';
+            }
+        ?>
 	</ul>
 	<br />
 	<?php
