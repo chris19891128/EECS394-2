@@ -76,12 +76,20 @@ mysqli_close ( $mysql );
 	<?php
 	
 	// echo "<script type='text/javascript'>show();</script>";
-	
+    $max = 0;
+    for($i = 0; $i < count ( $survey ['answer'] ); $i ++)
+    {
+        $count = $stat [$i];
+        if ($count >= $max)
+        {
+            $max = $count;
+        }
+    }
 	for($i = 0; $i < count ( $survey ['answer'] ); $i ++) {
 		$choice = $survey ['answer'] [$i];
 		$count = $stat [$i];
 		if ($totalNumber > 0) {
-			$percent = ($count / $totalNumber * 100) . '%';
+			$percent = ($count / $max * 100) . '%';
 		} else {
 			$percent = '0%';
 		}

@@ -88,7 +88,6 @@ function submitIt(choice){
         //var allow = "false";
         //var t = <?php echo "'$resp'"; ?>;
     var t = "<?php echo $resp; ?>";
-    alert(t);
     if (t == "false")
         {
             alert("You cannot vote");
