@@ -26,6 +26,7 @@
 
 <?php
 $survey = get_survey_by_id ( $_GET ['id'] );
+$survey_res = get_survey_recipient_by_id ( $survey_id );
 $stat = array ();
 $res = array ();
 for($i = 0; $i < count ( $survey ['answer'] ); $i ++) {
@@ -51,6 +52,13 @@ for($i = 0; $i < count ( $survey ['answer'] ); $i ++) {
 mysqli_close ( $mysql );
 ?>
 	<h1><?php echo $survey ['question']; ?></h1>
+    <?php
+        echo "<p> (Other recipients: ";
+        for($i = 0; $i < count ( $survey_res ) - 1; $i ++) {
+            echo $survey_res [$i] . ", ";
+        }
+        echo $survey_res [$i] . " )</p>";
+    ?>
 
 	<ul class="nav nav-tabs">
 		<li><a href="answer.php?id=<?php echo $survey_id; ?>">Vote</a></li>

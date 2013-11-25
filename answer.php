@@ -5,7 +5,12 @@ require_once 'survey_db.php';
 $survey_id = $_GET ['id'];
 $survey = get_survey_by_id ( $_GET ['id'] );
 $survey_res = get_survey_recipient_by_id ( $survey_id );
-$respondant = $_GET ['responder'];
+$resp = true;
+if(isset($_GET['responder']))
+{
+    $respondant = $_GET ['responder'];
+    $resp = false;
+}
 ?>
 
 <!DOCTYPE html>
@@ -32,22 +37,30 @@ $respondant = $_GET ['responder'];
 
 <script type="text/javascript">
 	function submitIt(choice){
-		var data = {
-	        	id: <?php echo "'$survey_id'"; ?>,
-	            choice: choice,
-        		respondant: <?php echo "'$respondant'"; ?>
-	    };
-		$.ajax({
-        	type: "POST",
-        	url: "response.php",
-        	data: data,
-        	success:function(data){
-            	if(data=='error'){
-                	alert('You cannot vote twice');
-            	}
-        		location.replace("stat.php?id=" + <?php echo "'$survey_id'"; ?>);
-    		}
-   	 	});
+        var t = "<?php echo $resp ?>";
+        if (t == false)
+        {
+            	alert('You cannot vote');
+        }
+        else
+        {
+            var data = {
+                    id: <?php echo "'$survey_id'"; ?>,
+                    choice: choice,
+                    respondant: <?php echo "'$respondant'"; ?>
+            };
+            $.ajax({
+                   type: "POST",
+                   url: "response.php",
+                   data: data,
+                   success:function(data){
+                   if(data=='error'){
+                        alert('You cannot vote twice');
+                   }
+                   location.replace("stat.php?id=" + <?php echo "'$survey_id'"; ?>);
+                   }
+                   });
+        }
 	}
 
 	function otherRes(){
@@ -64,6 +77,12 @@ $respondant = $_GET ['responder'];
 <body onload="init()">
 	<div class='container'>
 	<?php
+    if (!isset($_GET['responder'])
+    {
+        echo "<ul class=\"pager\">";
+        echo "<li class=\"previous\"><a href=\"home.php\">&larr; Home</a></li>";
+        echo "</ul>";
+    }
 	echo "<h1>" . $survey ['question'] . "</h1>"; 
 	echo "<p> (Other recipients: ";
 	for($i = 0; $i < count ( $survey_res ) - 1; $i ++) {
