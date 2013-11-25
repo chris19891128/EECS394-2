@@ -45,7 +45,7 @@ echo $number;
         alert(t);
         if (t == "false")
         {
-            	alert('You cannot vote');
+            	alert("You cannot vote");
         }
         else
         {
@@ -55,10 +55,10 @@ echo $number;
             alert(responder);
             for(var i = 0;i <= sumOfResponder; i++)
             {
-                if (<?php echo "$survey_res["+i+"]"; ?> == responder)
-                {
-                    allow = "true";
-                }
+                //if (<?php echo "$survey_res["+i+"]"; ?> == responder)
+                //{
+                //  allow = "true";
+                //}
             }
             if (allow == "true")
             {
