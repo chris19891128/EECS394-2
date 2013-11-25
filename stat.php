@@ -12,7 +12,11 @@
 <?php
     require_once 'lib/all_error.php';
     require_once 'survey_db.php';
-    
+    if(isset($_GET['responder']))
+    {
+        $respondant = $_GET ['responder'];
+        $resp = "true";
+    }
     $survey_id = $_GET ['id'];
 ?>
 
@@ -61,8 +65,17 @@ mysqli_close ( $mysql );
     ?>
 
 	<ul class="nav nav-tabs">
-		<li><a href="answer.php?id=<?php echo $survey_id; ?>">Vote</a></li>
-		<li class="active"><a href="#">See Result</a></li>
+<?php
+    if ($resp == "true")
+    {
+    echo '<li><a href="answer.php?id='.$survey_id.'&responder='.$respondant.'">Vote</a></li>';
+    }
+    else
+    {
+    echo '<li><a href="answer.php?id='.$survey_id.'">Vote</a></li>';
+    }
+    ?>
+    <li class="active"><a href="#">See Result</a></li>
 	</ul>
 	<br />
 	<p>You can click on the bar chart to see who voted :)</p>
