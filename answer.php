@@ -49,9 +49,12 @@ $number = count ( $survey_res ) -1;
 	echo "<h1>" . $survey ['question'] . "</h1>"; 
 	echo "<p> (Other recipients: ";
 	for($i = 0; $i < count ( $survey_res ) - 1; $i ++) {
-        if ((isset($_GET['responder']) && ($survey_res [$i] == $respondant))
+        if (isset($_GET['responder'])
         {
-            $allow = "true";
+            if ($survey_res [$i] == $respondant)
+            {
+                $allow = "true";
+            }
         }
 		echo $survey_res [$i] . ", ";
 	}
