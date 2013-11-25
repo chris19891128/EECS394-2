@@ -37,8 +37,6 @@
 		<li class="previous"><a href="home.php">&larr; Home</a></li>
 	</ul>
  <a href="stat2.php?id=<?php echo $survey_id?>">Track respondants</a> -->
-
-<?php
 $survey = get_survey_by_id ( $_GET ['id'] );
 $survey_res = get_survey_recipient_by_id ( $survey_id );
 $stat = array ();
