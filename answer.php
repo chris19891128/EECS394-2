@@ -11,6 +11,7 @@ if(isset($_GET['responder']))
     $respondant = $_GET ['responder'];
     $resp = true;
 }
+    echo $resp;
 ?>
 
 <!DOCTYPE html>
@@ -83,6 +84,8 @@ if(isset($_GET['responder']))
         echo "<li class=\"previous\"><a href=\"home.php\">&larr; Home</a></li>";
         echo "</ul>";
     }
+    ?>
+    <?php
 	echo "<h1>" . $survey ['question'] . "</h1>"; 
 	echo "<p> (Other recipients: ";
 	for($i = 0; $i < count ( $survey_res ) - 1; $i ++) {
