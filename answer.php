@@ -6,6 +6,7 @@ $survey_id = $_GET ['id'];
 $survey = get_survey_by_id ( $_GET ['id'] );
 $survey_res = get_survey_recipient_by_id ( $survey_id );
 $resp = "false";
+$allow = "false";
 if(isset($_GET['responder']))
 {
     $respondant = $_GET ['responder'];
@@ -39,7 +40,7 @@ echo $number;
 
 <script type="text/javascript">
 	function submitIt(choice){
-        var allow = "false";
+            //var allow = "false";
             //var t = <?php echo "'$resp'"; ?>;
         var t = "<?php echo $resp; ?>";
         alert(t);
@@ -51,16 +52,9 @@ echo $number;
         {
             var sumOfResponder = "<?php echo $number; ?>";
             alert(sumOfResponder);
-            var responder = "<?php echo $respondant; ?>";
+            var responder = "<?php echo $allow; ?>";
             alert(responder);
-            for(var i = 0;i <= sumOfResponder; i++)
-            {
-                //if (<?php echo "$survey_res["+i+"]"; ?> == responder)
-                //{
-                //  allow = "true";
-                //}
-            }
-            if (allow == "true")
+            if (responder == "true")
             {
                 var data =
                 {
@@ -113,6 +107,10 @@ echo $number;
 	echo "<h1>" . $survey ['question'] . "</h1>"; 
 	echo "<p> (Other recipients: ";
 	for($i = 0; $i < count ( $survey_res ) - 1; $i ++) {
+        if ($survey_res [$i] == $respondant)
+        {
+            $allow = "true";
+        }
 		echo $survey_res [$i] . ", ";
 	}
 	echo $survey_res [$i] . " )</p>";
