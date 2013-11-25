@@ -5,11 +5,11 @@ require_once 'survey_db.php';
 $survey_id = $_GET ['id'];
 $survey = get_survey_by_id ( $_GET ['id'] );
 $survey_res = get_survey_recipient_by_id ( $survey_id );
-$resp = false;
+$resp = "false";
 if(isset($_GET['responder']))
 {
     $respondant = $_GET ['responder'];
-    $resp = true;
+    $resp = "true";
 }
     echo $resp;
 ?>
@@ -39,7 +39,7 @@ if(isset($_GET['responder']))
 <script type="text/javascript">
 	function submitIt(choice){
         var t = "<?php echo $resp ?>";
-        if (t == false)
+        if (t == "false")
         {
             	alert('You cannot vote');
         }
@@ -78,14 +78,12 @@ if(isset($_GET['responder']))
 <body onload="init()">
 	<div class='container'>
 	<?php
-    if (!isset($_GET['responder'])
+    if (!isset($_GET['responder']))
     {
         echo "<ul class=\"pager\">";
         echo "<li class=\"previous\"><a href=\"home.php\">&larr; Home</a></li>";
         echo "</ul>";
     }
-    ?>
-    <?php
 	echo "<h1>" . $survey ['question'] . "</h1>"; 
 	echo "<p> (Other recipients: ";
 	for($i = 0; $i < count ( $survey_res ) - 1; $i ++) {
