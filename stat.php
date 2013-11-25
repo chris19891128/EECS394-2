@@ -8,8 +8,6 @@
 	href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css"
 	rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
-<script type="text/javascript" src="js/external/d3.v3/d3.v3.min.js"></script>
-<script type="text/javascript" src="js/external/d3.v3/d3.v3.js"></script>
 
 <?php
     require_once 'lib/all_error.php';
@@ -20,8 +18,11 @@
 
 </head>
 <body>
-<a href="home.php" id="home_link">Home</a>
-<a href="stat2.php?id=<?php echo $survey_id?>">Track respondants</a>
+<div class="container">
+	<ul class="pager">
+		<li class="previous"><a href="home.php">&larr; Home</a></li>
+	</ul>
+<!-- <a href="stat2.php?id=<?php echo $survey_id?>">Track respondants</a> -->
 
 <?php
 $survey = get_survey_by_id ( $_GET ['id'] );
@@ -49,57 +50,71 @@ for($i = 0; $i < count ( $survey ['answer'] ); $i ++) {
 
 mysqli_close ( $mysql );
 ?>
+	<h1><?php echo $survey ['question']; ?></h1>
 
-<div class="container">
-		<h1><?php echo $survey ['question']; ?></h1>
-		<table class="table">
-			<tr>
-				<th>Answer</th>
-				<th>Graphic</th>
-				<th>Statistic</th>
-				<th>Respondants</th>
-			</tr>
-		<?php
-		
-		echo "<script type='text/javascript'>show();</script>";
-		
-		for($i = 0; $i < count ( $survey ['answer'] ); $i ++) {
-			$choice = $survey ['answer'] [$i];
-			$count = $stat [$i];
-			if ($totalNumber > 0) {
-				$percent1 = ($count / $totalNumber * 100) . '%';
-				$percent2 = ((1 - $count / $totalNumber) * 100) . '%';
-			} else {
-				$percent1 = '0%';
-				$percent2 = '100%';
-			}
-			echo <<<END
-			<tr>
-				<td style="width:100px">$choice</td> 
-				<td style="width:">
-					<table width="100%">
-						<td style="width:$percent1" bgcolor="DarkCyan" height="20px"/>
-						<td style="width:$percent2" height="20px"/>
-					</table>
-				</td>
-				<td style="width:100px">$count</td> 
-				<td style="width:100px">
-					<table width="100%">
-END;
-			
-			foreach ( $res [$i] as $single_email ) {
-				echo "<tr><td>$single_email</td></tr>";
-			}
-			echo <<<END
-					</table>
-				</td>
-			</tr>
-END;
+	<ul class="nav nav-tabs">
+		<li><a href="answer.php?id=<?php echo $survey_id; ?>">Vote</a></li>
+		<li class="active"><a href="#">See Result</a></li>
+	</ul>
+	<br />
+	<p>You can click on the bar chart to see who voted :)</p>
+	<table class="table" id="stats_graph">
+		<!-- <tr>
+			<th>Answer</th>
+			<th>Graphic</th>
+			<th>Statistic</th>
+			<th>Respondants</th>
+		</tr> -->
+	<?php
+	
+	// echo "<script type='text/javascript'>show();</script>";
+	
+	for($i = 0; $i < count ( $survey ['answer'] ); $i ++) {
+		$choice = $survey ['answer'] [$i];
+		$count = $stat [$i];
+		if ($totalNumber > 0) {
+			$percent = ($count / $totalNumber * 100) . '%';
+		} else {
+			$percent = '0%';
 		}
+		echo <<<END
+		<tr>
+			<td>$choice</td> 
+			<td style="width:100%;">
+				<a style="display: block; width:$percent; height: 20px; background-color: #428bca;" data-toggle="modal" data-target="#voters$i"> </a>
+			</td>
+			<td>$count</td> 
+			<td>
+			<div class="modal fade" id="voters$i" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  <div class="modal-dialog">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			        <h4 class="modal-title" id="myModalLabel">Voters for $choice</h4>
+			      </div>
+			      <div class="modal-body">
+END;
 		
-		?>
+		foreach ( $res [$i] as $single_email ) {
+			echo "$single_email<br />";
+		}
+		echo <<<END
+				  <div class="modal-footer">
+			        <!--<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			        <button type="button" class="btn btn-primary">Save changes</button>-->
+			      </div>
+			    </div><!-- /.modal-content -->
+			  </div><!-- /.modal-dialog -->
+			</div><!-- /.modal -->
+		</tr>
+END;
+	}
+	
+	?>
 
 	</table>
 	<?php include ("footer.inc");?>
 </div>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>
 </body>

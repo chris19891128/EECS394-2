@@ -14,10 +14,11 @@
 
 </head>
 <body>
-<a href="home.php" id="home_link">Home</a>
-
-	<div class="container">
-		<table class="table">
+<div class="container">
+	<ul class="pager">
+	  <li class="previous"><a href="home.php">&larr; Home</a></li>
+	</ul>
+	<table class="table">
 <?php
 require_once 'lib/all_error.php';
 session_start ();
@@ -32,7 +33,7 @@ while ( $row = mysqli_fetch_array ( $result ) ) {
 	echo "<tr>";
 	echo "<td>Poll_$id</td>";
 	echo "<td><a href='stat.php?id=$id'>See statistic result</a></td>";
-	echo "<td><a href='stat2.php?id=$id'>See individual result</a></td>";
+	// echo "<td><a href='stat2.php?id=$id'>See individual result</a></td>";
 	echo "</tr>";
 }
 ?>

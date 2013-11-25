@@ -64,13 +64,19 @@ $respondant = $_GET ['responder'];
 <body onload="init()">
 	<div class='container'>
 	<?php
-	echo "<h1>" . $survey ['question'] . "</h1>";
+	echo "<h1>" . $survey ['question'] . "</h1>"; 
 	echo "<p> (Other recipients: ";
 	for($i = 0; $i < count ( $survey_res ) - 1; $i ++) {
 		echo $survey_res [$i] . ", ";
 	}
 	echo $survey_res [$i] . " )</p>";
-	
+	?>
+	<ul class="nav nav-tabs">
+		<li class="active"><a href="#">Vote</a></li>
+		<li><a href="stat.php?id=<?php echo $survey_id; ?>">See Result</a></li>
+	</ul>
+	<br />
+	<?php
 	$count = 0;
 	foreach ( $survey ['answer'] as $choice ) {
 		echo '<p><button class="choiceButton btn btn-default" type="button"' . 'onClick="submitIt(\'' . $count ++ . '\')">' . $choice . '</button></p>';

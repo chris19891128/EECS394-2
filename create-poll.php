@@ -31,7 +31,10 @@ if (! isset ( $_SESSION ['token'] )) {
 <script type="text/javascript" src="js/site.js"></script>
 </head>
 <body onload="init()">
-
+<div class="container">
+<ul class="pager">
+  <li class="previous"><a href="home.php">&larr; Home</a></li>
+</ul>
 <?php
 if ($_POST) {
 	$mysql = new mysqli ( 'localhost', 'root', 'stu.fudan2013', 'EasyPolling' ) or die ( 'Cannot connect to Database' );
@@ -43,57 +46,49 @@ if ($_POST) {
 	mysqli_close ( $mysql );
 } else {
 	echo <<<END
-	<div class="container">
-		<a href="home.php" id="home_link" class="btn btn-default">Home</a>
-		<form action="create-poll.php" method="" id="create">
-			<input type="hidden" id="emailHidden" value="$_SESSION[email]"/>
-			<div id="poll">
-				<div class="form-group" id="recipient-group">
-					<label for="recipient">To:</label> <input type="text"
-						class="form-control" id="recipient"
-						placeholder="Email list here separated by comma" />
+	<form action="create-poll.php" method="" id="create">
+		<input type="hidden" id="emailHidden" value="$_SESSION[email]"/>
+		<div id="poll">
+			<div class="form-group" id="recipient-group">
+				<label for="recipient">To:</label> <input type="text"
+					class="form-control" id="recipient"
+					placeholder="Email list here separated by comma" />
+			</div>
+			<div class="form-group" id="question-group">
+				<label for="question">Question:</label> <input type="text"
+					class="form-control" id="question"
+					placeholder="Enter your question here" />
+			</div>
+			<div class="form-group" id="option-group">
+				<div class="form-group">
+					<label for="option_1_input">Option 1:</label>
+					<input type="text" class="form-control" id="option_1_input" placeholder="" />
 				</div>
-				<div class="form-group" id="question-group">
-					<label for="question">Question:</label> <input type="text"
-						class="form-control" id="question"
-						placeholder="Enter your question here" />
-				</div>
-				<div class="form-group" id="option-group">
-					<div class="form-group">
-						<label for="option_1_input">Option 1:</label>
-						<input type="text" class="form-control" id="option_1_input" placeholder="" />
-					</div>
-					<div class="form-group">
-						<label for="option_2_input">Option 2:</label>
-						<input type="text" class="form-control" id="option_2_input" placeholder="" />
-					</div>
+				<div class="form-group">
+					<label for="option_2_input">Option 2:</label>
+					<input type="text" class="form-control" id="option_2_input" placeholder="" />
 				</div>
 			</div>
-			<button type="button" class="btn btn-default" onclick="addOption()">Add
-				Option</button>
-			<button type="button" class="btn btn-default" onclick="newPoll()">Make a Poll</button>
-		
-		</form>
-	</div>
+		</div>
+		<button type="button" class="btn btn-default btn-lg" onclick="addOption()">Add
+			Option</button>
+		<button type="button" class="btn btn-primary btn-lg" onclick="newPoll()">Make a Poll</button>
 	
-	<div class="container">
-		<form class="form-inline" role="form" id="success">
-			<p>See the statistical result, click <a id="seeResult" href="">here</a></p>
-			<p>See the result by each recipient, click <a id="seeResult2" href="">here</a></p>
-		</form>
+	</form>
+
+	<div id="success">
+		<h1>Congratulations! Your poll has been sent out!</h1>
+		<a id="seeResult" href="" class="btn btn-primary btn-lg">See the Results</a>
 	</div>
-	
-	<div class="container">
-		<form class="form-inline" role="form" id="progress">
-			<p>Sending Emails....... Please Wait</p>
-		</form>
+
+	<div id="progress">
+		<h1>Sending Emails... Please Wait</h1>
 	</div>
-	
 END;
 }
 
 ?>
-
-	<footer>- EasyPolling, Powered by the Orange Team, EECS394 2013</footer>
+<?php include ("footer.inc");?>
+</div>
 </body>
 </html>
