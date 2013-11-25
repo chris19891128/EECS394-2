@@ -11,7 +11,8 @@ if(isset($_GET['responder']))
     $respondant = $_GET ['responder'];
     $resp = "true";
 }
-    echo $resp;
+$number = count ( $survey_res ) -1;
+        //echo $resp;
 ?>
 
 <!DOCTYPE html>
@@ -38,29 +39,52 @@ if(isset($_GET['responder']))
 
 <script type="text/javascript">
 	function submitIt(choice){
-        var t = "<?php echo $resp ?>";
+        var allow = "false";
+        var t = <?php echo "'$resp'"; ?>;
+        alert(t);
         if (t == "false")
         {
             	alert('You cannot vote');
         }
         else
         {
-            var data = {
+            var sumOfResponder = <?php echo "'$number'"; ?>;
+            alert(sumOfResponder);
+            var responder = <?php echo "'$respondant'"; ?>;
+            alert(responder);
+            for(var i = 0;i <= sumOfResponder; i++)
+            {
+                if (<?php echo "'$survey_res['"+i+"']'"; ?> == responder)
+                {
+                    allow = "true";
+                }
+            }
+            if (allow == "true")
+            {
+                var data =
+                {
                     id: <?php echo "'$survey_id'"; ?>,
                     choice: choice,
                     respondant: <?php echo "'$respondant'"; ?>
-            };
-            $.ajax({
-                   type: "POST",
-                   url: "response.php",
-                   data: data,
-                   success:function(data){
-                   if(data=='error'){
+                };
+                $.ajax(
+                    {
+                    type: "POST",
+                    url: "response.php",
+                    data: data,
+                    success:function(data){
+                    if(data=='error')
+                    {
                         alert('You cannot vote twice');
-                   }
-                   location.replace("stat.php?id=" + <?php echo "'$survey_id'"; ?>);
-                   }
-                   });
+                    }
+                    location.replace("stat.php?id=" + <?php echo "'$survey_id'"; ?>);
+                    }
+                    });
+            }
+            else
+            {
+                alert('you are not allow to vote');
+            }
         }
 	}
 
