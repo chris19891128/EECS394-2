@@ -53,7 +53,7 @@ if ($client->getAccessToken ()) {
 <head>
 <meta charset="utf-8">
 
-<title>Easy Polling</title>
+<title>iMDown</title>
 <meta name="description" content="Test Project">
 <meta name="viewport" content="width=device-width">
 <link
@@ -67,7 +67,7 @@ if ($client->getAccessToken ()) {
 
 <body>
 	<div class="container">
-		<h1>Welcome to EasyPolling, please connect your Gmail account first.</h1>
+		<h1>Welcome to iMDown, please connect your Gmail account first.</h1>
 	<?php print "<a class='login btn btn-primary btn-lg' href='$authUrl'>Connect Me!</a>"; ?>
 </div>
 	<script type="text/javascript"

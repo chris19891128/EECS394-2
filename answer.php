@@ -11,7 +11,7 @@ $respondant = $_GET ['responder'];
 <!DOCTYPE html>
 <html>
 <head>
-<title>EasyPolling</title>
+<title>iMDown</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Bootstrap -->
 <link
