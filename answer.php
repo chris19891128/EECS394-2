@@ -50,8 +50,9 @@ $number = count ( $survey_res ) -1;
 	echo "<p> (Other recipients: ";
     if (isset($_GET['responder']))
     {
+        echo "{".$respondant."}";
         for($i = 0; $i < count ( $survey_res ) - 1; $i ++) {
-            echo ($survey_res[$i])." ";
+            echo "|".($survey_res[$i])."|";
             if ($survey_res [$i] == $respondant)
             {
                 $allow = "true";
