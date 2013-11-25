@@ -67,14 +67,14 @@ mysqli_close ( $mysql );
 
 	<ul class="nav nav-tabs">
 <?php
-    if ($resp == "true")
-    {
-    echo '<li><a href="answer.php?id='.$survey_id.'&responder='.$respondant.'">Vote</a></li>';
-    }
-    else
-    {
+        //if ($resp == "true")
+        //{
+        //echo '<li><a href="answer.php?id='.$survey_id.'&responder='.$respondant.'">Vote</a></li>';
+        //}
+        //else
+        //{
     echo '<li><a href="answer.php?id='.$survey_id.'">Vote</a></li>';
-    }
+        //}
     ?>
     <li class="active"><a href="#">See Result</a></li>
 	</ul>
