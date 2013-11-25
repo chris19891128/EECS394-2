@@ -92,7 +92,7 @@ function submitIt(choice){
     if (t == "false")
         {
             alert("You cannot vote");
-            break;
+            continue;
         }
     else
         {
