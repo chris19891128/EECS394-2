@@ -123,7 +123,7 @@ function submitIt(choice){
             }
         else
             {
-            alert('you are not allow to vote');
+            alert('you are not allowed to vote');
             }
         }
 }
