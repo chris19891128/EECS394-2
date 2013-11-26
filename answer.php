@@ -96,8 +96,8 @@ $number = count ( $survey_res ) -1;
 <script type="text/javascript">
 function submitIt(choice){
         //var allow = "false";
-        //var t = <?php echo "'$resp'"; ?>;
-    var t = "<?php echo $resp; ?>";
+    var t2 = "<?php echo $resp; ?>";
+    var t = "<?php echo $allow; ?>";
     if (t == "false")
         {
             alert("You cannot vote");
@@ -124,9 +124,12 @@ function submitIt(choice){
                    {
                    if(data=='error')
                    {
-                   alert('You cannot vote twice');
+                        alert('You cannot vote twice');
                    }
-                   location.replace("stat.php?id=" + <?php echo "'$survey_id'"; ?>);
+                   if (t2 == "false")
+                   {
+                        location.replace("stat.php?id=" + <?php echo "'$survey_id'"; ?>);
+                   }
                    }
                    });
             }
