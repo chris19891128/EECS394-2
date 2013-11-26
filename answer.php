@@ -126,9 +126,14 @@ function submitIt(choice){
                    {
                         alert('You cannot vote twice');
                    }
-                   if (t2 != "false")
+                   if (t2 == "false")
                    {
                         location.replace("stat.php?id=" + <?php echo "'$survey_id'"; ?>);
+                   }
+                   else
+                   {
+                   location.replace("stat.php?id=" + <?php echo "'$survey_id'"; ?> + "&responder=" + <?php echo "'$respondant'"; ?> );
+                   
                    }
                    }
                    });
