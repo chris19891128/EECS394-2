@@ -74,7 +74,7 @@ $number = count ( $survey_res ) -1;
                 else
                 {
                 echo '<li><a href="stat.php?id='.$survey_id.'">See Result</a></li>';
-                echo '<li><a href="stat2.php?id='.$survey_id.'">Tack Respondants</a></li>';
+                echo '<li><a href="stat2.php?id='.$survey_id.'">Track Respondants</a></li>';
                 }
         ?>
 	</ul>

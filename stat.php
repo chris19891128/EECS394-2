@@ -71,13 +71,13 @@ mysqli_close ( $mysql );
         if ($resp == "true")
         {
         echo '<li><a href="answer.php?id='.$survey_id.'&responder='.$respondant.'">Vote</a></li>';
-        <li class="active"><a href="#">See Result</a></li>
+        echo '<li class="active"><a href="#">See Result</a></li>';
         echo '<li><a href="stat2.php?id='.$survey_id.'&responder='.$respondant.'">Tack Respondants</a></li>';
         }
         else
         {
         echo '<li><a href="answer.php?id='.$survey_id.'">Vote</a></li>';
-        <li class="active"><a href="#">See Result</a></li>
+        echo '<li class="active"><a href="#">See Result</a></li>';
         echo '<li><a href="stat2.php?id='.$survey_id.'">Track Respondants</a></li>';
         }
     ?>
