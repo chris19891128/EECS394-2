@@ -78,7 +78,7 @@ mysqli_close ( $mysql );
 <li class="active"><a href="#">Track Respondants</a></li>
 </ul>
 <br />
-		<table class="table" border="0">
+		<table class="table" border="0" frame="void">
 				<th>Recipient</th>
 				<th>Answer</th>
 		<?php
