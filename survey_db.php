@@ -32,6 +32,7 @@ function get_survey_recipient_by_id($survey_id) {
 	}
 	mysqli_close ( $link );
 	return $json;
+}
     
 function get_survey_creator_by_id($survey_id)
 {
