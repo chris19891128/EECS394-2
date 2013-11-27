@@ -33,7 +33,7 @@ function get_survey_recipient_by_id($survey_id) {
 	mysqli_close ( $link );
 	return $json;
     
-function get_creator_by_id($survey_id)
+function get_survey_creator_by_id($survey_id)
 {
     $link = new mysqli ( 'localhost', 'root', 'stu.fudan2013', 'EasyPolling' ) or die ( 'Cannot connect to Database' );
 	$query = "select Creator from Poll where ID='$survey_id'";

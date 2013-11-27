@@ -22,7 +22,7 @@ require_once 'survey_db.php';
 $survey_id = $_GET ['id'];
 $survey = get_survey_by_id ( $_GET ['id'] );
 $survey_res = get_survey_recipient_by_id ( $survey_id );
-$survey_creator = get_creator_by_id($survey_id);
+$survey_creator = get_survey_creator_by_id ( $survey_id );
     echo ($survey_creator);
 $resp = "false";
 $allow = "false";
