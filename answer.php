@@ -3,10 +3,20 @@ require_once 'lib/all_error.php';
 require_once 'survey_db.php';
     
     session_start ();
-    if (! isset ( $_SESSION ['token'] )) {
-        header ( 'location: login.php' );
+    if(isset($_GET['responder']))
+    {
+        $respondant = $_GET ['responder'];
+        $resp = "true";
+    $_SESSION ['email'] = $respondant;
     }
-    echo $_SESSION ['email'];
+    else
+    {
+        if (! isset ( $_SESSION ['token'] )) {
+            header ( 'location: login.php' );
+        }
+    
+    }
+    echo "  ".$_SESSION ['email'];
 
 $survey_id = $_GET ['id'];
 $survey = get_survey_by_id ( $_GET ['id'] );
