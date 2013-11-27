@@ -41,7 +41,7 @@ function get_survey_creator_by_id($survey_id)
     $result = mysqli_query ( $link, $query );
     $row = mysqli_fetch_array ( $result );
     if ($row) {
-		$creator = $row ['recipient'];
+		$creator = $row ['Creator'];
 	} else {
 		echo mysqli_error ( $link );
 		$creator = NULL;
