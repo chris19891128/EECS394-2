@@ -91,13 +91,13 @@ $number = count ( $survey_res ) - 1;
         <?php
                 if ($resp == "true")
                 {
-                echo '<li><a href="stat.php?id='.$survey_id.'&responder='.$respondant.'">See Result</a></li>';
-                echo '<li><a href="stat2.php?id='.$survey_id.'&responder='.$respondant.'">Track Respondants</a></li>';
+                echo '<li><a href="stat.php?id='.$survey_id.'&responder='.$respondant.'">Result</a></li>';
+                echo '<li><a href="stat2.php?id='.$survey_id.'&responder='.$respondant.'">Respondants</a></li>';
                 }
                 else
                 {
-                echo '<li><a href="stat.php?id='.$survey_id.'">See Result</a></li>';
-                echo '<li><a href="stat2.php?id='.$survey_id.'">Track Respondants</a></li>';
+                echo '<li><a href="stat.php?id='.$survey_id.'">Result</a></li>';
+                echo '<li><a href="stat2.php?id='.$survey_id.'">Respondants</a></li>';
                 }
         ?>
 	</ul>
