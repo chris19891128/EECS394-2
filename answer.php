@@ -14,14 +14,16 @@ require_once 'survey_db.php';
         if (! isset ( $_SESSION ['token'] )) {
             header ( 'location: login.php' );
         }
+        $respondant = $_SESSION ['email'];
     
     }
     echo $respondant;
-    echo "  ".$_SESSION ['email'];
 
 $survey_id = $_GET ['id'];
 $survey = get_survey_by_id ( $_GET ['id'] );
 $survey_res = get_survey_recipient_by_id ( $survey_id );
+$survey_creator = get_survey_creator_by_id($survey_id);
+    echo ($survey_creator);
 $resp = "false";
 $allow = "false";
 if(isset($_GET['responder']))
@@ -29,7 +31,8 @@ if(isset($_GET['responder']))
     $respondant = $_GET ['responder'];
     $resp = "true";
 }
-$number = count ( $survey_res ) -1;
+$number = count ( $survey_res ) - 1;
+
 ?>
 
 <!DOCTYPE html>
@@ -65,20 +68,23 @@ $number = count ( $survey_res ) -1;
     }
 	echo "<h1>" . $survey ['question'] . "</h1>"; 
 	echo "<p> (Other recipients: ";
-    if (isset($_GET['responder']))
-    {
+            //if (isset($_GET['responder']))
+            //{
+            //}
+    }
+	for($i = 0; $i < count ( $survey_res ) - 1; $i ++) {
+		echo $survey_res [$i] . ", ";
+	}
+	echo $survey_res [$i] . " )</p>";
+    $survey_res[$number] = $survey_creator;
+    $number = $number + 1;
         for($i = 0; $i < count ( $survey_res ); $i ++) {
             if ($survey_res [$i] == $respondant)
             {
                 $allow = "true";
                 break;
             }
-        }
-    }
-	for($i = 0; $i < count ( $survey_res ) - 1; $i ++) {
-		echo $survey_res [$i] . ", ";
-	}
-	echo $survey_res [$i] . " )</p>";
+
 	?>
 	<ul class="nav nav-tabs">
 		<li class="active"><a href="#">Vote</a></li>
@@ -145,10 +151,10 @@ function submitIt(choice){
                    {
                         alert('You cannot vote twice');
                    }
-                   if (t2 == "false")
-                   {
-                        location.replace("stat.php?id=" + <?php echo "'$survey_id'"; ?>);
-                   }
+                   //if (t2 == "false")
+                   //{
+                   //   location.replace("stat.php?id=" + <?php echo "'$survey_id'"; ?>);
+                   //}
                    else
                    {
                    location.replace("stat.php?id=" + <?php echo "'$survey_id'"; ?> + "&responder=" + <?php echo "'$respondant'"; ?> );
