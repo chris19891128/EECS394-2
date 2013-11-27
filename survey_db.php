@@ -22,7 +22,7 @@ function get_survey_recipient_by_id($survey_id) {
 	$query = "select * from Poll where ID='$survey_id'";
 	$result = mysqli_query ( $link, $query );
 	$row = mysqli_fetch_array ( $result );
-	
+    
 	if ($row) {
 		$emails = $row ['recipient'];
 		$json = json_decode ( $emails, true );
@@ -48,7 +48,4 @@ function get_survey_creator_by_id($survey_id)
 	mysqli_close ( $link );
 	return $creator;
 }
-    
-}
-
 ?>
