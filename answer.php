@@ -7,7 +7,7 @@ require_once 'survey_db.php';
     {
         $respondant = $_GET ['responder'];
         $resp = "true";
-        $_SESSION ['email'] = $respondant;
+        //$_SESSION ['email'] = $respondant;
     }
     else
     {
