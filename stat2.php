@@ -79,10 +79,8 @@ mysqli_close ( $mysql );
 </ul>
 <br />
 		<table class="table">
-			<tr>
 				<th>Recipient</th>
 				<th>Answer</th>
-			</tr>
 		<?php
 		foreach ( $survey_res as $res ) {
 			echo "<tr><td>$res</td>";
