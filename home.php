@@ -6,7 +6,10 @@ if (! isset ( $_SESSION ['token'] )) {
 }
 if(isset($_POST["logout"]))
 {
+    echo ("you click logout");
     unset($_SESSION['token']);
+    unset($_SESSION ['email']);
+	unset($_SESSION ['image']);
     session_destroy();
 }
 ?>
@@ -40,7 +43,7 @@ if(isset($_POST["logout"]))
 			<button type="submit" class="btn btn-default btn-lg"
 				formaction="history-poll.php">History Polls</button>
             <button class="btn btn-default btn-lg" value="logout"
-                formaction="home.php">LogOut</button>
+                formaction="home.php" method="post">LogOut</button>
 		</form>
 	</div>
 	<script type="text/javascript"
