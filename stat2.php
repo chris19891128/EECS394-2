@@ -1,6 +1,6 @@
 <!doctype html>
 <head>
-<title>Survey Results</title>
+<title>Track</title>
 <link
 	href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"
 	rel="stylesheet">
@@ -14,15 +14,17 @@
 <?php
     require_once 'lib/all_error.php';
     require_once 'survey_db.php';
-    
+    $resp = "false";
+    if(isset($_GET['responder']))
+    {
+    $respondant = $_GET ['responder'];
+    $resp = "true";
+    }
     $survey_id = $_GET ['id'];
 ?>
 
 </head>
 <body>
-<a href="home.php" id="home_link">Home</a>
-<a href="stat.php?id=<?php echo $survey_id?>">View Results</a>
-
 <?php
 $survey = get_survey_by_id ( $_GET ['id'] );
 $survey_res = get_survey_recipient_by_id ( $_GET ['id'] );
@@ -41,6 +43,30 @@ mysqli_close ( $mysql );
 ?>
 
 <div class="container">
+<?php
+    if (!isset($_GET['responder']))
+    {
+    echo "<ul class=\"pager\">";
+    echo "<li class=\"previous\"><a href=\"home.php\">&larr; Home</a></li>";
+    echo "</ul>";
+    }
+    ?>
+<ul class="nav nav-tabs">
+<?php
+    if ($resp == "true")
+    {
+    echo '<li><a href="answer.php?id='.$survey_id.'&responder='.$respondant.'">Vote</a></li>';
+    echo '<li><a href="stat.php?id='.$survey_id.'&responder='.$respondant.'">See Result</a></li>';
+    }
+    else
+    {
+    echo '<li><a href="answer.php?id='.$survey_id.'">Vote</a></li>';
+    echo '<li><a href="stat.php?id='.$survey_id.'">See Result</a></li>';
+    }
+    ?>
+<li class="active"><a href="#">Track Respondants</a></li>
+</ul>
+<br />
 		<h1><?php echo $survey ['question']; ?></h1>
 		<table class="table">
 			<tr>
