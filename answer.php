@@ -71,7 +71,7 @@ $number = count ( $survey_res ) - 1;
             //if (isset($_GET['responder']))
             //{
             //}
-    }
+            //}
 	for($i = 0; $i < count ( $survey_res ) - 1; $i ++) {
 		echo $survey_res [$i] . ", ";
 	}
@@ -84,7 +84,7 @@ $number = count ( $survey_res ) - 1;
                 $allow = "true";
                 break;
             }
-
+        }
 	?>
 	<ul class="nav nav-tabs">
 		<li class="active"><a href="#">Vote</a></li>
