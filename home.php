@@ -6,11 +6,12 @@ if (! isset ( $_SESSION ['token'] )) {
 }
 if(isset($_GET["logout"]))
 {
-    echo ("you click logout");
+        //echo ("you click logout");
     unset($_SESSION['token']);
     unset($_SESSION ['email']);
 	unset($_SESSION ['image']);
     session_destroy();
+    header ( 'location: login.php' );
 }
 ?>
 <!doctype html>
