@@ -50,7 +50,18 @@ mysqli_close ( $mysql );
     echo "<li class=\"previous\"><a href=\"home.php\">&larr; Home</a></li>";
     echo "</ul>";
     }
+    $survey = get_survey_by_id ( $_GET ['id'] );
+    $survey_res = get_survey_recipient_by_id ( $survey_id );
     ?>
+    <h1><?php echo $survey ['question']; ?></h1>
+<?php
+    echo "<p> (Other recipients: ";
+    for($i = 0; $i < count ( $survey_res ) - 1; $i ++) {
+        echo $survey_res [$i] . ", ";
+    }
+    echo $survey_res [$i] . " )</p>";
+    ?>
+
 <ul class="nav nav-tabs">
 <?php
     if ($resp == "true")

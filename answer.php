@@ -69,12 +69,12 @@ $number = count ( $survey_res ) -1;
                 if ($resp == "true")
                 {
                 echo '<li><a href="stat.php?id='.$survey_id.'&responder='.$respondant.'">See Result</a></li>';
-                echo '<li><a href="stat2.php?id='.$survey_id.'&responder='.$respondant.'">Track respondants</a></li>';
+                echo '<li><a href="stat2.php?id='.$survey_id.'&responder='.$respondant.'">Track Respondants</a></li>';
                 }
                 else
                 {
                 echo '<li><a href="stat.php?id='.$survey_id.'">See Result</a></li>';
-                echo '<li><a href="stat2.php?id='.$survey_id.'">See Result</a></li>';
+                echo '<li><a href="stat2.php?id='.$survey_id.'">Tack Respondants</a></li>';
                 }
         ?>
 	</ul>
