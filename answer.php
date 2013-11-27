@@ -1,6 +1,11 @@
 <?php
 require_once 'lib/all_error.php';
 require_once 'survey_db.php';
+    
+    session_start ();
+    if (! isset ( $_SESSION ['token'] )) {
+        header ( 'location: login.php' );
+    }
 
 $survey_id = $_GET ['id'];
 $survey = get_survey_by_id ( $_GET ['id'] );

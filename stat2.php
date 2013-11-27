@@ -78,6 +78,7 @@ mysqli_close ( $mysql );
 <li class="active"><a href="#">Track Respondants</a></li>
 </ul>
 <br />
+        <!-- frame = "void" -- not show the edge of the table -->
 		<table class="table" border="0" frame="void">
 				<th>Recipient</th>
 				<th>Answer</th>
