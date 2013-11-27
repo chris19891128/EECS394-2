@@ -42,7 +42,7 @@ if(isset($_GET["logout"]))
 				formaction="create-poll.php">New Poll</button>
 			<button type="submit" class="btn btn-default btn-lg"
 				formaction="history-poll.php">History Polls</button>
-            <button type="submit" class="btn btn-default btn-lg" value="logout"
+            <button type="submit" class="btn btn-default btn-lg" value="logout" name="logout"
                 formaction="home.php">LogOut</button>
 		</form>
 	</div>
