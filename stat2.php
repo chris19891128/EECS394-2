@@ -1,6 +1,6 @@
 <!doctype html>
 <head>
-<title>Track</title>
+<title>Track Respondants</title>
 <link
 	href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"
 	rel="stylesheet">
@@ -78,7 +78,6 @@ mysqli_close ( $mysql );
 <li class="active"><a href="#">Track Respondants</a></li>
 </ul>
 <br />
-		<h1><?php echo $survey ['question']; ?></h1>
 		<table class="table">
 			<tr>
 				<th>Recipient</th>
