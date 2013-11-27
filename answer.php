@@ -6,6 +6,7 @@ require_once 'survey_db.php';
     if (! isset ( $_SESSION ['token'] )) {
         header ( 'location: login.php' );
     }
+    echo $_SESSION['email'];
 
 $survey_id = $_GET ['id'];
 $survey = get_survey_by_id ( $_GET ['id'] );
