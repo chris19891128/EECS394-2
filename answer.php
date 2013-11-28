@@ -17,13 +17,13 @@ require_once 'survey_db.php';
         $respondant = $_SESSION ['email'];
     
     }
-    echo $respondant;
+    echo "respondant: ".$respondant;
 
 $survey_id = $_GET ['id'];
 $survey = get_survey_by_id ( $_GET ['id'] );
 $survey_res = get_survey_recipient_by_id ( $survey_id );
 $survey_creator = get_survey_creator_by_id ( $survey_id );
-    echo ($survey_creator);
+    echo "creator:  ".($survey_creator);
 $resp = "false";
 $allow = "false";
 if(isset($_GET['responder']))
