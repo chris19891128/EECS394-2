@@ -73,7 +73,7 @@ $number = count ( $survey_res );
         echo 'number:  '.($number).' ';
     $survey_res[$number] = $survey_creator;
     $number = $number + 1;
-        for($i = 0; $i < count ( $survey_res ) - 1; $i ++) {
+        for($i = 0; $i < count ( $survey_res ); $i ++) {
             echo 'voters: '.($survey_res[$i]).'    ';
             if ($survey_res [$i] == $respondant)
             {
