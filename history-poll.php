@@ -1,6 +1,8 @@
 <!doctype html>
 <head>
-<title>Survey Results</title>
+<title>iMDown</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Bootstrap -->
 <link
 	href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"
 	rel="stylesheet">
@@ -8,8 +10,13 @@
 	href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css"
 	rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
-<script type="text/javascript" src="js/external/d3.v3/d3.v3.min.js"></script>
-<script type="text/javascript" src="js/external/d3.v3/d3.v3.js"></script>
+<link rel="stylesheet"
+	href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+<link rel="stylesheet" href="/resources/demos/style.css" />
+<script type="text/javascript"
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 
 
 </head>

@@ -1,15 +1,22 @@
 <!doctype html>
 <head>
-<title>Track Respondants</title>
+<title>iMDown</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Bootstrap -->
 <link
-	href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"
-	rel="stylesheet">
+    href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"
+    rel="stylesheet">
 <link
-	href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css"
-	rel="stylesheet">
+    href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css"
+    rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
-<script type="text/javascript" src="js/external/d3.v3/d3.v3.min.js"></script>
-<script type="text/javascript" src="js/external/d3.v3/d3.v3.js"></script>
+<link rel="stylesheet"
+    href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+<link rel="stylesheet" href="/resources/demos/style.css" />
+<script type="text/javascript"
+    src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 
 <?php
     require_once 'lib/all_error.php';
@@ -67,15 +74,15 @@ mysqli_close ( $mysql );
     if ($resp == "true")
     {
     echo '<li><a href="answer.php?id='.$survey_id.'&responder='.$respondant.'">Vote</a></li>';
-    echo '<li><a href="stat.php?id='.$survey_id.'&responder='.$respondant.'">See Result</a></li>';
+    echo '<li><a href="stat.php?id='.$survey_id.'&responder='.$respondant.'">Result</a></li>';
     }
     else
     {
     echo '<li><a href="answer.php?id='.$survey_id.'">Vote</a></li>';
-    echo '<li><a href="stat.php?id='.$survey_id.'">See Result</a></li>';
+    echo '<li><a href="stat.php?id='.$survey_id.'">Result</a></li>';
     }
     ?>
-<li class="active"><a href="#">Track Respondants</a></li>
+<li class="active"><a href="#">Respondants</a></li>
 </ul>
 <br />
         <!-- frame = "void" -- not show the edge of the table -->

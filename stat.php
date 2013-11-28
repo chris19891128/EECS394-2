@@ -1,6 +1,8 @@
 <!doctype html>
 <head>
-<title>Survey Results</title>
+<title>iMDown</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Bootstrap -->
 <link
 	href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"
 	rel="stylesheet">
@@ -8,6 +10,13 @@
 	href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css"
 	rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet"
+	href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+<link rel="stylesheet" href="/resources/demos/style.css" />
+<script type="text/javascript"
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 
 <?php
     require_once 'lib/all_error.php';
@@ -71,14 +80,14 @@ mysqli_close ( $mysql );
         if ($resp == "true")
         {
         echo '<li><a href="answer.php?id='.$survey_id.'&responder='.$respondant.'">Vote</a></li>';
-        echo '<li class="active"><a href="#">See Result</a></li>';
-        echo '<li><a href="stat2.php?id='.$survey_id.'&responder='.$respondant.'">Tack Respondants</a></li>';
+        echo '<li class="active"><a href="#">Result</a></li>';
+        echo '<li><a href="stat2.php?id='.$survey_id.'&responder='.$respondant.'">Respondants</a></li>';
         }
         else
         {
         echo '<li><a href="answer.php?id='.$survey_id.'">Vote</a></li>';
-        echo '<li class="active"><a href="#">See Result</a></li>';
-        echo '<li><a href="stat2.php?id='.$survey_id.'">Track Respondants</a></li>';
+        echo '<li class="active"><a href="#">Result</a></li>';
+        echo '<li><a href="stat2.php?id='.$survey_id.'">Respondants</a></li>';
         }
     ?>
     <!--<li class="active"><a href="#">See Result</a></li>-->
@@ -116,7 +125,7 @@ mysqli_close ( $mysql );
 		<tr>
 			<td>$choice</td> 
 			<td style="width:100%;">
-				<a style="display: block; width:$percent; height: 20px; background-color: #428bca;" data-toggle="modal" data-target="#voters$i"> </a>
+				<a style="display: block; width:$percent; height: 20px; background-color: #428bca;" data-toggle="modal" data-target="#voters$i" href="#"> </a>
 			</td>
 			<td>$count</td> 
 			<td>
