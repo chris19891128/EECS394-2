@@ -31,7 +31,7 @@ if(isset($_GET['responder']))
     $respondant = $_GET ['responder'];
     $resp = "true";
 }
-$number = count ( $survey_res ) - 1;
+$number = count ( $survey_res );
 
 ?>
 
@@ -78,8 +78,8 @@ $number = count ( $survey_res ) - 1;
 	echo $survey_res [$i] . " )</p>";
     $survey_res[$number] = $survey_creator;
     $number = $number + 1;
-        for($i = 0; $i < count ( $survey_res ); $i ++) {
-            echo ($survey_res[$i])."    ";
+        for($i = 0; $i < count ( $survey_res ) - 1; $i ++) {
+            echo ($survey_res[$i]).'    ';
             if ($survey_res [$i] == $respondant)
             {
                 $allow = "true";
