@@ -79,6 +79,7 @@ $number = count ( $survey_res ) - 1;
     $survey_res[$number] = $survey_creator;
     $number = $number + 1;
         for($i = 0; $i < count ( $survey_res ); $i ++) {
+            echo ($survey_res[$i])."    ";
             if ($survey_res [$i] == $respondant)
             {
                 $allow = "true";
@@ -158,9 +159,13 @@ function submitIt(choice){
                    else
                    {
                         if (t2 == "true")
+                        {
                         location.replace("stat.php?id=" + <?php echo "'$survey_id'"; ?> + "&responder=" + <?php echo "'$respondant'"; ?> );
+                        }
                         else
+                        {
                         location.replace("stat.php?id=" + <?php echo "'$survey_id'";?> );
+                        }
                    
                    }
                    }
