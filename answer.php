@@ -18,13 +18,13 @@ require_once 'survey_db.php';
         $respondant = $_SESSION ['email'];
     
     }
-    echo " respondant:  ".$respondant;
+        //echo " respondant:  ".$respondant;
 
 $survey_id = $_GET ['id'];
 $survey = get_survey_by_id ( $_GET ['id'] );
 $survey_res = get_survey_recipient_by_id ( $survey_id );
 $survey_creator = get_survey_creator_by_id ( $survey_id );
-    echo " creator:   ".($survey_creator);
+        //echo " creator:   ".($survey_creator);
 $number = count ( $survey_res );
 
 ?>
@@ -70,11 +70,11 @@ $number = count ( $survey_res );
 		echo $survey_res [$i] . ", ";
 	}
 	echo $survey_res [$i] . " )</p>";
-        echo 'number:  '.($number).' ';
+            //echo 'number:  '.($number).' ';
     $survey_res[$number] = $survey_creator;
     $number = $number + 1;
         for($i = 0; $i < count ( $survey_res ); $i ++) {
-            echo 'voters: '.($survey_res[$i]).'    ';
+                //echo 'voters: '.($survey_res[$i]).'    ';
             if ($survey_res [$i] == $respondant)
             {
                 $allow = "true";
