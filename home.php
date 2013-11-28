@@ -39,11 +39,11 @@ if(isset($_GET["logout"]))
 		?></h1>
 
 		<form method="GET">
-			<button type="submit" class="btn btn-primary btn-lg"
+			<button type="submit" class="btn btn-primary"
 				formaction="create-poll.php">New Poll</button>
-			<button type="submit" class="btn btn-default btn-lg"
+			<button type="submit" class="btn btn-default"
 				formaction="history-poll.php">History Polls</button>
-            <button type="submit" class="btn btn-default btn-lg" value="logout" name="logout"
+            <button type="submit" class="btn btn-default" value="logout" name="logout"
                 formaction="home.php">LogOut</button>
 		</form>
 	</div>

@@ -125,7 +125,7 @@ mysqli_close ( $mysql );
 		<tr>
 			<td>$choice</td> 
 			<td style="width:100%;">
-				<a style="display: block; width:$percent; height: 20px; background-color: #428bca;" data-toggle="modal" data-target="#voters$i"> </a>
+				<a style="display: block; width:$percent; height: 20px; background-color: #428bca;" data-toggle="modal" data-target="#voters$i" href="#"> </a>
 			</td>
 			<td>$count</td> 
 			<td>
