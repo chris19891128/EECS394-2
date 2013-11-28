@@ -157,7 +157,10 @@ function submitIt(choice){
                    //}
                    else
                    {
-                   location.replace("stat.php?id=" + <?php echo "'$survey_id'"; ?> + "&responder=" + <?php echo "'$respondant'"; ?> );
+                        if (t2 == "true")
+                        location.replace("stat.php?id=" + <?php echo "'$survey_id'"; ?> + "&responder=" + <?php echo "'$respondant'"; ?> );
+                        else
+                        location.replace("stat.php?id=" + <?php echo "'$survey_id'";?> );
                    
                    }
                    }
