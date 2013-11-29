@@ -1,26 +1,6 @@
 <?php
+set_include_path ( '.' );
 require_once 'lib/all_error.php';
-require_once 'server/client.php';
-
-session_start ();
-
-if (isset ( $_GET ['logout'] )) {
-	unset ( $_SESSION ['token'] );
-}
-
-if (isset ( $_GET ['code'] )) {
-	$client->authenticate ();
-	$_SESSION ['token'] = $client->getAccessToken ();
-	$redirect = 'http://' . $_SERVER ['HTTP_HOST'] . $_SERVER ['PHP_SELF'];
-	header ( 'Location: ' . filter_var ( $redirect, FILTER_SANITIZE_URL ) );
-}
-
-if (isset ( $_SESSION ['token'] )) {
-	header ( 'location: home.php' );
-} else {
-	$authUrl = $client->createAuthUrl ();
-}
-
 ?>
 
 <!doctype html>
@@ -44,15 +24,13 @@ if (isset ( $_SESSION ['token'] )) {
 <script type="text/javascript"
 	src="//cdnjs.cloudflare.com/ajax/libs/less.js/1.4.1/less.min.js"></script>
 <script type="text/javascript" src="js/site.js"></script>
-
-</head>
-
 <body>
 	<div class="container">
-		<h1>Welcome to EasyPolling, please connect your Gmail account first.</h1>
-		<a class="login btn btn-primary btn-lg" href="<?php echo $authUrl; ?>">Connect
-			Me!</a>
+		<form class="form-inline" role="form" id="success">
+			<p>
+				See the statistical result, click <a id="seeResult" href="">here</a>
+			</p>
+		</form>
 	</div>
-
 </body>
-</html>
+
