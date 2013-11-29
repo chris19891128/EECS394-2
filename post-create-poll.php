@@ -1,33 +1,13 @@
 <?php
+set_include_path ( '.' );
 require_once 'lib/all_error.php';
-require_once 'server/client.php';
-
-session_start ();
-
-if (isset ( $_GET ['logout'] )) {
-	unset ( $_SESSION ['token'] );
-}
-
-if (isset ( $_GET ['code'] )) {
-	$client->authenticate ();
-	$_SESSION ['token'] = $client->getAccessToken ();
-	$redirect = 'http://' . $_SERVER ['HTTP_HOST'] . $_SERVER ['PHP_SELF'];
-	header ( 'Location: ' . filter_var ( $redirect, FILTER_SANITIZE_URL ) );
-}
-
-if (isset ( $_SESSION ['token'] )) {
-	header ( 'location: home.php' );
-} else {
-	$authUrl = $client->createAuthUrl ();
-}
-
 ?>
 
 <!doctype html>
 <head>
 <meta charset="utf-8">
 
-<title>iMDown</title>
+<title>Easy Polling</title>
 <meta name="description" content="Test Project">
 <meta name="viewport" content="width=device-width">
 <link
@@ -44,14 +24,21 @@ if (isset ( $_SESSION ['token'] )) {
 <script type="text/javascript"
 	src="//cdnjs.cloudflare.com/ajax/libs/less.js/1.4.1/less.min.js"></script>
 <script type="text/javascript" src="js/site.js"></script>
-
-</head>
-
 <body>
 	<div class="container">
-		<h1>Welcome to iMDown, please connect your Gmail account first.</h1>
-		<a class="login btn btn-primary btn-lg" href="<?php echo $authUrl; ?>">Connect
-			Me!</a>
+	<?php
+	if (isset ( $_GET ['id'] )) {
+		echo <<<END
+		<p>
+			See the statistical result, click <a id="seeResult"
+				href="stat.php?id=$_GET[id]">here</a>
+		</p>
+END;
+	} else {
+		echo "<p> The id of the poll is invalid </p>";
+	}
+	?>
 	</div>
+	<footer>- EasyPolling, Powered by the Orange Team, EECS394 2013</footer>
 </body>
-</html>
+

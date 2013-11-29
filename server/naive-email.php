@@ -1,4 +1,5 @@
 <?php
+set_include_path ( '..' );
 require_once 'lib/all_error.php';
 require_once 'lib/swift/lib/swift_required.php';
 

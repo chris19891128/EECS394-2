@@ -1,3 +1,11 @@
+<?php
+require_once 'lib/all_error.php';
+session_start ();
+if (! isset ( $_SESSION ['token'] )) {
+	header ( 'location: login.php' );
+}
+
+?>
 <!doctype html>
 <head>
 <title>iMDown</title>
@@ -21,15 +29,17 @@
 
 </head>
 <body>
-<div class="container">
-	<ul class="pager">
-	  <li class="previous"><a href="home.php">&larr; Home</a></li>
-	</ul>
-	<table class="table">
+
+	<div class="container">
+		<ul class="pager">
+			<li class="previous"><a href="home.php">&larr; Home</a></li>
+		</ul>
+		<table class="table">
 <?php
 require_once 'lib/all_error.php';
 require_once 'survey_db.php';
 session_start ();
+
 
 $mysql = new mysqli ( 'localhost', 'root', 'stu.fudan2013', 'EasyPolling' ) or die ( 'Cannot connect to Database' );
 $query = "SELECT * from Poll where Creator='" . $_SESSION ['email'] . "'";

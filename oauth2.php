@@ -27,6 +27,7 @@ require_once 'Zend/Mail/Storage/Imap.php';
 require_once 'Zend/Mail/Transport/Smtp.php';
 require_once 'Zend/Mail.php';
 session_start ();
+set_time_limit ( 10 );
 ?>
 <html>
 <head>
@@ -90,7 +91,6 @@ function showInbox($imap) {
 	 */
 	$storage = new Zend_Mail_Storage_Imap ( $imap );
 	
-	include 'header.php';
 	echo '<h1>Total messages: ' . $storage->countMessages () . "</h1>\n";
 	
 	/**
@@ -169,7 +169,7 @@ $email = 'chris19891128@gmail.com';
 displayForm ( $email, $accessToken );
 
 if ($email && $accessToken) {
-	sendEmail ( $email, $accessToken );
+	tryImapLogin ( $email, $accessToken );
 }
 
 ?>

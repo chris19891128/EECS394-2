@@ -1,11 +1,6 @@
 <?php
+set_include_path ( '.' );
 require_once 'lib/all_error.php';
-require_once 'naive-email.php';
-session_start ();
-
-if (! isset ( $_SESSION ['token'] )) {
-	header ( 'location: login.php' );
-}
 ?>
 
 <!doctype html>
@@ -28,67 +23,56 @@ if (! isset ( $_SESSION ['token'] )) {
 	src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 <script type="text/javascript"
 	src="//cdnjs.cloudflare.com/ajax/libs/less.js/1.4.1/less.min.js"></script>
+
+<!-- my script -->
 <script type="text/javascript" src="js/site.js"></script>
+
+<!-- Select 2 Library -->
+<link href="lib/select2-3.4.5/select2.css" rel="stylesheet" />
+<script src="lib/select2-3.4.5/select2.js"></script>
+<script>
+
+</script>
+
 </head>
-<body onload="init()">
-<div class="container">
-<ul class="pager">
-  <li class="previous"><a href="home.php">&larr; Home</a></li>
-</ul>
-<?php
-if ($_POST) {
-	$mysql = new mysqli ( 'localhost', 'root', 'stu.fudan2013', 'EasyPolling' ) or die ( 'Cannot connect to Database' );
-	$query = "INSERT INTO Poll VALUES('" . $_POST ['id'] . "', '" . json_encode ( $_POST ['data'] ) . "', '" . json_encode ( $_POST ['recipient'] ) . "', '" . $_POST ['me'] . "')";
-	if ($updateDb = $mysql->query ( $query ) or die ( $mysql->error )) {
-		send_email ( $_POST ['me'], $_POST ['pwd'], $_POST ['recipient'], $_POST ['id'] );
-		echo "Email send out success";
-	}
-	mysqli_close ( $mysql );
-} else {
-	echo <<<END
-	<form action="create-poll.php" method="" id="create">
-		<input type="hidden" id="emailHidden" value="$_SESSION[email]"/>
-		<div id="poll">
-			<div class="form-group" id="recipient-group">
-				<label for="recipient">To:</label> <input type="text"
-					class="form-control" id="recipient"
-					placeholder="Email list here separated by comma" />
-			</div>
-			<div class="form-group" id="question-group">
-				<label for="question">Question:</label> <input type="text"
-					class="form-control" id="question"
-					placeholder="Enter your question here" />
-			</div>
-			<div class="form-group" id="option-group">
-				<div class="form-group">
-					<label for="option_1_input">Option 1:</label>
-					<input type="text" class="form-control" id="option_1_input" placeholder="" />
+
+<body>
+	<a href="home.php" id="home_link">Home</a>
+
+	<div class="container">
+		<form action="post-create-poll.php" method="" id="create">
+			<div id="poll">
+				<div class="form-group" id="recipient-group">
+					<label for="recipient">To:</label> <input type="hidden"
+						class="form-control" id="recipient" />
+					<p>
+						<select multiple name="e1" id="e1" style="width: 500px"
+							class="populate">
+						</select>
+					</p>
 				</div>
-				<div class="form-group">
-					<label for="option_2_input">Option 2:</label>
-					<input type="text" class="form-control" id="option_2_input" placeholder="" />
+				<div class="form-group" id="question-group">
+					<label for="question">Question:</label> <input type="text"
+						class="form-control" id="question"
+						placeholder="Enter your question here" />
+				</div>
+				<div class="form-group" id="option-group">
+					<div class="form-group">
+						<label for="option_1_input">Option 1:</label> <input type="text"
+							class="form-control" id="option_1_input" placeholder="" />
+					</div>
+					<div class="form-group">
+						<label for="option_2_input">Option 2:</label> <input type="text"
+							class="form-control" id="option_2_input" placeholder="" />
+					</div>
 				</div>
 			</div>
-		</div>
-		<button type="button" class="btn btn-default btn-lg" onclick="addOption()">Add
-			Option</button>
-		<button type="button" class="btn btn-primary btn-lg" onclick="newPoll()">Make a Poll</button>
-	
-	</form>
+			<button type="button" class="btn btn-default" onclick="addOption()">Add
+				Option</button>
+			<button type="submit" class="btn btn-default">Make a Poll</button>
 
-	<div id="success">
-		<h1>Congratulations! Your poll has been sent out!</h1>
-		<a id="seeResult" href="" class="btn btn-primary btn-lg">See the Results</a>
+		</form>
 	</div>
-
-	<div id="progress">
-		<h1>Sending Emails... Please Wait</h1>
-	</div>
-END;
-}
-
-?>
-<?php include ("footer.inc");?>
-</div>
+	<footer>- EasyPolling, Powered by the Orange Team, EECS394 2013</footer>
 </body>
 </html>

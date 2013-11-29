@@ -1,26 +1,46 @@
-function init() {
-	$('#create').show();
-	$('#success').hide();
-	$('#progress').hide();
+var myEmail;
+
+$(function() {
+	loadUser();
+	loadContact();
+	$("#e1").select2();
+	$("#create").submit(function(event) {
+		event.preventDefault();
+		newPoll();
+	});
+});
+
+function loadContact() {
+	$.ajax({
+		type : "GET",
+		url : 'server/myapi.php?f=contact',
+		success : function(data) {
+			var contacts = $.parseJSON(data);
+			for (var i = 0; i < contacts.length; i++) {
+				var name = contacts[i][0];
+				var email = contacts[i][1];
+				$option = $('<option></option>');
+				$option.attr('value', email).html(
+						name + '&#60;' + email + '&#62;').appendTo($('#e1'));
+			}
+		}
+	});
+}
+
+function loadUser() {
+	$.ajax({
+		type : "GET",
+		url : 'server/myapi.php?f=user',
+		success : function(data) {
+			var user = $.parseJSON(data);
+			myEmail = user.email;
+		}
+	});
 }
 
 function GUID() { // NotMoreThan1million
 	return ("0000" + (Math.random() * Math.pow(36, 4) << 0).toString(36))
 			.substr(-4);
-}
-
-function addQuestion() {
-
-}
-
-function addOption() {
-	var options = $('#option-group');
-	var n = options.children().length;
-	var nextOption = '<div class="form-group"><label for="option#">Option '
-			+ (n + 1)
-			+ ':</label><input type="text" class="form-control" id="option_'
-			+ (n + 1) + '_input"placeholder="" /></div>';
-	options.append(nextOption);
 }
 
 /**
@@ -41,9 +61,7 @@ function encodePoll() {
 	var answers = [];
 	var options = $("[id^='option_']").filter("[id$='_input']");
 	for (var i = 0; i < options.length; i++) {
-		if (options[i].value != null) {
-			answers.push(options[i].value.replace("/[']/g", "&#39;"));
-		}
+		answers.push(options[i].value.replace("/[']/g", "&#39;"));
 	}
 
 	var json = {
@@ -54,39 +72,65 @@ function encodePoll() {
 	return json;
 }
 
+/**
+ * 
+ */
+function extractRecipients() {
+	var recipients = [];
+	$('li.select2-search-choice div:first-child').each(function(index) {
+		var str = $(this).text();
+		recipients.push(str.substring(str.indexOf("<") + 1, str.indexOf(">")));
+	});
+	return recipients;
+}
+
 function newPoll() {
 
-	if (!validate()) {
-		return;
+	// Extract emails
+	var emails = extractRecipients();
+
+	// Extract poll content
+	var poll = encodePoll();
+
+	// Validation
+	if (emails.length == 0) {
+		alert('You did not enter recipients');
+		return false;
 	}
 
-	var emails = $('#recipient').val().replace(/\s+/g, '').split(',');
+	if (poll['question'] == null || poll['question'] == '') {
+		alert('You cannot have empty question');
+		return false;
+	}
 
-	var json = encodePoll();
+	for (var i = 0; i < poll['answer'].length; i++) {
+		if (poll['answer'][i] == null || poll['answer'][i] == '') {
+			alert('You cannot have empty option ' + (i + 1));
+			return false;
+		}
+	}
 
+	// New GUID
 	var guid = GUID();
 
 	// TODO to be removed
 	var pwd = askForPwd();
 
-	// TODO Magic here, how did you get me
+	// Post everything to post-create-poll.php
 	$.ajax({
 		type : "POST",
-		url : $('#create').attr('action'),
+		url : 'server/process-poll.php',
 		data : {
 			id : guid,
 			recipient : emails,
-			data : json,
-			me : $('#emailHidden').val(),
+			data : poll,
+			me : myEmail,
 			pwd : pwd
 		},
 		success : function(data) {
-			alert('Email is sent');
-			$('#create').hide();
-			$('#progress').hide();
-			$('#success').show();
-			$('#seeResult').attr('href', 'stat.php?id=' + guid);
-			$('#seeResult2').attr('href', 'stat2.php?id=' + guid);
+			var baseUrl = document.URL.substring(0, document.URL.lastIndexOf("/"));
+			location.replace( baseUrl + "/post-create-poll.php?id="
+					+ guid);
 		}
 	});
 
@@ -95,31 +139,51 @@ function newPoll() {
 	$('#progress').show();
 }
 
-function validate() {
-	if ($('#recipient').val() == '') {
-		alert('you cannot have empty recipients');
-		return false;
-	}
-
-	if ($('#question').val() == '') {
-		alert('you cannot have empty question');
-		return false;
-	}
-
-	var options = $("[id^='option_']").filter("[id$='_input']");
-	for (var i = 0; i < options.length; i++) {
-		if (options[i].value == '') {
-			alert('you cannot have empty option ' + (i + 1));
-			return false;
-		}
-	}
-
-	return true;
-}
+// function validate() {
+//
+// if ($('li.select2-search-choice div:first-child').length == 0) {
+// alert('You did not enter recipients');
+// }
+//
+// if ($('#question').val() == '') {
+// alert('You cannot have empty question');
+// return false;
+// }
+//
+// var options = $("[id^='option_']").filter("[id$='_input']");
+// for (var i = 0; i < options.length; i++) {
+// if (options[i].value == '') {
+// alert('You cannot have empty option ' + (i + 1));
+// return false;
+// }
+// }
+//
+// return true;
+// }
 
 function askForPwd() {
 	var pwd = prompt("Please enter your password", "");
 	return pwd;
+}
+
+/**
+ * To be implemented
+ */
+function addQuestion() {
+
+}
+
+/**
+ * Add option function
+ */
+function addOption() {
+	var options = $('#option-group');
+	var n = options.children().length;
+	var nextOption = '<div class="form-group"><label for="option#">Option '
+			+ (n + 1)
+			+ ':</label><input type="text" class="form-control" id="option_'
+			+ (n + 1) + '_input"placeholder="" /></div>';
+	options.append(nextOption);
 }
             
                                         
