@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
+<<<<<<< HEAD
 	<name>EECS394-2</name>
+=======
+	<name>EasyPolling</name>
+>>>>>>> e673d9c3c7d50413ed468015e691862069be98d9
 	<comment></comment>
 	<projects>
 	</projects>

@@ -16,5 +16,10 @@ footer {
 }
 
 #home_link{
-	text-align: right;
+	margin: 10px 0;
+	padding-left: 0;
+}
+
+#stats_graph td{
+	border: 0;
 }

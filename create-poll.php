@@ -7,7 +7,7 @@ require_once 'lib/all_error.php';
 <head>
 <meta charset="utf-8">
 
-<title>Easy Polling</title>
+<title>iMDown</title>
 <meta name="description" content="Test Project">
 <meta name="viewport" content="width=device-width">
 <link

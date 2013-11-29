@@ -1,8 +1,8 @@
 <?php
 set_include_path ( '.' );
 require_once 'lib/all_error.php';
-
 // Do nothing now
+
 ?>
 
 <!doctype html>
@@ -41,10 +41,12 @@ require_once 'lib/all_error.php';
 	<div class="container" id="root" style="display: none">
 		<h1 id="h1">Welcome</h1>
 		<form method="GET">
-			<button type="submit" class="btn btn-primary btn-lg"
+			<button type="submit" class="btn btn-primary"
 				formaction="create-poll.php">New Poll</button>
-			<button type="submit" class="btn btn-default btn-lg"
+			<button type="submit" class="btn btn-default"
 				formaction="history-poll.php">History Polls</button>
+            <button type="submit" class="btn btn-default" value="logout" name="logout"
+                formaction="home.php">LogOut</button>
 		</form>
 	</div>
 
