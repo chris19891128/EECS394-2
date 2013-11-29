@@ -128,7 +128,8 @@ function newPoll() {
 			pwd : pwd
 		},
 		success : function(data) {
-			location.replace(document.URL + "/../post-create-poll.php?id="
+			var baseUrl = document.URL.substring(0, document.URL.lastIndexOf("/"));
+			location.replace( baseUrl + "/post-create-poll.php?id="
 					+ guid);
 		}
 	});
