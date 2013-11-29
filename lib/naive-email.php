@@ -2,7 +2,13 @@
 set_include_path ( '..' );
 require_once 'lib/all_error.php';
 require_once 'lib/swift/lib/swift_required.php';
-
+/**
+ * Send a "You have a poll" email
+ *
+ * @param unknown $me        	
+ * @param unknown $pwd        	
+ * @param unknown $emails        	
+ */
 function send_email($me, $pwd, $emails, $survey_id) {
 	$transport = Swift_SmtpTransport::newInstance ( 'smtp.gmail.com', 465, "ssl" )->setUsername ( $me )->setPassword ( $pwd );
 	
@@ -13,13 +19,14 @@ function send_email($me, $pwd, $emails, $survey_id) {
 	}
 	
 	foreach ( $emails as $email ) {
-		$url = 'http://' . $_SERVER ['HTTP_HOST'] . $_SERVER ['PHP_SELF'] . '/../answer.php?id=' . $survey_id . '&responder=' . $email;
+		$cur_url = 'http://' . $_SERVER ['HTTP_HOST'] . $_SERVER ['PHP_SELF'];
+		$url = dirname ( dirname ( $cur_url ) ) . '/answer.php?id=' . $survey_id . '&responder=' . $email;
 		
-		$message = Swift_Message::newInstance ( 'You have a new poll' )->setFrom ( array (
+		$message = Swift_Message::newInstance ( "You have a new Poll" )->setFrom ( array (
 				$_POST ['me'] 
 		) )->setTo ( array (
 				$email 
-		) )->setBody ( $url );
+		) )->setBody ( "Please complete the poll through link " . $url );
 		
 		$result = $mailer->send ( $message );
 	}

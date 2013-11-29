@@ -25,10 +25,16 @@ require_once 'lib/all_error.php';
 	$(function(){
 		$.ajax({
 			type : "GET",
-			url : 'server/myapi.php?f=user',
+			url : 'server/googleapi.php?f=user',
 			success : function(data) {
 				var user = $.parseJSON(data);
-				$('#h1').text('Welcome ' + user.name + " !");
+				if(user.name == ""){
+					$('#h1').text('Welcome Customer!');
+					$('#log').html('Log In').attr('formaction', 'login.php');
+				} else{
+					$('#h1').text('Welcome ' + user.name + " !");
+					$('#log').html('Log Out').attr('formaction', 'login.php?logout');
+				}	
 				$('#root').show();
 			}
 		});
@@ -42,11 +48,11 @@ require_once 'lib/all_error.php';
 		<h1 id="h1">Welcome</h1>
 		<form method="GET">
 			<button type="submit" class="btn btn-primary"
-				formaction="create-poll.php">New Poll</button>
+				formaction="create-poll.html">New Poll</button>
 			<button type="submit" class="btn btn-default"
 				formaction="history-poll.php">History Polls</button>
-            <button type="submit" class="btn btn-default" value="logout" name="logout"
-                formaction="home.php">LogOut</button>
+			<button type="submit" class="btn btn-default" value="logout"
+				name="logout" id="log" formaction=""></button>
 		</form>
 	</div>
 

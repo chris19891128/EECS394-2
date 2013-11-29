@@ -1,6 +1,6 @@
 <?php
 require_once 'lib/all_error.php';
-require_once 'server/client.php';
+require_once 'lib/client.php';
 
 session_start ();
 

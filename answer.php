@@ -1,34 +1,22 @@
 <?php
-require_once 'lib/all_error.php';
-require_once 'survey_db.php';
-    $resp = "false";
-    $allow = "false";
-    session_start ();
-    if(isset($_GET['responder']))
-    {
-        $respondant = $_GET ['responder'];
-        $resp = "true";
-        //$_SESSION ['email'] = $respondant;
-    }
-    else
-    {
-        if (! isset ( $_SESSION ['token'] )) {
-            header ( 'location: login.php' );
-        }
-        $respondant = $_SESSION ['email'];
-    
-    }
-        //echo " respondant:  ".$respondant;
+set_include_path ( '.' );
+require_once 'lib/survey_db.php';
+require_once 'lib/session.php';
+session_start ();
 
-$survey_id = $_GET ['id'];
-$survey = get_survey_by_id ( $_GET ['id'] );
-$survey_res = get_survey_recipient_by_id ( $survey_id );
-$survey_creator = get_survey_creator_by_id ( $survey_id );
-        //echo " creator:   ".($survey_creator);
-$number = count ( $survey_res );
+if (! isset ( $_GET ['id'] ) || ! isset ( $_GET ['responder'] )) {
+	$err_num = 1;
+} elseif ($_GET ['responder'] == get_survey_creator_by_id ( $_GET ['id'] )) {
+	$err_num = 2;
+} elseif (! in_array ( $_GET ['responder'], get_survey_recipient_by_id ( $_GET ['id'] ) )) {
+	$err_num = 3;
+} elseif (in_array ( $_GET ['responder'], get_survey_responded_by_id ( $_GET ['id'] ) )) {
+	$err_num = 4;
+} else {
+	$err_num = 0;
+}
 
 ?>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -42,144 +30,40 @@ $number = count ( $survey_res );
 	href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css"
 	rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
-<link rel="stylesheet"
-	href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
-<link rel="stylesheet" href="/resources/demos/style.css" />
-<script type="text/javascript"
-	src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+<script src="js/answer.js"></script>
 </head>
 
-<body onload="init()">
-	<div class='container'>
-	<?php
-    if (!isset($_GET['responder']))
-    {
-        echo "<ul class=\"pager\">";
-        echo "<li class=\"previous\"><a href=\"home.php\">&larr; Home</a></li>";
-        echo "</ul>";
-    }
-	echo "<h1>" . $survey ['question'] . "</h1>"; 
-	echo "<p> (Other recipients: ";
-            //if (isset($_GET['responder']))
-            //{
-            //}
-            //}
-	for($i = 0; $i < count ( $survey_res ) - 1; $i ++) {
-		echo $survey_res [$i] . ", ";
-	}
-	echo $survey_res [$i] . " )</p>";
-            //echo 'number:  '.($number).' ';
-    $survey_res[$number] = $survey_creator;
-    $number = $number + 1;
-        for($i = 0; $i < count ( $survey_res ); $i ++) {
-                //echo 'voters: '.($survey_res[$i]).'    ';
-            if ($survey_res [$i] == $respondant)
-            {
-                $allow = "true";
-                break;
-            }
-        }
-	?>
-	<ul class="nav nav-tabs">
-		<li class="active"><a href="#">Vote</a></li>
-        <?php
-                if ($resp == "true")
-                {
-                echo '<li><a href="stat.php?id='.$survey_id.'&responder='.$respondant.'">Result</a></li>';
-                echo '<li><a href="stat2.php?id='.$survey_id.'&responder='.$respondant.'">Respondants</a></li>';
-                }
-                else
-                {
-                echo '<li><a href="stat.php?id='.$survey_id.'">Result</a></li>';
-                echo '<li><a href="stat2.php?id='.$survey_id.'">Respondants</a></li>';
-                }
-        ?>
-	</ul>
-	<br />
-	<?php
-	$count = 0;
-	foreach ( $survey ['answer'] as $choice ) {
-		echo '<p><button class="choiceButton btn btn-default" type="button"' . 'onClick="submitIt(\'' . $count ++ . '\')">' . $choice . '</button></p>';
-	}
-	?>
-	
-	<div id="dialog" title="Basic dialog">
-			<p></p>
-		</div>
-	
-	<?php
-	include ("footer.inc");
-	?>
+<body>
+	<input id='err' type='hidden' value='<?php echo $err_num;?>' />
+	<input id='sid' type='hidden'
+		value='<?php echo isset ( $_GET ['id'] ) ? $_GET ['id']:'' ;?>' />
+	<input id='rid' type='hidden'
+		value='<?php echo isset ( $_GET ['responder'] ) ? $_GET ['responder']:'' ;?>' />
+
+
+	<div id='fv' class='container' style='display: none'>
+		<p id='errStr'></p>
+		<!-- 		<button type="submit" class="btn btn-primary" formaction="home.html" -->
+		<!-- 			id="home">Back To home</button> -->
+	</div>
+
+	<div id='infov' class='container' style='display: none'>
+		<h1 id='qt'></h1>
+		<p id='ar'></p>
+	</div>
+
+	<div id='nav' class='container' style='display: none'>
+		<ul class="nav nav-tabs">
+			<li id='l1' class="active"><a href="#">Vote</a></li>
+			<li id='l2'><a id='l2a'>Result</a></li>
+		</ul>
+	</div>
+
+	<div id='vv' class='container' style='display: none'>
+		</br>
+		<form id='vf'></form>
 	</div>
 </body>
-<script type="text/javascript">
-function submitIt(choice){
-        //var allow = "false";
-    var t2 = "<?php echo $resp; ?>";
-    var t = "<?php echo $allow; ?>";
-    if (t == "false")
-        {
-            alert("You cannot vote");
-            //continue;
-        }
-    else
-        {
-        var sumOfResponder = "<?php echo $number; ?>";
-        var responder = "<?php echo $allow; ?>";
-        if (responder == "true")
-            {
-            var data =
-                {
-                id: <?php echo "'$survey_id'"; ?>,
-                choice: choice,
-                respondant: <?php echo "'$respondant'"; ?>
-                };
-            $.ajax(
-                   {
-                   type: "POST",
-                   url: "response.php",
-                   data: data,
-                   success:function(data)
-                   {
-                   if(data=='error')
-                   {
-                        alert('You cannot vote twice');
-                   }
-                   //if (t2 == "false")
-                   //{
-                   //   location.replace("stat.php?id=" + <?php echo "'$survey_id'"; ?>);
-                   //}
-                   else
-                   {
-                        if (t2 == "true")
-                        {
-                        location.replace("stat.php?id=" + <?php echo "'$survey_id'"; ?> + "&responder=" + <?php echo "'$respondant'"; ?> );
-                        }
-                        else
-                        {
-                        location.replace("stat.php?id=" + <?php echo "'$survey_id'";?> );
-                        }
-                   
-                   }
-                   }
-                   });
-            }
-        else
-            {
-            alert('you are not allowed to vote');
-            }
-        }
-}
 
-function otherRes(){
-    $("#others").show();
-    $("#others").dialog();
-}
-
-function init(){
-    $("#others").hide();
-}
-</script>
 </html>

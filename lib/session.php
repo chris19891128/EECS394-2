@@ -1,15 +1,7 @@
 <?php
 set_include_path ( '..' );
 require_once 'lib/all_error.php';
-require_once 'server/client.php';
-
-session_start ();
-
-if ($_GET ['f'] == 'user') {
-	echo json_encode ( getFullUserInfo () );
-} else if ($_GET ['f'] == 'contact') {
-	echo json_encode ( getAllContacts () );
-}
+require_once 'lib/client.php';
 
 /**
  * Function to return the json for user info
@@ -23,7 +15,8 @@ function getFullUserInfo() {
 		return json_decode ( $response, true );
 	}
 	return array (
-			'name' => 'Custom' 
+			'name' => '',
+			'email' => '' 
 	);
 }
 
@@ -76,5 +69,4 @@ function getAccessToken() {
 	}
 	return null;
 }
-
 ?>

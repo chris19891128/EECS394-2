@@ -13,7 +13,7 @@ $(function() {
 function loadContact() {
 	$.ajax({
 		type : "GET",
-		url : 'server/myapi.php?f=contact',
+		url : 'server/googleapi.php?f=contact',
 		success : function(data) {
 			var contacts = $.parseJSON(data);
 			for (var i = 0; i < contacts.length; i++) {
@@ -30,7 +30,7 @@ function loadContact() {
 function loadUser() {
 	$.ajax({
 		type : "GET",
-		url : 'server/myapi.php?f=user',
+		url : 'server/googleapi.php?f=user',
 		success : function(data) {
 			var user = $.parseJSON(data);
 			myEmail = user.email;
@@ -115,7 +115,7 @@ function newPoll() {
 
 	// TODO to be removed
 	var pwd = askForPwd();
-
+		
 	// Post everything to post-create-poll.php
 	$.ajax({
 		type : "POST",
@@ -133,33 +133,7 @@ function newPoll() {
 					+ guid);
 		}
 	});
-
-	$('#create').hide();
-	$('#success').hide();
-	$('#progress').show();
 }
-
-// function validate() {
-//
-// if ($('li.select2-search-choice div:first-child').length == 0) {
-// alert('You did not enter recipients');
-// }
-//
-// if ($('#question').val() == '') {
-// alert('You cannot have empty question');
-// return false;
-// }
-//
-// var options = $("[id^='option_']").filter("[id$='_input']");
-// for (var i = 0; i < options.length; i++) {
-// if (options[i].value == '') {
-// alert('You cannot have empty option ' + (i + 1));
-// return false;
-// }
-// }
-//
-// return true;
-// }
 
 function askForPwd() {
 	var pwd = prompt("Please enter your password", "");
