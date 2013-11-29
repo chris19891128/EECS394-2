@@ -123,7 +123,7 @@ function newPoll() {
 		data : {
 			id : guid,
 			recipient : emails,
-			data : json,
+			data : poll,
 			me : myEmail,
 			pwd : pwd
 		},

@@ -26,11 +26,19 @@ require_once 'lib/all_error.php';
 <script type="text/javascript" src="js/site.js"></script>
 <body>
 	<div class="container">
-		<form class="form-inline" role="form" id="success">
-			<p>
-				See the statistical result, click <a id="seeResult" href="">here</a>
-			</p>
-		</form>
+	<?php
+	if (isset ( $_GET ['id'] )) {
+		echo <<<END
+		<p>
+			See the statistical result, click <a id="seeResult"
+				href="stat.php?id=$_GET[id]">here</a>
+		</p>
+END;
+	} else {
+		echo "<p> The id of the poll is invalid </p>";
+	}
+	?>
 	</div>
+	<footer>- EasyPolling, Powered by the Orange Team, EECS394 2013</footer>
 </body>
 
