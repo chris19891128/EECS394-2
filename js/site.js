@@ -121,3 +121,5 @@ function askForPwd() {
 	var pwd = prompt("Please enter your password", "");
 	return pwd;
 }
+            
+                                        

@@ -58,6 +58,7 @@ $number = count ( $survey_res );
     {
         echo "<ul class=\"pager\">";
         echo "<li class=\"previous\"><a href=\"home.php\">&larr; Home</a></li>";
+        echo "<li class=\"previous\"><a href=\"addrespondants.php?id=".$survey_id."\">&larr; Add Respondants</a></li>";
         echo "</ul>";
     }
 	echo "<h1>" . $survey ['question'] . "</h1>"; 
