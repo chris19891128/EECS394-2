@@ -1,8 +1,6 @@
 <?php
 set_include_path ( '.' );
 require_once 'lib/survey_db.php';
-require_once 'lib/session.php';
-session_start ();
 
 if (! isset ( $_GET ['id'] ) || ! isset ( $_GET ['responder'] )) {
 	$err_num = 1;

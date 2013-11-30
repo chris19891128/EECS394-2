@@ -1,31 +1,25 @@
 <?php
 set_include_path ( '..' );
+require_once 'lib/all_error.php';
 require_once 'lib/client.php';
 
 /**
  * Function to return the json for user info
  *
- * @return multitype:
+ * @return multitype: false if the accessToken does not exist or
  */
 function getFullUserInfo() {
 	global $client;
-	if (($accessToken = getAccessToken ()) != null) {
-		$response = file_get_contents ( 'https://www.googleapis.com/oauth2/v3/userinfo?access_token=' . $accessToken );
-		$json = json_decode ( $response, true );
-		if (isset ( $json ['error'] )) {
-			unset ( $_SESSION ['token'] );
-			return array (
-					'name' => '',
-					'email' => '' 
-			);
-		} else {
-			return $json;
+	if (isset ( $_SESSION ['token'] )) {
+		$accessToken = getAccessToken ();
+		$response = @file_get_contents ( 'https://www.googleapis.com/oauth2/v3/userinfo?access_token=' . $accessToken );
+		if (! strpos ( $http_response_header [0], "200" )) {
+			return false;
 		}
+		$json = json_decode ( $response, true );
+		return $json;
 	}
-	return array (
-			'name' => '',
-			'email' => '' 
-	);
+	return false;
 }
 
 /**
@@ -35,7 +29,8 @@ function getFullUserInfo() {
  */
 function getAllContacts() {
 	global $client;
-	if (($accessToken = getAccessToken ()) != null) {
+	if (isset ( $_SESSION ['token'] )) {
+		$accessToken = getAccessToken ();
 		$client->setAccessToken ( $_SESSION ['token'] );
 		$req = new Google_HttpRequest ( "https://www.google.com/m8/feeds/contacts/default/full?&max-results=2000" );
 		$req->setRequestHeaders ( array (

@@ -20,27 +20,23 @@ require_once 'lib/all_error.php';
 	src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 
 <script type="text/javascript">
-	$(function(){
+	$(function() {
 		$.ajax({
 			type : "GET",
 			url : 'server/googleapi.php?f=user',
 			success : function(data) {
- 				var user;
-				try {
-					user = $.parseJSON(data);
-				} catch (e){
-					alert("parsing error" + data);
-					user = {user: '', email:''};
-				}
-				if(user.name == ""){
+				user = $.parseJSON(data);
+				if (user === false) {
 					$('#h1').text('Welcome Customer!');
 					$('#log').html('Log In').attr('formaction', 'login.php');
-					$('#create').html('See demo').attr('formaction', 'create-poll.php?demo');
+					$('#create').html('See demo').attr('formaction',
+							'create-poll.php?demo');
 					$('#history').hide();
-				} else{
+				} else {
 					$('#h1').text('Welcome ' + user.name + " !");
-					$('#log').html('Log Out').attr('formaction', 'login.php?logout');
-				}	
+					$('#log').html('Log Out')
+							.attr('formaction', 'login.php?logout');
+				}
 				$('#root').show();
 			}
 		});
