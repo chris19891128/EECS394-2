@@ -22,7 +22,14 @@ if (! isset ( $_SESSION ['token'] )) {
 <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
 <script>
 	$(function(){
-		$('#mt').html('haha');
+		$.ajax({
+			type : "GET",
+			url : 'server/surveyapi.php',
+			data :{ f : 'history'},
+			success : function(data) {
+				alert(data);
+			}
+		});
 	});
 </script>
 
@@ -36,5 +43,5 @@ if (! isset ( $_SESSION ['token'] )) {
 		<table class="table" id='mt'>
 		</table>
 <?php include ("footer.inc");?>
-	</div>
+</div>
 </body>
