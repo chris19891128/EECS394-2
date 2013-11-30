@@ -1,6 +1,5 @@
 <?php
 set_include_path ( '..' );
-require_once 'lib/all_error.php';
 require_once 'lib/google-api-php-client/src/Google_Client.php';
 
 /*
