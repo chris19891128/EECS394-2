@@ -24,16 +24,16 @@ if (! isset ( $_SESSION ['token'] )) {
 	$(function(){
 		$.ajax({
 			type : "GET",
-			url : 'server/surveyapi.php?f=history&id=' + $('#sid').val(),
+			url : 'server/surveyapi.php',
+			data : {f : 'history'},
 			success : function(data) {
-				$('#ar').html('(Other Recipients: ');
-				var emails = $.parseJSON(data);
-				var i = 0;
-				for (; i < emails.length - 1; i++) {
-					$('#ar').append(emails[i] + ', ');
+				var polls = $.parseJSON(data);
+				for (var i=0; i < polls.length; i++) {
+				$td1 = $('<td>' + polls[i]['survey']['question'] + '</td>');
+					$td2 = $('<td><a href="statp.php?id=' polls[i]['id'] + '">See statistic result</a></td>');
+					$row = $('<tr></tr>').append($td1).append($td2);
+					$('#mt').append($row);
 				}
-				$('#ar').append(emails[i] + ')');
-				$('#infov').show();
 			}
 		});
 	});
@@ -46,25 +46,8 @@ if (! isset ( $_SESSION ['token'] )) {
 		<ul class="pager">
 			<li class="previous"><a href="home.php">&larr; Home</a></li>
 		</ul>
-		<table class="table">
-// <?php
-
-// $user = getFullUserInfo ();
-// $me = $user ['email'];
-
-// while ( $row = mysqli_fetch_array ( $result ) ) {
-// $id = $row ['ID'];
-// $survey = get_survey_by_id ( $id );
-
-// echo "<tr>";
-// echo "<td>" . $survey ['question'] . "</td>";
-// echo "<td><a href='statp.php?id=$id'>See statistic result</a></td>";
-// // echo "<td><a href='stat2.php?id=$id'>See individual result</a></td>";
-// echo "</tr>";
-// }
-?>
-
-</table>
+		<table class="table" id='mt'>
+		</table>
 <?php include ("footer.inc");?>
 </div>
 </body>
