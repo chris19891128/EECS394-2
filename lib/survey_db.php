@@ -1,6 +1,4 @@
 <?php
-set_include_path ( '..' );
-require_once 'lib/all_error.php';
 
 /**
  *

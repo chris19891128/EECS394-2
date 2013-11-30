@@ -1,6 +1,5 @@
 <?php
 set_include_path ( '..' );
-require_once 'lib/all_error.php';
 require_once 'lib/client.php';
 require_once 'lib/session.php';
 
