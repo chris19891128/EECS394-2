@@ -36,12 +36,10 @@ if (! isset ( $_SESSION ['token'] )) {
 
 	<div class="container" id="root" style="display: none">
 		<!-- Back to home button -->
-		<div id='hv' class='container'>
-			<ul class="pager">
-				<li class="previous"><a href="home.php"> &larr; Home</a></li>
-			</ul>
-		</div>
-
+		<ul class="pager">
+			<li class="previous"><a href="home.php"> &larr; Home</a></li>
+		</ul>
+		
 		<!-- Information panel -->
 		<div id='infov' class='container'>
 			<h1 id='qt'></h1>
