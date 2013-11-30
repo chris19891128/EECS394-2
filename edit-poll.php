@@ -33,6 +33,8 @@ if (! isset ( $_SESSION ['token'] )) {
 </head>
 
 <body>
+	<input id='sid' type='hidden' value='<?php echo $_GET ['id'];?>' />
+
 	<div class="container" id="root" style="display: none">
 		<!-- Home -->
 		<ul class="pager">
@@ -63,8 +65,7 @@ if (! isset ( $_SESSION ['token'] )) {
 				</div>
 
 				<!-- Options -->
-				<div class="form-group" id="option-group">
-				</div>
+				<div class="form-group" id="option-group"></div>
 			</div>
 
 			<!-- Control buttons -->
