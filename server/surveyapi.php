@@ -8,20 +8,9 @@ session_start ();
 
 if (isset ( $_GET ['f'] )) {
 	if ($_GET ['f'] == 'survey') {
-		// echo json_encode ( get_survey_by_id ( $_GET ['id'] ) );
-		echo json_encode ( array (
-				'question' => 'person gener',
-				'answer' => [ 
-						'male',
-						'female',
-						'unknown' 
-				] 
-		) );
+		echo json_encode ( get_survey_by_id ( $_GET ['id'] ) );
 	} else if ($_GET ['f'] == 'recipient') {
-		// echo json_encode ( get_survey_recipient_by_id ( $_GET ['id'] ) );
-		echo json_encode ( [ 
-				'chaoshi2012@u.northwestern.edu' 
-		] );
+		echo json_encode ( get_survey_recipient_by_id ( $_GET ['id'] ) );
 	} else if ($_GET ['f'] == 'creator') {
 		echo get_survey_creator_by_id ( $_GET ['id'] );
 	} else if ($_GET ['f'] == 'responders') {
