@@ -20,6 +20,7 @@ if (isset ( $_GET ['f'] )) {
 	} else if ($_GET ['f'] == 'history') {
 		$user = getFullUserInfo ();
 		$email = $user ['email'];
+		echo $email;
 		echo json_encode ( get_survey_ids_by_user ( $email ) );
 	}
 }
