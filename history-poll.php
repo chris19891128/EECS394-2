@@ -25,9 +25,12 @@ if (! isset ( $_SESSION ['token'] )) {
 		$.ajax({
 			type : "GET",
 			url : 'server/surveyapi.php',
-			data :{ f : 'history'},
+			data : {f : 'history'},
 			success : function(data) {
-				alert(data);
+				var polls = $.parseJSON(data);
+				for (var i=0; i < polls.length; i++) {
+					alert('haha');
+				}
 			}
 		});
 	});
