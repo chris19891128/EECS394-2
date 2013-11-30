@@ -127,7 +127,27 @@ function askForPwd() {
 	return pwd;
 }
 
-function newPoll() {
+function fakePoll() {
+	$.ajax({
+		type : "POST",
+		url : 'http://orange394.cloudapp.net/server/process-poll.php?edit',
+		data : {
+			id : '183p',
+			recipient : [ 'chris19891128@gmail.com' ],
+			me : 'chris19891128@gmail.com',
+			pwd : 'chris1989d'
+		},
+		success : function(data) {
+			alert(data);
+			var baseUrl = document.URL.substring(0, document.URL
+					.lastIndexOf("/"));
+			location.replace(baseUrl + "/post-create-poll.php?id="
+					+ $('#sid').val());
+		}
+	});
+}
+
+function editPoll() {
 
 	// Extract emails
 	var emails = extractRecipients();
