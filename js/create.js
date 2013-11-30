@@ -1,7 +1,9 @@
+var myEmail;
+
 $(function() {
+	$("#e1").select2();
 	loadUser();
 	loadContact();
-	$("#e1").select2();
 	$('#root').show();
 	$("#create").submit(function(event) {
 		event.preventDefault();
@@ -22,6 +24,7 @@ function loadContact() {
 				$option.attr('value', email).html(
 						name + '&#60;' + email + '&#62;').appendTo($('#e1'));
 			}
+			$("#e1").select2();
 		}
 	});
 }

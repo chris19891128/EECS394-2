@@ -5,8 +5,10 @@ require_once 'lib/session.php';
 session_start ();
 if (! isset ( $_SESSION ['token'] )) {
 	header ( 'location: login.php' );
+} elseif (! isset ( $_GET ['id'] )) {
+	echo 'Invalid url, missing survey id';
+	return;
 }
-
 ?>
 
 <!doctype html>
@@ -23,7 +25,7 @@ if (! isset ( $_SESSION ['token'] )) {
 <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
 
 <!-- my script -->
-<script type="text/javascript" src="js/create.js"></script>
+<script type="text/javascript" src="js/edit.js"></script>
 
 <!-- Select 2 Library -->
 <link href="lib/select2-3.4.5/select2.css" rel="stylesheet" />
@@ -41,6 +43,8 @@ if (! isset ( $_SESSION ['token'] )) {
 		<form action="post-create-poll.php" method="" id="create">
 			<div id="poll">
 
+				<!-- Existing Recipients -->
+
 				<!-- Recipients -->
 				<div class="form-group" id="recipient-group">
 					<label for="recipient">To:</label> <input type="hidden"
@@ -55,27 +59,16 @@ if (! isset ( $_SESSION ['token'] )) {
 				<!-- Question -->
 				<div class="form-group" id="question-group">
 					<label for="question">Question:</label> <input type="text"
-						class="form-control" id="question"
-						placeholder="Enter your question here" />
+						class="form-control" id="question" readonly />
 				</div>
 
 				<!-- Options -->
 				<div class="form-group" id="option-group">
-					<div class="form-group">
-						<label for="option_1_input">Option 1:</label> <input type="text"
-							class="form-control" id="option_1_input" placeholder="" />
-					</div>
-					<div class="form-group">
-						<label for="option_2_input">Option 2:</label> <input type="text"
-							class="form-control" id="option_2_input" placeholder="" />
-					</div>
 				</div>
 			</div>
 
 			<!-- Control buttons -->
-			<button type="button" class="btn btn-default" onclick="addOption()">Add
-				Option</button>
-			<button type="submit" class="btn btn-default">Make a Poll</button>
+			<button type="submit" class="btn btn-default">Send to More People</button>
 
 		</form>
 		<?php include ("footer.inc");?>

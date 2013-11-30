@@ -6,23 +6,13 @@ $(function() {
 	switch (err) {
 	case '1':
 		$('div.container').hide();
-		$('#errStr').html('Broken URL, Missing survey id or responder!');
-		$('#fv').show();
-		break;
-	case '2':
-		$('div.container').hide();
 		$('#l2a').attr('href', 'stat.php?id=' + $('#sid').val());
 		$('#nav').show();
 		$('#vv').html('You cannot vote for the poll you created').show();
 		loadQuestion();
 		loadRecipients();
 		break;
-	case '3':
-		$('div.container').hide();
-		$('#errStr').html('You have no authentication to see this poll');
-		$('#fv').show();
-		break;
-	case '4':
+	case '2':
 		$('div.container').hide();
 		$('#l2a').attr(
 				'href',

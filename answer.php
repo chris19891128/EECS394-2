@@ -3,13 +3,15 @@ set_include_path ( '.' );
 require_once 'lib/survey_db.php';
 
 if (! isset ( $_GET ['id'] ) || ! isset ( $_GET ['responder'] )) {
-	$err_num = 1;
+	echo 'Broken URL, Missing survey id or responder!';
+	return;
 } elseif ($_GET ['responder'] == get_survey_creator_by_id ( $_GET ['id'] )) {
-	$err_num = 2;
+	$err_num = 1;
 } elseif (! in_array ( $_GET ['responder'], get_survey_recipient_by_id ( $_GET ['id'] ) )) {
-	$err_num = 3;
+	echo 'You have no authentication to see this poll';
+	return;
 } elseif (in_array ( $_GET ['responder'], get_survey_responded_by_id ( $_GET ['id'] ) )) {
-	$err_num = 4;
+	$err_num = 2;
 } else {
 	$err_num = 0;
 }
@@ -40,11 +42,6 @@ if (! isset ( $_GET ['id'] ) || ! isset ( $_GET ['responder'] )) {
 		value='<?php echo isset ( $_GET ['responder'] ) ? $_GET ['responder']:'' ;?>' />
 
 	<div class="container" id="root" style="display: none">
-
-		<!-- Panel for error message displaying -->
-		<div id='fv' class='container' style='display: none'>
-			<p id='errStr'></p>
-		</div>
 
 		<!-- Panel for question and other recipients display -->
 		<div id='infov' class='container' style='display: none'>
