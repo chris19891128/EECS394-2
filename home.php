@@ -25,7 +25,12 @@ require_once 'lib/all_error.php';
 			type : "GET",
 			url : 'server/googleapi.php?f=user',
 			success : function(data) {
-				var user = $.parseJSON(data);
+				try{
+					var user = $.parseJSON(data);
+				} catch(e){
+					var baseUrl = document.URL.substring(0, document.URL.lastIndexOf("/"));
+					location.replace( baseUrl + "/login.php");
+				}
 				if(user.name == ""){
 					$('#h1').text('Welcome Customer!');
 					$('#log').html('Log In').attr('formaction', 'login.php');
