@@ -100,7 +100,8 @@ function submitIt(index) {
 		url : 'server/response.php',
 		data : {
 			id : $('#sid').val(),
-			respondant : $('#rid').val()
+			respondant : $('#rid').val(),
+			choice : index
 		},
 		success : function(data) {
 			if (data == 'success') {
