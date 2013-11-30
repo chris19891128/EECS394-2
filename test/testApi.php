@@ -1,12 +1,6 @@
 <?php
 set_include_path ( '..' );
-require_once 'server/myapi.php';
+require_once 'lib/survey_db.php';
 
-session_start ();
-
-if ($_GET ['f'] == 'user') {
-	echo var_dump ( getFullUserInfo () );
-} else if ($_GET ['f'] == 'contact') {
-	echo var_dump ( getAllContacts () );
-}
+echo json_encode ( get_survey_reply_by_id ( $_GET ['id'] ) );
 ?>

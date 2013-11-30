@@ -12,7 +12,15 @@ function getFullUserInfo() {
 	global $client;
 	if (($accessToken = getAccessToken ()) != null) {
 		$response = file_get_contents ( 'https://www.googleapis.com/oauth2/v3/userinfo?access_token=' . $accessToken );
-		return json_decode ( $response, true );
+		$json = json_decode ( $response, true );
+		if (isset ( $json ['error'] )) {
+			return array (
+					'name' => '',
+					'email' => '' 
+			);
+		} else {
+			return $json;
+		}
 	}
 	return array (
 			'name' => '',

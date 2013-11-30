@@ -90,29 +90,32 @@ function loadStats() {
 								+ "%";
 						$td2 = $('<td style="width:100%;"><a style="display: block; width:'
 								+ per
-								+ '; height: 20px; background-color: #428bca;" data-toggle="modal" data-target="#voters$i" href="#"> </a></td>');
+								+ '; height: 20px; background-color: #428bca;" data-toggle="modal" data-target="#voters'
+								+ i + '" href="#"> </a></td>');
 
 						// count cell
 						$td3 = $('<td>' + replies[i].length + '</td>');
 
 						// Create the div now from the template
+						$td4 = $('<td></td>');
 						$div_clone = $('#voters_sample').clone().attr('id',
-								'voters_' + i);
-						$div_clone.find('h4').append('Voters are:');
-						var j = 0;
-						for (; j < replies[i].length - 1; j++) {
-							$div_clone.find('h4').append(
-									' ' + replies[i][j] + ',');
+								'voters' + i);
+						$div_clone.find('h4').append('Voters for ' + answer[i]);
+
+						var html_str = '';
+						for (var j = 0; j < replies[i].length; j++) {
+							html_str = html_str + replies[i][j] + '</br>';
 						}
-						$div_clone.find('h4').append(' ' + replies[i][j]);
+						$div_clone.find('.modal-body').prepend(html_str);
+						$td4.append($div_clone);
 
 						// append
-						$row.append($td1).append($td2).append($td3).append(
-								$div_clone);
+						$row.append($td1).append($td2).append($td3)
+								.append($td4);
 						$('#stats_graph').append($row);
-
 					}
 
+					$('#vv').show();
 				}
 			});
 }

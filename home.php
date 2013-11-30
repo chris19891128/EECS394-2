@@ -1,8 +1,6 @@
 <?php
 set_include_path ( '.' );
 require_once 'lib/all_error.php';
-// Do nothing now
-
 ?>
 
 <!doctype html>
@@ -31,6 +29,8 @@ require_once 'lib/all_error.php';
 				if(user.name == ""){
 					$('#h1').text('Welcome Customer!');
 					$('#log').html('Log In').attr('formaction', 'login.php');
+					$('#create').html('See demo').attr('formaction', 'create-poll.php?demo');
+					$('#history').hide();
 				} else{
 					$('#h1').text('Welcome ' + user.name + " !");
 					$('#log').html('Log Out').attr('formaction', 'login.php?logout');
@@ -47,9 +47,9 @@ require_once 'lib/all_error.php';
 	<div class="container" id="root" style="display: none">
 		<h1 id="h1">Welcome</h1>
 		<form method="GET">
-			<button type="submit" class="btn btn-primary"
-				formaction="create-poll.html">New Poll</button>
-			<button type="submit" class="btn btn-default"
+			<button type="submit" class="btn btn-primary" id="create"
+				formaction="create-poll.php">New Poll</button>
+			<button type="submit" class="btn btn-default" id="history"
 				formaction="history-poll.php">History Polls</button>
 			<button type="submit" class="btn btn-default" value="logout"
 				name="logout" id="log" formaction=""></button>

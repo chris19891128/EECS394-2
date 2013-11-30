@@ -8,36 +8,20 @@ require_once 'lib/all_error.php';
  * @return multitype:string multitype:string
  */
 function get_survey_by_id($survey_id) {
-	// $link = new mysqli ( 'localhost', 'root', 'stu.fudan2013', 'EasyPolling' ) or die ( 'Cannot connect to Database' );
-	// $query = "select * from Poll where ID='$survey_id'";
-	// $result = mysqli_query ( $link, $query );
-	// $row = mysqli_fetch_array ( $result );
+	$link = new mysqli ( 'localhost', 'root', 'stu.fudan2013', 'EasyPolling' ) or die ( 'Cannot connect to Database' );
+	$query = "select * from Poll where ID='$survey_id'";
+	$result = mysqli_query ( $link, $query );
+	$row = mysqli_fetch_array ( $result );
 	
-	// if ($row) {
-	// $content = $row ['Content'];
-	// // echo $content;
-	// $json = json_decode ( $content, true );
-	// } else {
-	// echo mysqli_error ( $link );
-	// $json = NULL;
-	// }
-	// mysqli_close ( $link );
-	
-	/**
-	 * To be removed
-	 */
-	$json = 
-
-	array (
-			'question' => 'where are you',
-			'answer' => array (
-					'work',
-					'home' 
-			) 
-	);
-	
-	/**
-	 */
+	if ($row) {
+		$content = $row ['Content'];
+		// echo $content;
+		$json = json_decode ( $content, true );
+	} else {
+		echo mysqli_error ( $link );
+		$json = NULL;
+	}
+	mysqli_close ( $link );
 	
 	return $json;
 }
@@ -48,32 +32,19 @@ function get_survey_by_id($survey_id) {
  * @return multitype:string
  */
 function get_survey_recipient_by_id($survey_id) {
-	// $link = new mysqli ( 'localhost', 'root', 'stu.fudan2013', 'EasyPolling' ) or die ( 'Cannot connect to Database' );
-	// $query = "select * from Poll where ID='$survey_id'";
-	// $result = mysqli_query ( $link, $query );
-	// $row = mysqli_fetch_array ( $result );
+	$link = new mysqli ( 'localhost', 'root', 'stu.fudan2013', 'EasyPolling' ) or die ( 'Cannot connect to Database' );
+	$query = "select * from Poll where ID='$survey_id'";
+	$result = mysqli_query ( $link, $query );
+	$row = mysqli_fetch_array ( $result );
 	
-	// if ($row) {
-	// $emails = $row ['recipient'];
-	// $json = json_decode ( $emails, true );
-	// } else {
-	// echo mysqli_error ( $link );
-	// $json = NULL;
-	// }
-	// mysqli_close ( $link );
-	
-	/**
-	 * To be removed
-	 */
-	$json = 
-
-	array (
-			'chris1989apply@gmail.com',
-			'chaoshi2012@u.northwestern.edu' 
-	);
-	
-	/**
-	 */
+	if ($row) {
+		$emails = $row ['recipient'];
+		$json = json_decode ( $emails, true );
+	} else {
+		echo mysqli_error ( $link );
+		$json = NULL;
+	}
+	mysqli_close ( $link );
 	
 	return $json;
 }
@@ -104,51 +75,41 @@ function get_survey_responded_by_id($survey_id) {
  * @return string
  */
 function get_survey_creator_by_id($survey_id) {
-	// $link = new mysqli ( 'localhost', 'root', 'stu.fudan2013', 'EasyPolling' ) or die ( 'Cannot connect to Database' );
-	// $query = "select Creator from Poll where ID='$survey_id'";
-	// $result = mysqli_query ( $link, $query );
-	// $row = mysqli_fetch_array ( $result );
-	// if ($row) {
-	// $creator = $row ['Creator'];
-	// } else {
-	// echo mysqli_error ( $link );
-	// $creator = NULL;
-	// }
-	// mysqli_close ( $link );
-	$creator = 'chris19891128@gmail.com';
+	$link = new mysqli ( 'localhost', 'root', 'stu.fudan2013', 'EasyPolling' ) or die ( 'Cannot connect to Database' );
+	$query = "select Creator from Poll where ID='$survey_id'";
+	$result = mysqli_query ( $link, $query );
+	$row = mysqli_fetch_array ( $result );
+	if ($row) {
+		$creator = $row ['Creator'];
+	} else {
+		echo mysqli_error ( $link );
+		$creator = NULL;
+	}
+	mysqli_close ( $link );
 	return $creator;
 }
 
 /**
  */
 function get_survey_reply_by_id($survey_id) {
-	// $survey = get_survey_by_id ( $_GET ['id'] );
-	// $res = array ();
-	// for($i = 0; $i < count ( $survey ['answer'] ); $i ++) {
-	// $res [$i] = array ();
-	// }
-	// $mysql = new mysqli ( 'localhost', 'root', 'stu.fudan2013', 'EasyPolling' ) or die ( 'Cannot connect to Database' );
-	// $query = "SELECT * from Answer where Poll_ID='$_GET[id]'";
-	// $result = mysqli_query ( $mysql, $query );
+	$survey = get_survey_by_id ( $_GET ['id'] );
+	$res = array ();
+	for($i = 0; $i < count ( $survey ['answer'] ); $i ++) {
+		$res [$i] = array ();
+	}
+	$mysql = new mysqli ( 'localhost', 'root', 'stu.fudan2013', 'EasyPolling' ) or die ( 'Cannot connect to Database' );
+	$query = "SELECT * from Answer where Poll_ID='$_GET[id]'";
+	$result = mysqli_query ( $mysql, $query );
 	
-	// while ( $row = mysqli_fetch_array ( $result ) ) {
-	// $index = intval ( $row ['Answer'] );
-	// $res [$index] [count ( $res [$index] )] = $row ['Respondant'];
-	// }
+	while ( $row = mysqli_fetch_array ( $result ) ) {
+		$index = intval ( $row ['Answer'] );
+		$res [$index] [count ( $res [$index] )] = $row ['Respondant'];
+	}
 	
-	// mysqli_close ( $mysql );
+	mysqli_close ( $mysql );
 	$res = array (
-			'answer' => array (
-					'work',
-					'home' 
-			),
-			'reply' => array (
-					array (),
-					array (
-							'chris1989apply@gmail.com',
-							'chaoshi2012@u.northwestern.edu' 
-					) 
-			) 
+			'answer' => $survey ['answer'],
+			'reply' => $res 
 	);
 	return $res;
 }

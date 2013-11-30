@@ -56,7 +56,7 @@ if (! isset ( $_GET ['id'] ) || ! isset ( $_GET ['responder'] )) {
 	<div id='nav' class='container' style='display: none'>
 		<ul class="nav nav-tabs">
 			<li id='l1' class="active"><a href="#">Vote</a></li>
-			<li id='l2'><a id='l2a'>Result</a></li>
+			<li id='l2'><a id='l2a'>See Result</a></li>
 		</ul>
 	</div>
 

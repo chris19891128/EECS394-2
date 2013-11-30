@@ -1,3 +1,15 @@
+<?php
+require_once 'lib/all_error.php';
+require_once 'lib/session.php';
+
+session_start ();
+$user = getFullUserInfo ();
+if ($user ['name'] == '' && $user ['email'] == '') {
+	header ( 'location: login.php' );
+}
+
+?>
+
 <!doctype html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">

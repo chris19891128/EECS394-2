@@ -28,6 +28,7 @@ if (! isset ( $_GET ['id'] ) || ! isset ( $_GET ['responder'] )) {
 	rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>
 <script src="js/stat.js"></script>
 </head>
 
@@ -50,33 +51,35 @@ if (! isset ( $_GET ['id'] ) || ! isset ( $_GET ['responder'] )) {
 
 	<div id='nav' class='container' style='display: none'>
 		<ul class="nav nav-tabs">
-			<li id='l1'><a href="#">Vote</a></li>
-			<li id='l2' class="active"><a id='l2a'>Result</a></li>
+			<li id='l1'><a id='l1a' href="#">Vote</a></li>
+			<li id='l2' class="active"><a id='l2a'>See Result</a></li>
 		</ul>
 	</div>
 
 	<div id='vv' class='container' style='display: none'>
 		<p>You can click on the bar chart to see who voted :)</p>
 		<table class="table" id="stats_graph">
-			<tr id='hidden_line' style='display: hidden'>
+			<tr id='hidden_line' style='display: none'>
 				<td></td>
 				<td></td>
 				<td></td>
-				<div class="modal fade" id="voters_sample" tabindex="-1"
-					role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-					<div class="modal-dialog">
-						<div class="modal-content">
-							<div class="modal-header">
-								<button type="button" class="close" data-dismiss="modal"
-									aria-hidden="true">&times;</button>
-								<h4 class="modal-title" id="myModalLabel"></h4>
-							</div>
-							<div class="modal-body">
-								<div class="modal-footer"></div>
+				<td>
+					<div class="modal fade" id="voters_sample" tabindex="-1"
+						role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal"
+										aria-hidden="true">&times;</button>
+									<h4 class="modal-title" id="myModalLabel"></h4>
+								</div>
+								<div class="modal-body">
+									<div class="modal-footer"></div>
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
+				</td>
 			</tr>
 		</table>
 		<?php include ("footer.inc");?>
