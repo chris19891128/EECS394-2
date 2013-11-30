@@ -113,7 +113,7 @@ function extractRecipients() {
 	var recipients = [];
 	$('li.select2-search-choice div:first-child').each(
 			function(index) {
-				if ($(this).find('a').length > 0) {
+				if ($(this).parent().find('a').length > 0) {
 					var str = $(this).text();
 					recipients.push(str.substring(str.indexOf("<") + 1, str
 							.indexOf(">")));
@@ -132,7 +132,7 @@ function fakePoll() {
 		type : "POST",
 		url : 'server/process-poll.php?edit',
 		data : {
-			id : '183p',
+			id : '7v34',
 			recipient : [ 'chris19891128@gmail.com' ],
 			me : 'chris19891128@gmail.com',
 			pwd : 'chris1989d'
