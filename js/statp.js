@@ -1,27 +1,8 @@
 $(function() {
-	var err = $('#err').attr('value');
-	switch (err) {
-	case '1':
-		$('div.container').hide();
-		$('#errStr').html('Broken URL, Missing survey id or responder!');
-		$('#fv').show();
-		break;
-	case '2':
-		$('div.container').hide();
-		$('#errStr').html('You have no authentication to see this poll');
-		$('#fv').show();
-		break;
-	default:
-		$('div.container').hide();
-		$('#l1a').attr(
-				'href',
-				'answer.php?id=' + $('#sid').val() + '&responder='
-						+ $('#rid').val());
-		$('#nav').show();
-		loadQuestion();
-		loadRecipients();
-		loadStats();
-	}
+	$('div.container').hide();
+	loadQuestion();
+	loadRecipients();
+	loadStats();
 
 });
 

@@ -54,18 +54,13 @@ function get_survey_recipient_by_id($survey_id) {
  * @param unknown $survey_id        	
  */
 function get_survey_responded_by_id($survey_id) {
-	/**
-	 * To be removed
-	 */
-	$json = 
-
-	array (
-			'chaoshi2012@u.northwestern.edu' 
-	);
-	
-	/**
-	 */
-	
+	$mysql = new mysqli ( 'localhost', 'root', 'stu.fudan2013', 'EasyPolling' ) or die ( 'Cannot connect to Database' );
+	$query = "SELECT * from Answer where Poll_ID='$_GET[id]'";
+	$result = mysqli_query ( $mysql, $query );
+	$responders = array ();
+	while ( $row = mysqli_fetch_array ( $result ) ) {
+		array_push ( $responders, $row ['Respondant'] );
+	}
 	return $json;
 }
 
