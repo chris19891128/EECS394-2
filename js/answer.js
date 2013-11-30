@@ -94,17 +94,17 @@ function loadOptions() {
 	});
 }
 
-function submitIt(index){
+function submitIt(index) {
 	$.ajax({
 		type : "GET",
 		url : 'server/response.php',
-		data :{
+		data : {
 			id : $('#sid').val(),
 			respondant : $('#rid').val()
-		}
+		},
 		success : function(data) {
-			if(data == 'success'){
-				location.replace( $('#l2a').attr('href'));
+			if (data == 'success') {
+				location.replace($('#l2a').attr('href'));
 			}
 		}
 	});
