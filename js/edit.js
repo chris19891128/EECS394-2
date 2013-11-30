@@ -55,6 +55,10 @@ function loadSent() {
 		},
 		success : function(data) {
 			var sent = $.parseJSON(data);
+			if (sent == null) {
+				return;
+			}
+			
 			for (var i = 0; i < sent.length; i++) {
 				var front = sent[i].split('@')[0];
 				var end = sent[i].split('@')[1];
