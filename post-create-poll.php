@@ -40,7 +40,7 @@ if (! isset ( $_SESSION ['token'] )) {
 		echo <<<END
 		<p>
 			See the statistical result, click <a id="seeResult"
-				href="stat.php?id=$_GET[id]">here</a>
+				href="statp.php?id=$_GET[id]">here</a>
 		</p>
 END;
 	} else {
