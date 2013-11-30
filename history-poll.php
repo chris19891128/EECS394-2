@@ -30,7 +30,7 @@ if (! isset ( $_SESSION ['token'] )) {
 				var polls = $.parseJSON(data);
 				for (var i=0; i < polls.length; i++) {
 					$td1 = $('<td>' + polls[i]['survey']['question'] + '</td>');
-					$td2 = $('<td></td>');
+					$td2 = $('<td><a href="statp.php?id=' + polls[i]['id'] + '">See statistic result</a></td>');
 					$row = $('<tr></tr>').append($td1).append($td2);
 					$('#mt').append($row);
 				}
