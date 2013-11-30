@@ -25,11 +25,12 @@ require_once 'lib/all_error.php';
 			type : "GET",
 			url : 'server/googleapi.php?f=user',
 			success : function(data) {
-				try{
-					var user = $.parseJSON(data);
-				} catch(e){
-					var baseUrl = document.URL.substring(0, document.URL.lastIndexOf("/"));
-					location.replace( baseUrl + "/login.php");
+ 				var user;
+				try {
+					user = $.parseJSON(data);
+				} catch (e){
+					alert("parsing error" + data);
+					user = {user: '', email:''};
 				}
 				if(user.name == ""){
 					$('#h1').text('Welcome Customer!');
@@ -44,7 +45,6 @@ require_once 'lib/all_error.php';
 			}
 		});
 	});
-	
 </script>
 </head>
 
