@@ -130,7 +130,7 @@ function askForPwd() {
 function fakePoll() {
 	$.ajax({
 		type : "POST",
-		url : 'http://orange394.cloudapp.net/server/process-poll.php?edit',
+		url : 'server/process-poll.php?edit',
 		data : {
 			id : '183p',
 			recipient : [ 'chris19891128@gmail.com' ],
