@@ -12,10 +12,10 @@ $(function() {
 	case '2':
 		$('div.container').hide();
 		$('#l2a').attr('href', 'stat.php?id=' + $('#sid').val());
-		$('#l3a').attr('href', 'stat2.php?id=' + $('#sid').val());
 		$('#nav').show();
 		$('#vv').html('You cannot vote for the poll you created').show();
 		loadQuestion();
+		loadRecipients();
 		break;
 	case '3':
 		$('div.container').hide();
@@ -31,6 +31,7 @@ $(function() {
 		$('#nav').show();
 		$('#vv').html('You have already voted').show();
 		loadQuestion();
+		loadRecipients();
 		break;
 	default:
 		$('div.container').hide();

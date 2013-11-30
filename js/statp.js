@@ -23,7 +23,7 @@ function loadRecipients() {
 		type : "GET",
 		url : 'server/surveyapi.php?f=recipient&id=' + $('#sid').val(),
 		success : function(data) {
-			$('#ar').html('(Other Recipients: ');
+			$('#ar').html('(All Recipients: ');
 			var emails = $.parseJSON(data);
 			var i = 0;
 			for (; i < emails.length - 1; i++) {
