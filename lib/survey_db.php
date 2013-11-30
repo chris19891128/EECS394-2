@@ -120,18 +120,18 @@ function get_survey_ids_by_user($email) {
 	$query = "SELECT * from Poll where Creator='" . $email . "'";
 	$result = mysqli_query ( $mysql, $query );
 	
-	$result = array ();
+	$returned = array ();
 	while ( $row = mysqli_fetch_array ( $result ) ) {
 		$id = $row ['ID'];
 		$survey = get_survey_by_id ( $id );
-		array_push ( $result, array (
+		array_push ( $returned, array (
 				'id' => $id,
 				'survey' => $survey 
 		) );
 	}
 	mysqli_close ( $mysql );
 	
-	return $result;
+	return $returned;
 }
 
 ?>
