@@ -1,5 +1,8 @@
 <?php
+
 require_once 'lib/all_error.php';
+require_once 'lib/survey_db.php';
+
 session_start ();
 if (! isset ( $_SESSION ['token'] )) {
 	header ( 'location: login.php' );
@@ -36,9 +39,6 @@ if (! isset ( $_SESSION ['token'] )) {
 		</ul>
 		<table class="table">
 <?php
-require_once 'lib/all_error.php';
-require_once 'survey_db.php';
-session_start ();
 
 $me = getFullUserInfo ()['email'];
 $mysql = new mysqli ( 'localhost', 'root', 'stu.fudan2013', 'EasyPolling' ) or die ( 'Cannot connect to Database' );
