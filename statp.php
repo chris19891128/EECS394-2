@@ -34,7 +34,7 @@ if (! isset ( $_SESSION ['token'] )) {
 	<input id='sid' type='hidden'
 		value='<?php echo isset ( $_GET ['id'] ) ? $_GET ['id']:'' ;?>' />
 
-	<div class='container'>
+	<div class="container" id="root" style="display: none">
 		<!-- Back to home button -->
 		<div id='hv' class='container'>
 			<ul class="pager">

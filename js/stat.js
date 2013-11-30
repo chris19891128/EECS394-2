@@ -22,7 +22,7 @@ $(function() {
 		loadRecipients();
 		loadStats();
 	}
-
+	$('#root').show();
 });
 
 function loadQuestion() {

@@ -35,6 +35,7 @@ if (! isset ( $_SESSION ['token'] )) {
 					$row = $('<tr></tr>').append($td1).append($td2);
 					$('#mt').append($row);
 				}
+				$('#root').show();
 			}
 		});
 	});
@@ -42,7 +43,7 @@ if (! isset ( $_SESSION ['token'] )) {
 
 </head>
 <body>
-	<div>
+	<div class="container" id="root" style="display: none">
 		<ul class="pager">
 			<li class="previous"><a href="home.php">&larr; Home</a></li>
 		</ul>

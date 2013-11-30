@@ -1,9 +1,8 @@
-var myEmail;
-
 $(function() {
 	loadUser();
 	loadContact();
 	$("#e1").select2();
+	$('#root').show();
 	$("#create").submit(function(event) {
 		event.preventDefault();
 		newPoll();
@@ -115,7 +114,7 @@ function newPoll() {
 
 	// TODO to be removed
 	var pwd = askForPwd();
-		
+
 	// Post everything to post-create-poll.php
 	$.ajax({
 		type : "POST",
@@ -128,9 +127,9 @@ function newPoll() {
 			pwd : pwd
 		},
 		success : function(data) {
-			var baseUrl = document.URL.substring(0, document.URL.lastIndexOf("/"));
-			location.replace( baseUrl + "/post-create-poll.php?id="
-					+ guid);
+			var baseUrl = document.URL.substring(0, document.URL
+					.lastIndexOf("/"));
+			location.replace(baseUrl + "/post-create-poll.php?id=" + guid);
 		}
 	});
 }

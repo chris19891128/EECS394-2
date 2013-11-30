@@ -1,9 +1,8 @@
 $(function() {
-	$('div.container').hide();
 	loadQuestion();
 	loadRecipients();
 	loadStats();
-
+	$('#root').show();
 });
 
 function loadQuestion() {
@@ -97,4 +96,3 @@ function loadStats() {
 				}
 			});
 }
-

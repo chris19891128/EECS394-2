@@ -39,7 +39,7 @@ if (! isset ( $_GET ['id'] ) || ! isset ( $_GET ['responder'] )) {
 	<input id='rid' type='hidden'
 		value='<?php echo isset ( $_GET ['responder'] ) ? $_GET ['responder']:'' ;?>' />
 
-	<div id='root'>
+	<div class="container" id="root" style="display: none">
 
 		<!-- Panel for error message displaying -->
 		<div id='fv' class='container' style='display: none'>

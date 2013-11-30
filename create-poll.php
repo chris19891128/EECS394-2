@@ -24,7 +24,7 @@ if ($user ['name'] == '' && $user ['email'] == '') {
 <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
 
 <!-- my script -->
-<script type="text/javascript" src="js/site.js"></script>
+<script type="text/javascript" src="js/create.js"></script>
 
 <!-- Select 2 Library -->
 <link href="lib/select2-3.4.5/select2.css" rel="stylesheet" />
@@ -32,8 +32,7 @@ if ($user ['name'] == '' && $user ['email'] == '') {
 </head>
 
 <body>
-
-	<div>
+	<div class="container" id="root" style="display: none">
 		<!-- Home -->
 		<ul class="pager">
 			<li class="previous"><a href="home.php"> &larr; Home</a></li>

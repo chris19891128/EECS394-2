@@ -45,6 +45,7 @@ $(function() {
 		loadOptions();
 	}
 
+	$('#root').show();
 });
 
 function loadQuestion() {
