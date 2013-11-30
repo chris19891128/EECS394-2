@@ -1,6 +1,5 @@
 <?php
 set_include_path ( '..' );
-require_once 'lib/all_error.php';
 require_once 'lib/client.php';
 
 /**
@@ -14,6 +13,7 @@ function getFullUserInfo() {
 		$response = file_get_contents ( 'https://www.googleapis.com/oauth2/v3/userinfo?access_token=' . $accessToken );
 		$json = json_decode ( $response, true );
 		if (isset ( $json ['error'] )) {
+			unset ( $_SESSION ['token'] );
 			return array (
 					'name' => '',
 					'email' => '' 
