@@ -22,17 +22,7 @@ if (! isset ( $_SESSION ['token'] )) {
 <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
 <script>
 	$(function(){
-		$.ajax({
-			type : "GET",
-			url : 'server/surveyapi.php',
-			success : function(data) {
-				var polls = $.parseJSON(data);
-				for (var i=0; i < polls.length; i++) {
-					$row = $('<tr></tr>');
-					$('#mt').append($row);
-				}
-			}
-		});
+		$('#mt').html('haha');
 	});
 </script>
 
@@ -46,5 +36,5 @@ if (! isset ( $_SESSION ['token'] )) {
 		<table class="table" id='mt'>
 		</table>
 <?php include ("footer.inc");?>
-</div>
+	</div>
 </body>
