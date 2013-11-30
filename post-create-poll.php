@@ -1,6 +1,12 @@
 <?php
 set_include_path ( '.' );
 require_once 'lib/all_error.php';
+
+session_start ();
+if (! isset ( $_SESSION ['token'] )) {
+	header ( 'location: login.php' );
+}
+
 ?>
 
 <!doctype html>
@@ -26,6 +32,9 @@ require_once 'lib/all_error.php';
 <script type="text/javascript" src="js/site.js"></script>
 <body>
 	<div class="container">
+		<ul class="pager">
+			<li class="previous"><a href="home.php">&larr; Home</a></li>
+		</ul>
 	<?php
 	if (isset ( $_GET ['id'] )) {
 		echo <<<END

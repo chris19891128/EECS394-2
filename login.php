@@ -52,6 +52,7 @@ if (isset ( $_SESSION ['token'] )) {
 		<h1>Welcome to iMDown, please connect your Gmail account first.</h1>
 		<a class="login btn btn-primary btn-lg" href="<?php echo $authUrl; ?>">Connect
 			Me!</a>
+		<?php include ("footer.inc");?>
 	</div>
 </body>
 </html>

@@ -32,11 +32,18 @@ if ($user ['name'] == '' && $user ['email'] == '') {
 </head>
 
 <body>
-	<a href="home.php" id="home_link">Home</a>
 
-	<div class="container">
+	<div>
+		<!-- Home -->
+		<ul class="pager">
+			<li class="previous"><a href="home.php"> &larr; Home</a></li>
+		</ul>
+
+		<!-- Main form for creating poll -->
 		<form action="post-create-poll.php" method="" id="create">
 			<div id="poll">
+
+				<!-- Recipients -->
 				<div class="form-group" id="recipient-group">
 					<label for="recipient">To:</label> <input type="hidden"
 						class="form-control" id="recipient" />
@@ -46,11 +53,15 @@ if ($user ['name'] == '' && $user ['email'] == '') {
 						</select>
 					</p>
 				</div>
+
+				<!-- Question -->
 				<div class="form-group" id="question-group">
 					<label for="question">Question:</label> <input type="text"
 						class="form-control" id="question"
 						placeholder="Enter your question here" />
 				</div>
+
+				<!-- Options -->
 				<div class="form-group" id="option-group">
 					<div class="form-group">
 						<label for="option_1_input">Option 1:</label> <input type="text"
@@ -62,12 +73,14 @@ if ($user ['name'] == '' && $user ['email'] == '') {
 					</div>
 				</div>
 			</div>
+
+			<!-- Control buttons -->
 			<button type="button" class="btn btn-default" onclick="addOption()">Add
 				Option</button>
 			<button type="submit" class="btn btn-default">Make a Poll</button>
 
 		</form>
+		<?php include ("footer.inc");?>
 	</div>
-	<footer>- EasyPolling, Powered by the Orange Team, EECS394 2013</footer>
 </body>
 </html>

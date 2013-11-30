@@ -39,28 +39,33 @@ if (! isset ( $_GET ['id'] ) || ! isset ( $_GET ['responder'] )) {
 	<input id='rid' type='hidden'
 		value='<?php echo isset ( $_GET ['responder'] ) ? $_GET ['responder']:'' ;?>' />
 
+	<div id='root'>
 
-	<div id='fv' class='container' style='display: none'>
-		<p id='errStr'></p>
-		<!-- 		<button type="submit" class="btn btn-primary" formaction="home.html" -->
-		<!-- 			id="home">Back To home</button> -->
-	</div>
+		<!-- Panel for error message displaying -->
+		<div id='fv' class='container' style='display: none'>
+			<p id='errStr'></p>
+		</div>
 
-	<div id='infov' class='container' style='display: none'>
-		<h1 id='qt'></h1>
-		<p id='ar'></p>
-	</div>
+		<!-- Panel for question and other recipients display -->
+		<div id='infov' class='container' style='display: none'>
+			<h1 id='qt'></h1>
+			<p id='ar'></p>
+		</div>
 
-	<div id='nav' class='container' style='display: none'>
-		<ul class="nav nav-tabs">
-			<li id='l1' class="active"><a href="#">Vote</a></li>
-			<li id='l2'><a id='l2a'>See Result</a></li>
-		</ul>
-	</div>
+		<!-- Panel for navigation -->
+		<div id='nav' class='container' style='display: none'>
+			<ul class="nav nav-tabs">
+				<li id='l1' class="active"><a href="#">Vote</a></li>
+				<li id='l2'><a id='l2a'>See Result</a></li>
+			</ul>
+		</div>
 
-	<div id='vv' class='container' style='display: none'>
-		</br>
-		<form id='vf'></form>
+		<!-- Panel for voting -->
+		<div id='vv' class='container' style='display: none'>
+			</br>
+			<form id='vf'></form>
+		</div>
+		<?php include ("footer.inc");?>
 	</div>
 </body>
 

@@ -42,13 +42,12 @@ if (! isset ( $_SESSION ['token'] )) {
 
 </head>
 <body>
-
-	<div class="container">
+	<div>
 		<ul class="pager">
 			<li class="previous"><a href="home.php">&larr; Home</a></li>
 		</ul>
 		<table class="table" id='mt'>
 		</table>
-<?php include ("footer.inc");?>
-</div>
+	<?php include ("footer.inc");?>
+	</div>
 </body>

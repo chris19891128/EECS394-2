@@ -55,6 +55,7 @@ require_once 'lib/all_error.php';
 			<button type="submit" class="btn btn-default" value="logout"
 				name="logout" id="log" formaction=""></button>
 		</form>
+		<?php include ("footer.inc");?>
 	</div>
 
 </body>

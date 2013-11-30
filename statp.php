@@ -33,45 +33,49 @@ if (! isset ( $_SESSION ['token'] )) {
 	<input id='err' type='hidden' value='0' />
 	<input id='sid' type='hidden'
 		value='<?php echo isset ( $_GET ['id'] ) ? $_GET ['id']:'' ;?>' />
-	<input id='rid' type='hidden'
-		value='<?php echo isset ( $_GET ['responder'] ) ? $_GET ['responder']:'' ;?>' />
 
+	<div class='container'>
+		<!-- Back to home button -->
+		<div id='hv' class='container'>
+			<ul class="pager">
+				<li class="previous"><a href="home.php"> &larr; Home</a></li>
+			</ul>
+		</div>
 
-	<ul class="pager">
-		<li class="previous"><a href="home.php"> &larr; Home</a></li>
-	</ul>
+		<!-- Information panel -->
+		<div id='infov' class='container'>
+			<h1 id='qt'></h1>
+			<p id='ar'></p>
+		</div>
 
-	<div id='infov' class='container' style='display: none'>
-		<h1 id='qt'></h1>
-		<p id='ar'></p>
-	</div>
-
-	<div id='vv' class='container' style='display: none'>
-		<p>You can click on the bar chart to see who voted :)</p>
-		<table class="table" id="stats_graph">
-			<tr id='hidden_line' style='display: none'>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td>
-					<div class="modal fade" id="voters_sample" tabindex="-1"
-						role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-						<div class="modal-dialog">
-							<div class="modal-content">
-								<div class="modal-header">
-									<button type="button" class="close" data-dismiss="modal"
-										aria-hidden="true">&times;</button>
-									<h4 class="modal-title" id="myModalLabel"></h4>
-								</div>
-								<div class="modal-body">
-									<div class="modal-footer"></div>
+		<!-- Stat data panel -->
+		<div id='vv' class='container'>
+			<p>You can click on the bar chart to see who voted :)</p>
+			<table class="table" id="stats_graph">
+				<tr id='hidden_line' style='display: none'>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>
+						<div class="modal fade" id="voters_sample" tabindex="-1"
+							role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-header">
+										<button type="button" class="close" data-dismiss="modal"
+											aria-hidden="true">&times;</button>
+										<h4 class="modal-title" id="myModalLabel"></h4>
+									</div>
+									<div class="modal-body">
+										<div class="modal-footer"></div>
+									</div>
 								</div>
 							</div>
 						</div>
-					</div>
-				</td>
-			</tr>
-		</table>
+					</td>
+				</tr>
+			</table>
 		<?php include ("footer.inc");?>
+		</div>
 	</div>
 </body>
