@@ -32,7 +32,7 @@ if (! isset ( $_SESSION ['token'] )) {
 					$td1 = $('<td>' + polls[i]['survey']['question'] + '</td>');
 					$td2 = $('<td><a href="statp.php?id=' + polls[i]['id'] + '">See statistic result</a></td>');
 					$td3 = $('<td><a href="edit-poll.php?id=' + polls[i]['id'] + '">Add more recipients</a></td>');
-					$row = $('<tr></tr>').append($td1).append($td2).append($t3);
+					$row = $('<tr></tr>').append($td1).append($td2).append($td3);
 					$('#mt').append($row);
 				}
 				$('#root').show();
