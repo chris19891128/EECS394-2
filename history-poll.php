@@ -29,7 +29,10 @@ if (! isset ( $_SESSION ['token'] )) {
 			success : function(data) {
 				var polls = $.parseJSON(data);
 				for (var i=0; i < polls.length; i++) {
-					alert('haha');
+					$td1 = $('<td>' + polls[i]['survey']['question'] + '</td>');
+					$td2 = $('<td></td>');
+					$row = $('<tr></tr>').append($td1).append($td2);
+					$('#mt').append($row);
 				}
 			}
 		});
