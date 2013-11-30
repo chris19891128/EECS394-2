@@ -1,4 +1,5 @@
 <?php
+set_include_path ( '..' );
 require_once 'lib/all_error.php';
 $mysql = new mysqli ( 'localhost', 'root', 'stu.fudan2013', 'EasyPolling' ) or die ( 'Cannot connect to Database' );
 $query = "SELECT * FROM Answer where Poll_ID='" . $_GET ['id'] . "' and Respondant='" . $_GET ['respondant'] . "'";
