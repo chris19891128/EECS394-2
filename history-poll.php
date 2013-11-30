@@ -22,20 +22,7 @@ if (! isset ( $_SESSION ['token'] )) {
 <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
 <script>
 	$(function(){
-		$.ajax({
-			type : "GET",
-			url : 'server/surveyapi.php',
-			data : {f : 'history'},
-			success : function(data) {
-				var polls = $.parseJSON(data);
-				for (var i=0; i < polls.length; i++) {
-				$td1 = $('<td>' + polls[i]['survey']['question'] + '</td>');
-					$td2 = $('<td><a href="statp.php?id=' polls[i]['id'] + '">See statistic result</a></td>');
-					$row = $('<tr></tr>').append($td1).append($td2);
-					$('#mt').append($row);
-				}
-			}
-		});
+		
 	});
 </script>
 
