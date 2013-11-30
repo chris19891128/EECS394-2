@@ -1,5 +1,4 @@
 <?php
-
 require_once 'lib/all_error.php';
 require_once 'lib/survey_db.php';
 
@@ -13,7 +12,6 @@ if (! isset ( $_SESSION ['token'] )) {
 <head>
 <title>iMDown</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- Bootstrap -->
 <link
 	href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"
 	rel="stylesheet">
@@ -21,14 +19,25 @@ if (! isset ( $_SESSION ['token'] )) {
 	href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css"
 	rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
-<link rel="stylesheet"
-	href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
-<link rel="stylesheet" href="/resources/demos/style.css" />
-<script type="text/javascript"
-	src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
-
+<script>
+	$(function(){
+		$.ajax({
+			type : "GET",
+			url : 'server/surveyapi.php?f=history&id=' + $('#sid').val(),
+			success : function(data) {
+				$('#ar').html('(Other Recipients: ');
+				var emails = $.parseJSON(data);
+				var i = 0;
+				for (; i < emails.length - 1; i++) {
+					$('#ar').append(emails[i] + ', ');
+				}
+				$('#ar').append(emails[i] + ')');
+				$('#infov').show();
+			}
+		});
+	});
+</script>
 
 </head>
 <body>
@@ -38,23 +47,21 @@ if (! isset ( $_SESSION ['token'] )) {
 			<li class="previous"><a href="home.php">&larr; Home</a></li>
 		</ul>
 		<table class="table">
-<?php
+// <?php
 
-$me = getFullUserInfo ()['email'];
-$mysql = new mysqli ( 'localhost', 'root', 'stu.fudan2013', 'EasyPolling' ) or die ( 'Cannot connect to Database' );
-$query = "SELECT * from Poll where Creator='" . $me . "'";
-$result = mysqli_query ( $mysql, $query );
+// $user = getFullUserInfo ();
+// $me = $user ['email'];
 
-while ( $row = mysqli_fetch_array ( $result ) ) {
-	$id = $row ['ID'];
-	$survey = get_survey_by_id ( $id );
-	
-	echo "<tr>";
-	echo "<td>" . $survey ['question'] . "</td>";
-	echo "<td><a href='statp.php?id=$id'>See statistic result</a></td>";
-	// echo "<td><a href='stat2.php?id=$id'>See individual result</a></td>";
-	echo "</tr>";
-}
+// while ( $row = mysqli_fetch_array ( $result ) ) {
+// $id = $row ['ID'];
+// $survey = get_survey_by_id ( $id );
+
+// echo "<tr>";
+// echo "<td>" . $survey ['question'] . "</td>";
+// echo "<td><a href='statp.php?id=$id'>See statistic result</a></td>";
+// // echo "<td><a href='stat2.php?id=$id'>See individual result</a></td>";
+// echo "</tr>";
+// }
 ?>
 
 </table>

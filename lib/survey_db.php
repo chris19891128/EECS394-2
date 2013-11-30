@@ -109,4 +109,29 @@ function get_survey_reply_by_id($survey_id) {
 	return $res;
 }
 
+/**
+ * Return all the survey under one's email
+ *
+ * @param unknown $email        	
+ * @return multitype:
+ */
+function get_survey_ids_by_user($email) {
+	$mysql = new mysqli ( 'localhost', 'root', 'stu.fudan2013', 'EasyPolling' ) or die ( 'Cannot connect to Database' );
+	$query = "SELECT * from Poll where Creator='" . $email . "'";
+	$result = mysqli_query ( $mysql, $query );
+	
+	$result = array ();
+	while ( $row = mysqli_fetch_array ( $result ) ) {
+		$id = $row ['ID'];
+		$survey = get_survey_by_id ( $id );
+		array_push ( $result, array (
+				'id' => $id,
+				'survey' => $survey 
+		) );
+	}
+	mysqli_close ( $mysql );
+	
+	return $result;
+}
+
 ?>
