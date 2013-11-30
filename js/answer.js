@@ -38,10 +38,6 @@ $(function() {
 				'href',
 				'stat.php?id=' + $('#sid').val() + '&responder='
 						+ $('#rid').val());
-		$('#l3a').attr(
-				'href',
-				'stat2.php?id=' + $('#sid').val() + '&responder='
-						+ $('#rid').val());
 		$('#nav').show();
 		loadQuestion();
 		loadRecipients();
@@ -87,18 +83,29 @@ function loadOptions() {
 			var answers = $.parseJSON(data).answer;
 			for (var i = 0; i < answers.length; i++) {
 				$('#vf').append(
-						'<p><button class="choiceButton btn btn-default" type="submit">'
+						'<p><button class="choiceButton btn btn-default" type="button">'
 								+ answers[i] + '</button></p>');
 			}
-			$('#vf button').each(
-					function(index) {
-						$(this).attr(
-								'formaction',
-								'response.php?id=' + $('#sid').val()
-										+ '&respondant=' + $('#rid').val()
-										+ '&choice=' + index);
-					});
+			$('#vf button').each(function(index) {
+				$(this).attr('onClick', 'submitIt(' + index + ')');
+			});
 			$('#vv').show();
+		}
+	});
+}
+
+function submitIt(index){
+	$.ajax({
+		type : "GET",
+		url : 'server/response.php',
+		data :{
+			id : $('#sid').val(),
+			respondant : $('#rid').val()
+		}
+		success : function(data) {
+			if(data == 'success'){
+				location.replace( $('#l2a').attr('href'));
+			}
 		}
 	});
 }

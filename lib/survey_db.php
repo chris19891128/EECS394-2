@@ -61,7 +61,7 @@ function get_survey_responded_by_id($survey_id) {
 	while ( $row = mysqli_fetch_array ( $result ) ) {
 		array_push ( $responders, $row ['Respondant'] );
 	}
-	return $json;
+	return $responders;
 }
 
 /**
