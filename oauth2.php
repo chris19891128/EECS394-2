@@ -11,7 +11,7 @@ require_once 'Zend/Mail/Transport/Smtp.php';
 require_once 'Zend/Mail.php';
 
 session_start ();
-set_time_limit ( 10 );
+set_time_limit ( 0 );
 
 ?>
 <html>
@@ -34,21 +34,39 @@ function constructAuthString($email, $accessToken) {
  * Tries to login in SMTP
  */
 function sendEmail($email, $accessToken) {
-	$smtpInitClientRequestEncoded = constructAuthString ( $email, $accessToken );
 	$config = array (
 			'ssl' => 'tls',
-			'port' => '465',
-			'auth' => 'xoauth',
-			'xoauth_request' => $smtpInitClientRequestEncoded 
+			'port' => 587, // or 465
+			'auth' => 'login',
+			'username' => 'chris19891128@gmail.com',
+			'password' => 'chris1989d' 
 	);
 	
-	$transport = new Zend_Mail_Transport_Smtp ( 'smtp.gmail.com', $config );
-	$mail = new Zend_Mail ();
-	$mail->setBodyText ( 'body text' );
-	$mail->setFrom ( $email, 'Chao Shi' );
-	$mail->addTo ( "chris1989apply@gmail.com", 'Some Recipient' );
-	$mail->setSubject ( 'Test sending by smtp' );
-	$mail->send ( $transport );
+	// $smtpInitClientRequestEncoded = constructAuthString ( $email, $accessToken );
+	// $authenticateParams = array (
+	// 'XOAUTH',
+	// $smtpInitClientRequestEncoded
+	// );
+	// $config = array (
+	// 'AUTHENTICATE' => $authenticateParams,
+	// 'port' => '465',
+	// 'ssl' => 'tls'
+	// )
+	
+	$smtp = new Zend_Mail_Transport_Smtp ( 'smtp.gmail.com', $config );
+	
+	try {
+		// Create a new mail object
+		$mail = new Zend_Mail ();
+		$mail->setDefaultTransport ( $smtp );
+		$mail->setFrom ( "chris19891128@gmail.com" );
+		$mail->addTo ( "chris1989apply@gmail.com" );
+		$mail->setSubject ( "Your account has been created" );
+		$mail->setBodyText ( "Thank you for registering!" );
+		$mail->send ( $smtp );
+	} catch ( Exception $e ) {
+		echo "error sending email . <BR>" . $e;
+	}
 }
 
 $accessToken = getAccessToken ();
