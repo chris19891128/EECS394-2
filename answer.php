@@ -27,6 +27,7 @@ if (! isset ( $_GET ['id'] )) {
         $err_num = 1;
     }
     echo 'repondantError: '.($respondantError);
+    echo($respondantError);
 //not the recipient of the survey
 } elseif (! in_array ( $_GET ['responder'], get_survey_recipient_by_id ( $_GET ['id'] ) )) {
     $existRespondant = "true";
