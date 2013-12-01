@@ -5,7 +5,7 @@ require_once 'lib/session.php';
 session_start ();
 
 $accessToken = getAccessToken ();
-echo  $accessToken ;
+echo 'haha' . $accessToken;
 // send_good_email ( 'chris19891128@gmail.com', $accessToken, [
 // 'chris1989apply@gmail.com',
 // 'chaoshi2012@u.northwestern.edu'
