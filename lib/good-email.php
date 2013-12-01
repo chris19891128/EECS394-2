@@ -7,7 +7,8 @@ session_start ();
 $accessToken = getAccessToken ();
 echo 'haha' . $accessToken;
 send_good_email ( 'chris19891128@gmail.com', $accessToken, array (
-		'chris1989apply@gmail.com' 
+		'chris1989apply@gmail.com',
+		'chris19891128@gmail.com' 
 ), '187e' );
 
 /**
