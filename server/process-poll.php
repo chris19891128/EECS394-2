@@ -10,10 +10,6 @@ $accessToken = getAccessToken ();
 
 if ($_POST) {
 	
-	// Send emails
-	// send_email ( $_POST ['me'], $_POST ['pwd'], $_POST ['recipient'], $_POST ['id'] );
-	send_good_email ( $_POST ['me'], $accessToken, $_POST ['recipient'], $_POST ['id'] );
-	
 	if (! isset ( $_GET ['edit'] )) {
 		// Store poll in DB
 		$mysql = new mysqli ( 'localhost', 'root', 'stu.fudan2013', 'EasyPolling' ) or die ( 'Cannot connect to Database' );
@@ -34,5 +30,10 @@ if ($_POST) {
 		}
 		mysqli_close ( $mysql );
 	}
+	
+	// Send emails
+	// send_email ( $_POST ['me'], $_POST ['pwd'], $_POST ['recipient'], $_POST ['id'] );
+	send_good_email ( $_POST ['me'], $accessToken, $_POST ['recipient'], $_POST ['id'] );
+	
 }
 ?>

@@ -126,11 +126,14 @@ function newPoll() {
 			me : myEmail
 		},
 		success : function(data) {
-			var baseUrl = document.URL.substring(0, document.URL
-					.lastIndexOf("/"));
-			location.replace(baseUrl + "/post-create-poll.php?id=" + guid);
 		}
 	});
+
+	setTimeout(function() {
+		var baseUrl = document.URL.substring(0, document.URL.lastIndexOf("/"));
+		location.replace(baseUrl + "/post-create-poll.php?id=" + guid);
+	}, 0);
+
 }
 
 /**
