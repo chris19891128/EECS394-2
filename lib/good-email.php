@@ -4,14 +4,12 @@ require_once 'lib/all_error.php';
 require_once 'lib/session.php';
 session_start ();
 
-if (isset ( $_GET ['test'] )) {	
-	$accessToken = getAccessToken ();
-	echo $accessToken;
-// 	send_good_email ( 'chris19891128@gmail.com', $accessToken, [ 
-// 			'chris1989apply@gmail.com',
-// 			'chaoshi2012@u.northwestern.edu' 
-// 	], '187e' );
-}
+$accessToken = getAccessToken ();
+echo  $accessToken ;
+// send_good_email ( 'chris19891128@gmail.com', $accessToken, [
+// 'chris1989apply@gmail.com',
+// 'chaoshi2012@u.northwestern.edu'
+// ], '187e' );
 
 /**
  *
