@@ -1,19 +1,45 @@
 <?php
 set_include_path ( '.' );
 require_once 'lib/survey_db.php';
-
-if (! isset ( $_GET ['id'] ) || ! isset ( $_GET ['responder'] )) {
+require_once 'lib/session.php';
+session_start ();
+if (! isset ( $_SESSION ['token'] ))
+{
+    header ( 'location: login.php' );
+}
+$respondantError = "false";
+$existRespondant = "false";
+//no survey_id
+if (! isset ( $_GET ['id'] )) {
 	echo 'Broken URL, Missing survey id or responder!';
 	return;
-} elseif ($_GET ['responder'] == get_survey_creator_by_id ( $_GET ['id'] )) {
-	$err_num = 1;
+//no responder then judge as the initiator
+} elseif (! isset ($_GET ['responder'])){
+    $userInfo = getFullUserInfo();
+    $respondant = $userInfo['email'];
+    echo($respondant);
+    //the home did not create that survey
+    if($respondant != get_survey_creator_by_id ( $_GET ['id']))
+    {
+        $respondantError = "true";
+        //echo($respondantError);
+        $err_num = 1;
+    }
+    echo($respondantError);
+    return;
+//not the recipient of the survey
 } elseif (! in_array ( $_GET ['responder'], get_survey_recipient_by_id ( $_GET ['id'] ) )) {
-	echo 'You have no authentication to see this poll';
-	return;
+    $existRespondant = "true";
+    echo 'You have no authentication to see this poll';
+    return;
 } elseif (in_array ( $_GET ['responder'], get_survey_responded_by_id ( $_GET ['id'] ) )) {
+    $existRespondant = "true";
+    echo ('You have already voted');
 	$err_num = 2;
 } else {
+    $existRespondant = "true";
 	$err_num = 0;
+    echo ($existRespondant);
 }
 
 ?>
@@ -34,11 +60,11 @@ if (! isset ( $_GET ['id'] ) || ! isset ( $_GET ['responder'] )) {
 <script src="js/answer.js"></script>
 </head>
 
-<<<<<<< HEAD
+
 <body onload="init()">
 	<div class='container'>
 	<?php
-    if (!isset($_GET['responder']))
+    if (!isset($_GET['responder']) && $respondantError == "false")
     {
         echo "<ul class=\"pager\">";
         echo "<li class=\"previous\"><a href=\"home.php\">&larr; Home</a></li>";
@@ -92,7 +118,6 @@ if (! isset ( $_GET ['id'] ) || ! isset ( $_GET ['responder'] )) {
 	
 	<div id="dialog" title="Basic dialog">
 			<p></p>
-=======
 <body>
 	<input id='err' type='hidden' value='<?php echo $err_num;?>' />
 	<input id='sid' type='hidden'
@@ -114,7 +139,6 @@ if (! isset ( $_GET ['id'] ) || ! isset ( $_GET ['responder'] )) {
 				<li id='l1' class="active"><a href="#">Vote</a></li>
 				<li id='l2'><a id='l2a'>See Result</a></li>
 			</ul>
->>>>>>> 00ce24f8835f21cf70532704caad45ead07cb1e4
 		</div>
 
 		<!-- Panel for voting -->

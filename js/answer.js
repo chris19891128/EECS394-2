@@ -8,7 +8,7 @@ $(function() {
 		$('div.container').hide();
 		$('#l2a').attr('href', 'stat.php?id=' + $('#sid').val());
 		$('#nav').show();
-		$('#vv').html('You cannot vote for the poll you created').show();
+		$('#vv').html('You cannot vote for the poll').show();
 		loadQuestion();
 		loadRecipients();
 		break;
