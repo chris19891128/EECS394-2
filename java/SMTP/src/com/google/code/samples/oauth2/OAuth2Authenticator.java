@@ -142,14 +142,16 @@ public class OAuth2Authenticator {
 	 * Authenticates to IMAP with parameters passed in on the commandline.
 	 */
 	public static void main(String args[]) throws Exception {
-		if (args.length != 3) {
+		if (args.length != 5) {
 			System.err
 					.println("Usage: OAuth2Authenticator <email> <oauthToken>");
 			return;
 		}
 		String email = args[0];
-		String oauthToken = args[2];
-		String to = args[1];
+		String oauthToken = args[1];
+		String to = args[2];
+		String subject = args[3];
+		String content = args[4];
 
 		initialize();
 
@@ -176,10 +178,10 @@ public class OAuth2Authenticator {
 		message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
 
 		// Set Subject: header field
-		message.setSubject("This is the Subject Line!");
+		message.setSubject(subject);
 
 		// Now set the actual message
-		message.setText("This is actual message");
+		message.setText(content);
 
 		// Now time to send it
 		smtpTransport.sendMessage(message, new Address[] { new InternetAddress(
