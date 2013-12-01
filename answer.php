@@ -65,7 +65,7 @@ if (! isset ( $_GET ['id'] )) {
 <body onload="init()">
 	<div class='container'>
 	<?php
-    if (!isset($_GET['responder']) && $respondantError == "false")
+    if (!isset($_GET['responder']))
     {
         echo "<ul class=\"pager\">";
         echo "<li class=\"previous\"><a href=\"home.php\">&larr; Home</a></li>";
