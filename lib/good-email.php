@@ -37,9 +37,6 @@ function send_good_email($me, $token, $emails, $survey_id) {
 		$cur_url = 'http://' . $_SERVER ['HTTP_HOST'] . $_SERVER ['PHP_SELF'];
 		$url = dirname ( dirname ( $cur_url ) ) . '/answer.php?id=' . $survey_id . '&responder=' . $email;
 		$content = "Please complete the poll through link " . $url;
-		echo $content;
-		
-		// $content = 'junk';
 		
 		if (! send_single_email ( $me, $token, $email, $subject, $content )) {
 			return false;
@@ -58,7 +55,6 @@ function send_good_email($me, $token, $emails, $survey_id) {
 function send_single_email($me, $token, $email, $subject, $content) {
 	$exe = 'java -jar ../java/SMTP/out/send_email.jar ' . $me . ' ' . $token . ' ' . $email . ' "' . $subject . '" "' . $content . '" 2>&1';
 	exec ( $exe, $out );
-	echo var_dump ( $out );
 	if ($out [count ( $out ) - 1] == 'Successfully sent out') {
 		return true;
 	} else {
