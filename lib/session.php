@@ -1,7 +1,7 @@
 <?php
 set_include_path ( '..' );
 require_once 'lib/all_error.php';
-require_once 'lib/session.php';
+require_once 'lib/client.php';
 
 /**
  * Function to return the json for user info

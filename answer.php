@@ -1,48 +1,65 @@
 <?php
+    <?php
+        set_include_path ( '.' );
+        require_once 'lib/survey_db.php';
+        require_once 'lib/session.php';
+        session_start ();
+        if (! isset ( $_SESSION ['token'] ))
+        {
+        header ( 'location: login.php' );
+        }
+        $respondantError = "false";
+        $existRespondant = "false";
+            //no survey_id
+        if (! isset ( $_GET ['id'] )) {
+            echo 'Broken URL, Missing survey id or responder!';
+            return;
+                //no responder then judge as the initiator
+        } elseif (! isset ($_GET ['responder'])){
+            $userInfo = getFullUserInfo();
+            $respondant = $userInfo['email'];
+            echo($respondant);
+            $err_num = 0;
+                //the home did not create that survey
+            if($respondant != get_survey_creator_by_id ( $_GET ['id']))
+                {
+                $respondantError = "true";
+                    //echo($respondantError);
+                $err_num = 1;
+                }
+            echo 'repondantError: '.($respondantError);
+                //not the recipient of the survey
+        } elseif (! in_array ( $_GET ['responder'], get_survey_recipient_by_id ( $_GET ['id'] ) )) {
+            $existRespondant = "true";
+            echo 'You have no authentication to see this poll';
+            return;
+        } elseif (in_array ( $_GET ['responder'], get_survey_responded_by_id ( $_GET ['id'] ) )) {
+            $existRespondant = "true";
+            echo ('You have already voted');
+            $err_num = 2;
+        } else {
+            $existRespondant = "true";
+            $err_num = 0;
+            echo ($existRespondant);
+        }
+    /**
 set_include_path ( '.' );
 require_once 'lib/survey_db.php';
-require_once 'lib/session.php';
-session_start ();
-if (! isset ( $_SESSION ['token'] ))
-{
-    header ( 'location: login.php' );
-}
-$respondantError = "false";
-$existRespondant = "false";
-//no survey_id
-if (! isset ( $_GET ['id'] )) {
+
+if (! isset ( $_GET ['id'] ) || ! isset ( $_GET ['responder'] )) {
 	echo 'Broken URL, Missing survey id or responder!';
 	return;
-//no responder then judge as the initiator
-} elseif (! isset ($_GET ['responder'])){
-    $userInfo = getFullUserInfo();
-    $respondant = $userInfo['email'];
-    echo($respondant);
-    $err_num = 0;
-    //the home did not create that survey
-    if($respondant != get_survey_creator_by_id ( $_GET ['id']))
-    {
-        $respondantError = "true";
-        //echo($respondantError);
-        $err_num = 1;
-    }
-    echo 'repondantError: '.($respondantError);
-    echo($respondantError);
-//not the recipient of the survey
+} elseif ($_GET ['responder'] == get_survey_creator_by_id ( $_GET ['id'] )) {
+	$err_num = 1;
 } elseif (! in_array ( $_GET ['responder'], get_survey_recipient_by_id ( $_GET ['id'] ) )) {
-    $existRespondant = "true";
-    echo 'You have no authentication to see this poll';
-    return;
+	echo 'You have no authentication to see this poll';
+	return;
 } elseif (in_array ( $_GET ['responder'], get_survey_responded_by_id ( $_GET ['id'] ) )) {
-    $existRespondant = "true";
-    echo ('You have already voted');
 	$err_num = 2;
 } else {
-    $existRespondant = "true";
 	$err_num = 0;
-    echo ($existRespondant);
 }
-
+**/
 ?>
 <!DOCTYPE html>
 <html>
@@ -61,64 +78,6 @@ if (! isset ( $_GET ['id'] )) {
 <script src="js/answer.js"></script>
 </head>
 
-
-<body onload="init()">
-	<div class='container'>
-	<?php
-    if (!isset($_GET['responder']))
-    {
-        echo "<ul class=\"pager\">";
-        echo "<li class=\"previous\"><a href=\"home.php\">&larr; Home</a></li>";
-        echo "<li class=\"previous\"><a href=\"addrespondants.php?id=".$survey_id."\">&larr; Add Respondants</a></li>";
-        echo "</ul>";
-    }
-	echo "<h1>" . $survey ['question'] . "</h1>"; 
-	echo "<p> (Other recipients: ";
-            //if (isset($_GET['responder']))
-            //{
-            //}
-            //}
-	for($i = 0; $i < count ( $survey_res ) - 1; $i ++) {
-		echo $survey_res [$i] . ", ";
-	}
-	echo $survey_res [$i] . " )</p>";
-            //echo 'number:  '.($number).' ';
-    $survey_res[$number] = $survey_creator;
-    $number = $number + 1;
-        for($i = 0; $i < count ( $survey_res ); $i ++) {
-                //echo 'voters: '.($survey_res[$i]).'    ';
-            if ($survey_res [$i] == $respondant)
-            {
-                $allow = "true";
-                break;
-            }
-        }
-	?>
-	<ul class="nav nav-tabs">
-		<li class="active"><a href="#">Vote</a></li>
-        <?php
-                if ($resp == "true")
-                {
-                echo '<li><a href="stat.php?id='.$survey_id.'&responder='.$respondant.'">Result</a></li>';
-                echo '<li><a href="stat2.php?id='.$survey_id.'&responder='.$respondant.'">Respondants</a></li>';
-                }
-                else
-                {
-                echo '<li><a href="stat.php?id='.$survey_id.'">Result</a></li>';
-                echo '<li><a href="stat2.php?id='.$survey_id.'">Respondants</a></li>';
-                }
-        ?>
-	</ul>
-	<br />
-	<?php
-	$count = 0;
-	foreach ( $survey ['answer'] as $choice ) {
-		echo '<p><button class="choiceButton btn btn-default" type="button"' . 'onClick="submitIt(\'' . $count ++ . '\')">' . $choice . '</button></p>';
-	}
-	?>
-	
-	<div id="dialog" title="Basic dialog">
-			<p></p>
 <body>
 	<input id='err' type='hidden' value='<?php echo $err_num;?>' />
 	<input id='sid' type='hidden'

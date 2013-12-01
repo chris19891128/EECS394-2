@@ -155,5 +155,3 @@ function addOption() {
 			+ (n + 1) + '_input"placeholder="" /></div>';
 	options.append(nextOption);
 }
-            
-                                        

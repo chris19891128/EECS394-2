@@ -43,10 +43,7 @@ function get_survey_recipient_by_id($survey_id) {
 		$json = NULL;
 	}
 	mysqli_close ( $link );
-        //$json = ["513629287@qq.com","yuchaozhou2014@u.northwestern.edu"];
-        //$json = json_decode ($json);
-        //var_dump($json);
-        //$json = array("yuchaozhou2014@u.northwestern.edu", "513629287@qq.com");
+	
 	return $json;
 }
 
@@ -55,7 +52,6 @@ function get_survey_recipient_by_id($survey_id) {
  * @param unknown $survey_id        	
  */
 function get_survey_responded_by_id($survey_id) {
-    
 	$mysql = new mysqli ( 'localhost', 'root', 'stu.fudan2013', 'EasyPolling' ) or die ( 'Cannot connect to Database' );
 	$query = "SELECT * from Answer where Poll_ID='$_GET[id]'";
 	$result = mysqli_query ( $mysql, $query );
@@ -63,8 +59,6 @@ function get_survey_responded_by_id($survey_id) {
 	while ( $row = mysqli_fetch_array ( $result ) ) {
 		array_push ( $responders, $row ['Respondant'] );
 	}
-    mysqli_close ( $mysql );
-     //$responders = array("yuchaozhou2014@u.northwestern.edu", "513629287@qq.com");
 	return $responders;
 }
 
@@ -85,10 +79,7 @@ function get_survey_creator_by_id($survey_id) {
 		$creator = NULL;
 	}
 	mysqli_close ( $link );
-        //return $creator;
-    
-        //$creator = "yuchaozhou2014@u.northwestern.edu";
-    return $creator;
+	return $creator;
 }
 
 /**

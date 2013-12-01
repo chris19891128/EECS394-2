@@ -47,30 +47,6 @@ if (! isset ( $_SESSION ['token'] )) {
 		<ul class="pager">
 			<li class="previous"><a href="home.php">&larr; Home</a></li>
 		</ul>
-		<table class="table">
-<?php
-require_once 'survey_db.php';
-
-
-$mysql = new mysqli ( 'localhost', 'root', 'stu.fudan2013', 'EasyPolling' ) or die ( 'Cannot connect to Database' );
-$query = "SELECT * from Poll where Creator='" . $_SESSION ['email'] . "'";
-$result = mysqli_query ( $mysql, $query );
-
-while ( $row = mysqli_fetch_array ( $result ) ) {
-	$id = $row ['ID'];
-    $survey = get_survey_by_id ( $id );
-	
-	echo "<tr>";
-	echo "<td>". $survey ['question'] ."</td>";
-	echo "<td><a href='stat.php?id=$id'>See statistic result</a></td>";
-	// echo "<td><a href='stat2.php?id=$id'>See individual result</a></td>";
-	echo "</tr>";
-}
-?>
-
-</table>
-<?php include ("footer.inc");?>
-</div>
 		<table class="table" id='mt'>
 		</table>
 	<?php include ("footer.inc");?>
