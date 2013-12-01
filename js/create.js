@@ -115,9 +115,6 @@ function newPoll() {
 	// New GUID
 	var guid = GUID();
 
-	// TODO to be removed
-	var pwd = askForPwd();
-
 	// Post everything to post-create-poll.php
 	$.ajax({
 		type : "POST",
@@ -126,8 +123,7 @@ function newPoll() {
 			id : guid,
 			recipient : emails,
 			data : poll,
-			me : myEmail,
-			pwd : pwd
+			me : myEmail
 		},
 		success : function(data) {
 			var baseUrl = document.URL.substring(0, document.URL
@@ -135,11 +131,6 @@ function newPoll() {
 			location.replace(baseUrl + "/post-create-poll.php?id=" + guid);
 		}
 	});
-}
-
-function askForPwd() {
-	var pwd = prompt("Please enter your password", "");
-	return pwd;
 }
 
 /**

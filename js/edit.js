@@ -58,7 +58,7 @@ function loadSent() {
 			if (sent == null) {
 				return;
 			}
-			
+
 			for (var i = 0; i < sent.length; i++) {
 				var front = sent[i].split('@')[0];
 				var end = sent[i].split('@')[1];
@@ -126,31 +126,6 @@ function extractRecipients() {
 	return recipients;
 }
 
-function askForPwd() {
-	var pwd = prompt("Please enter your password", "");
-	return pwd;
-}
-
-function fakePoll() {
-	$.ajax({
-		type : "POST",
-		url : 'server/process-poll.php?edit',
-		data : {
-			id : '7v34',
-			recipient : [ 'chris19891128@gmail.com' ],
-			me : 'chris19891128@gmail.com',
-			pwd : 'chris1989d'
-		},
-		success : function(data) {
-			alert(data);
-			var baseUrl = document.URL.substring(0, document.URL
-					.lastIndexOf("/"));
-			location.replace(baseUrl + "/post-create-poll.php?id="
-					+ $('#sid').val());
-		}
-	});
-}
-
 function editPoll() {
 
 	// Extract emails
@@ -166,8 +141,7 @@ function editPoll() {
 		data : {
 			id : $('#sid').val(),
 			recipient : emails,
-			me : myEmail,
-			pwd : pwd
+			me : myEmail
 		},
 		success : function(data) {
 			var baseUrl = document.URL.substring(0, document.URL

@@ -1,16 +1,4 @@
 <?php
-set_include_path ( '..' );
-require_once 'lib/all_error.php';
-require_once 'lib/session.php';
-session_start ();
-
-$accessToken = getAccessToken ();
-echo 'haha' . $accessToken;
-send_good_email ( 'chris19891128@gmail.com', $accessToken, array (
-		'chris1989apply@gmail.com',
-		'chris19891128@gmail.com' 
-), '187e' );
-
 /**
  *
  * @param unknown $me        	

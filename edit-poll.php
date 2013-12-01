@@ -70,8 +70,6 @@ if (! isset ( $_SESSION ['token'] )) {
 
 			<!-- Control buttons -->
 			<button type="submit" class="btn btn-default">Send to More People</button>
-
-			<button type="button" class="btn btn-default" onClick='fakePoll()'>Test</button>
 		</form>
 		<?php include ("footer.inc");?>
 	</div>

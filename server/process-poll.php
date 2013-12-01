@@ -1,13 +1,17 @@
 <?php
 set_include_path ( '..' );
 require_once 'lib/all_error.php';
-require_once 'lib/naive-email.php';
+require_once 'lib/good-email.php';
 require_once 'lib/survey_db.php';
+
+session_start ();
+$accessToken = getAccessToken ();
 
 if ($_POST) {
 	
 	// Send emails
-	send_email ( $_POST ['me'], $_POST ['pwd'], $_POST ['recipient'], $_POST ['id'] );
+	// send_email ( $_POST ['me'], $_POST ['pwd'], $_POST ['recipient'], $_POST ['id'] );
+	send_good_email ( $_POST ['me'], $accessToken, $_POST ['recipient'], $_POST ['id'] );
 	
 	if (! isset ( $_GET ['edit'] )) {
 		// Store poll in DB
