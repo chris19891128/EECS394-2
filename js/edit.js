@@ -132,7 +132,7 @@ function editPoll() {
 	var emails = extractRecipients();
 
 	// TODO to be removed
-	var pwd = askForPwd();
+	// var pwd = askForPwd();
 
 	// Post everything to post-create-poll.php
 	$.ajax({
