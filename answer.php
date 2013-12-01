@@ -1,4 +1,4 @@
-<?php
+
     <?php
         set_include_path ( '.' );
         require_once 'lib/survey_db.php';
