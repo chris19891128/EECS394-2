@@ -5,7 +5,7 @@ require_once 'lib/session.php';
 session_start ();
 
 $accessToken = getAccessToken ();
-echo 'haha';
+echo 'haha' . $accessToken;
 // send_good_email ( 'chris19891128@gmail.com', $accessToken, [
 // 'chris1989apply@gmail.com',
 // 'chaoshi2012@u.northwestern.edu'
@@ -43,10 +43,16 @@ function send_good_email($me, $token, $emails, $survey_id) {
  * @param unknown $survey_id        	
  */
 function send_single_email($me, $token, $email, $subject, $content) {
-	$JAVA_HOME = parse_ini_file ( './res/path.properties' )['java_home'];
-	$PATH = "$JAVA_HOME/bin:/usr/local/bin:/usr/bin:/bin";
-	putenv ( "JAVA_HOME=$JAVA_HOME" );
-	putenv ( "PATH=$PATH" );
+	$properties = parse_ini_file ( './res/path.properties' );
+	if (! $properties) {
+		return false;
+	}
+	
+	$java_home = $properties ['java_home'];
+	$path = "$JAVA_HOME/bin:/usr/local/bin:/usr/bin:/bin";
+	
+	putenv ( "JAVA_HOME=$java_home" );
+	putenv ( "PATH=$path" );
 	
 	$exe = 'java -jar ./java/SMTP/out/send_email.jar ' . $me . ' ' . $token . ' ' . $email . ' "' . $subject . '" "' . $content . '" 2>&1';
 	exec ( $exe, $out );
