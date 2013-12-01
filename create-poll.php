@@ -46,7 +46,7 @@ if (! isset ( $_SESSION ['token'] )) {
 					<label for="recipient">To:</label> <input type="hidden"
 						class="form-control" id="recipient" />
 					<p>
-						<select multiple name="e1" id="e1" style="width: 500px"
+						<select multiple name="e1" id="e1" style="width: 100%"
 							class="populate">
 						</select>
 					</p>
