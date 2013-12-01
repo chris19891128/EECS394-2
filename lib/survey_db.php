@@ -63,6 +63,7 @@ function get_survey_responded_by_id($survey_id) {
 	while ( $row = mysqli_fetch_array ( $result ) ) {
 		array_push ( $responders, $row ['Respondant'] );
 	}
+    mysqli_close ( $mysql );
      //$responders = array("yuchaozhou2014@u.northwestern.edu", "513629287@qq.com");
 	return $responders;
 }
@@ -84,7 +85,7 @@ function get_survey_creator_by_id($survey_id) {
 		$creator = NULL;
 	}
 	mysqli_close ( $link );
-	return $creator;
+        //return $creator;
     
         //$creator = "yuchaozhou2014@u.northwestern.edu";
     return $creator;
