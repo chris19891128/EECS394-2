@@ -56,3 +56,4 @@ function send_single_email($me, $token, $email, $subject, $content) {
 		return false;
 	}
 }
+?>
