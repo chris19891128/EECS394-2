@@ -35,9 +35,11 @@ if (! isset ( $_SESSION ['token'] )) {
 		<ul class="pager">
 			<li class="previous"><a href="home.php">&larr; Home</a></li>
 		</ul>
+
 	<?php
 	if (isset ( $_GET ['id'] )) {
 		echo <<<END
+		<h1>Your Poll Has Been Sent!</h1>
 		<p>
 			See the statistical result, click <a id="seeResult"
 				href="statp.php?id=$_GET[id]">here</a>
