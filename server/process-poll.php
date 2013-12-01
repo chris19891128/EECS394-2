@@ -3,6 +3,7 @@ set_include_path ( '..' );
 require_once 'lib/all_error.php';
 require_once 'lib/good-email.php';
 require_once 'lib/survey_db.php';
+require_once 'lib/session.php';
 
 session_start ();
 $accessToken = getAccessToken ();
