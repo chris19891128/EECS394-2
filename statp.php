@@ -4,12 +4,8 @@ require_once 'lib/survey_db.php';
 require_once 'lib/session.php';
 session_start ();
 
-if (! isset ( $_GET ['id'] ) || ! isset ( $_GET ['responder'] )) {
-	$err_num = 1;
-} elseif ($_GET ['responder'] == get_survey_creator_by_id ( $_GET ['id'] ) || in_array ( $_GET ['responder'], get_survey_recipient_by_id ( $_GET ['id'] ) )) {
-	$err_num = 0;
-} else {
-	$err_num = 2;
+if (! isset ( $_SESSION ['token'] )) {
+	header ( 'location: login.php' );
 }
 
 ?>
@@ -30,38 +26,28 @@ if (! isset ( $_GET ['id'] ) || ! isset ( $_GET ['responder'] )) {
 <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
 <script type="text/javascript"
 	src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>
-<script src="js/stat.js"></script>
+<script src="js/statp.js"></script>
 </head>
 
 <body>
-	<input id='err' type='hidden' value='<?php echo $err_num;?>' />
+	<input id='err' type='hidden' value='0' />
 	<input id='sid' type='hidden'
 		value='<?php echo isset ( $_GET ['id'] ) ? $_GET ['id']:'' ;?>' />
-	<input id='rid' type='hidden'
-		value='<?php echo isset ( $_GET ['responder'] ) ? $_GET ['responder']:'' ;?>' />
 
 	<div class="container" id="root" style="display: none">
-		<!-- Panel for errors -->
-		<div id='fv' class='container' style='display: none'>
-			<p id='errStr'></p>
-		</div>
-
-		<!-- Panel for question and other recipients -->
-		<div id='infov' class='container' style='display: none'>
+		<!-- Back to home button -->
+		<ul class="pager">
+			<li class="previous"><a href="home.php"> &larr; Home</a></li>
+		</ul>
+		
+		<!-- Information panel -->
+		<div id='infov' class='container'>
 			<h1 id='qt'></h1>
 			<p id='ar'></p>
 		</div>
 
-		<!-- Panel for navigation -->
-		<div id='nav' class='container' style='display: none'>
-			<ul class="nav nav-tabs">
-				<li id='l1'><a id='l1a' href="#">Vote</a></li>
-				<li id='l2' class="active"><a id='l2a'>See Result</a></li>
-			</ul>
-		</div>
-
-		<!-- Stat data area -->
-		<div id='vv' class='container' style='display: none'>
+		<!-- Stat data panel -->
+		<div id='vv' class='container'>
 			<p>You can click on the bar chart to see who voted :)</p>
 			<table class="table" id="stats_graph">
 				<tr id='hidden_line' style='display: none'>

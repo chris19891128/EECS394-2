@@ -1,9 +1,10 @@
 var myEmail;
 
 $(function() {
+	$("#e1").select2();
 	loadUser();
 	loadContact();
-	$("#e1").select2();
+	$('#root').show();
 	$("#create").submit(function(event) {
 		event.preventDefault();
 		newPoll();
@@ -13,7 +14,7 @@ $(function() {
 function loadContact() {
 	$.ajax({
 		type : "GET",
-		url : 'server/myapi.php?f=contact',
+		url : 'server/googleapi.php?f=contact',
 		success : function(data) {
 			var contacts = $.parseJSON(data);
 			for (var i = 0; i < contacts.length; i++) {
@@ -23,6 +24,7 @@ function loadContact() {
 				$option.attr('value', email).html(
 						name + '&#60;' + email + '&#62;').appendTo($('#e1'));
 			}
+			$("#e1").select2();
 		}
 	});
 }
@@ -30,7 +32,7 @@ function loadContact() {
 function loadUser() {
 	$.ajax({
 		type : "GET",
-		url : 'server/myapi.php?f=user',
+		url : 'server/googleapi.php?f=user',
 		success : function(data) {
 			var user = $.parseJSON(data);
 			myEmail = user.email;
@@ -113,9 +115,6 @@ function newPoll() {
 	// New GUID
 	var guid = GUID();
 
-	// TODO to be removed
-	var pwd = askForPwd();
-
 	// Post everything to post-create-poll.php
 	$.ajax({
 		type : "POST",
@@ -124,46 +123,17 @@ function newPoll() {
 			id : guid,
 			recipient : emails,
 			data : poll,
-			me : myEmail,
-			pwd : pwd
+			me : myEmail
 		},
 		success : function(data) {
-			var baseUrl = document.URL.substring(0, document.URL.lastIndexOf("/"));
-			location.replace( baseUrl + "/post-create-poll.php?id="
-					+ guid);
 		}
 	});
 
-	$('#create').hide();
-	$('#success').hide();
-	$('#progress').show();
-}
+	setTimeout(function() {
+		var baseUrl = document.URL.substring(0, document.URL.lastIndexOf("/"));
+		location.replace(baseUrl + "/post-create-poll.php?id=" + guid);
+	}, 0);
 
-// function validate() {
-//
-// if ($('li.select2-search-choice div:first-child').length == 0) {
-// alert('You did not enter recipients');
-// }
-//
-// if ($('#question').val() == '') {
-// alert('You cannot have empty question');
-// return false;
-// }
-//
-// var options = $("[id^='option_']").filter("[id$='_input']");
-// for (var i = 0; i < options.length; i++) {
-// if (options[i].value == '') {
-// alert('You cannot have empty option ' + (i + 1));
-// return false;
-// }
-// }
-//
-// return true;
-// }
-
-function askForPwd() {
-	var pwd = prompt("Please enter your password", "");
-	return pwd;
 }
 
 /**

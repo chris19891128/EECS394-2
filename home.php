@@ -1,8 +1,6 @@
 <?php
 set_include_path ( '.' );
 require_once 'lib/all_error.php';
-// Do nothing now
-
 ?>
 
 <!doctype html>
@@ -22,18 +20,27 @@ require_once 'lib/all_error.php';
 	src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 
 <script type="text/javascript">
-	$(function(){
+	$(function() {
 		$.ajax({
 			type : "GET",
-			url : 'server/myapi.php?f=user',
+			url : 'server/googleapi.php?f=user',
 			success : function(data) {
-				var user = $.parseJSON(data);
-				$('#h1').text('Welcome ' + user.name + " !");
+				user = $.parseJSON(data);
+				if (user === false) {
+					$('#h1').text('Welcome Customer!');
+					$('#log').html('Log In').attr('formaction', 'login.php');
+					$('#create').html('See demo').attr('formaction',
+							'create-poll.php?demo');
+					$('#history').hide();
+				} else {
+					$('#h1').text('Welcome ' + user.name + " !");
+					$('#log').html('Log Out')
+							.attr('formaction', 'login.php?logout');
+				}
 				$('#root').show();
 			}
 		});
 	});
-	
 </script>
 </head>
 
@@ -41,13 +48,14 @@ require_once 'lib/all_error.php';
 	<div class="container" id="root" style="display: none">
 		<h1 id="h1">Welcome</h1>
 		<form method="GET">
-			<button type="submit" class="btn btn-primary"
+			<button type="submit" class="btn btn-primary" id="create"
 				formaction="create-poll.php">New Poll</button>
-			<button type="submit" class="btn btn-default"
+			<button type="submit" class="btn btn-default" id="history"
 				formaction="history-poll.php">History Polls</button>
-            <button type="submit" class="btn btn-default" value="logout" name="logout"
-                formaction="home.php">LogOut</button>
+			<button type="submit" class="btn btn-default" value="logout"
+				name="logout" id="log" formaction=""></button>
 		</form>
+		<?php include ("footer.inc");?>
 	</div>
 
 </body>
