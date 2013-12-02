@@ -80,6 +80,7 @@ if (! isset ( $_GET ['id'] ) || ! isset ( $_GET ['responder'] )) {
 
 <body>
 	<input id='err' type='hidden' value='<?php echo $err_num;?>' />
+    <input id='exist' type='hidden' value='<?php echo $existRespondant;?>' />
 	<input id='sid' type='hidden'
 		value='<?php echo isset ( $_GET ['id'] ) ? $_GET ['id']:'' ;?>' />
 	<input id='rid' type='hidden'
@@ -94,10 +95,11 @@ if (! isset ( $_GET ['id'] ) || ! isset ( $_GET ['responder'] )) {
 		</div>
 
 		<!-- Panel for navigation -->
-		<div id='nav' class='container' style='display: none'>
+		<div id='nav' class='container'>
 			<ul class="nav nav-tabs">
 				<li id='l1' class="active"><a href="#">Vote</a></li>
-				<li id='l2'><a id='l2a'>See Result</a></li>
+				<li id='l2' class="active"><a href="">See Result</a></li>
+                <li id='l3' class="active"><a href="">Track Respondants</a></li>
 			</ul>
 		</div>
 

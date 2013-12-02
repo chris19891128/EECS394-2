@@ -4,8 +4,9 @@ require_once 'lib/survey_db.php';
 require_once 'lib/session.php';
 session_start ();
 
-if (! isset ( $_GET ['id'] ) || ! isset ( $_GET ['responder'] )) {
-	$err_num = 1;
+if (! isset ( $_GET ['id'] )) {
+    echo 'Broken URL, Missing survey id or responder!';
+    return;
 } elseif ($_GET ['responder'] == get_survey_creator_by_id ( $_GET ['id'] ) || in_array ( $_GET ['responder'], get_survey_recipient_by_id ( $_GET ['id'] ) )) {
 	$err_num = 0;
 } else {
