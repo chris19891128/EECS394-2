@@ -28,7 +28,7 @@ $(function() {
         $('div.container').hide();
         $('#l2a').attr(
                  'href',
-                 'stat.php?id=' + $('#sid').val();
+                 'stat.php?id=' + $('#sid').val());
         $('#nav').show();
         loadQuestion();
         loadRecipients();
