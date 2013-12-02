@@ -23,6 +23,17 @@ $(function() {
 		loadQuestion();
 		loadRecipients();
 		break;
+    //no responder
+    case '3':
+        $('div.container').hide();
+        $('#l2a').attr(
+                 'href',
+                 'stat.php?id=' + $('#sid').val();
+        $('#nav').show();
+        loadQuestion();
+        loadRecipients();
+        loadOptions();
+        break;
 	default:
 		$('div.container').hide();
 		$('#l2a').attr(

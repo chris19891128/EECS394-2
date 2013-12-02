@@ -19,7 +19,7 @@
             $userInfo = getFullUserInfo();
             $respondant = $userInfo['email'];
             echo($respondant);
-            $err_num = 0;
+            $err_num = 3;
                 //the home did not create that survey
             if($respondant != get_survey_creator_by_id ( $_GET ['id']))
                 {
@@ -83,7 +83,7 @@ if (! isset ( $_GET ['id'] ) || ! isset ( $_GET ['responder'] )) {
 	<input id='sid' type='hidden'
 		value='<?php echo isset ( $_GET ['id'] ) ? $_GET ['id']:'' ;?>' />
 	<input id='rid' type='hidden'
-		value='<?php echo isset ( $_GET ['responder'] ) ? $_GET ['responder']:'' ;?>' />
+		value='<?php echo isset ( $_GET ['responder'] ) ? $_GET ['responder'] : $respondant ;?>' />
 
 	<div class="container" id="root" style="display: none">
 
