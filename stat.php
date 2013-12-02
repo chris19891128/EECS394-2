@@ -3,7 +3,8 @@ set_include_path ( '.' );
 require_once 'lib/survey_db.php';
 require_once 'lib/session.php';
 session_start ();
-
+$existRespondant = "false";
+/**
 if (! isset ( $_GET ['id'] )) {
     echo 'Broken URL, Missing survey id or responder!';
     return;
@@ -12,7 +13,38 @@ if (! isset ( $_GET ['id'] )) {
 } else {
 	$err_num = 2;
 }
-
+**/
+    if (! isset ( $_GET ['id'] )) {
+        echo 'Broken URL, Missing survey id or responder!';
+        return;
+            //no responder then judge as the initiator
+    } elseif (! isset ($_GET ['responder'])){
+        $userInfo = getFullUserInfo();
+        $respondant = $userInfo['email'];
+        echo($respondant);
+        $err_num = 3;
+            //the home did not create that survey
+        if($respondant != get_survey_creator_by_id ( $_GET ['id']))
+            {
+            $respondantError = "true";
+                //echo($respondantError);
+            $err_num = 1;
+            }
+        echo 'repondantError: '.($respondantError);
+            //not the recipient of the survey
+    } elseif (! in_array ( $_GET ['responder'], get_survey_recipient_by_id ( $_GET ['id'] ) )) {
+        $existRespondant = "true";
+        echo 'You have no authentication to see this poll';
+        return;
+    } elseif (in_array ( $_GET ['responder'], get_survey_responded_by_id ( $_GET ['id'] ) )) {
+        $existRespondant = "true";
+        echo ('You have already voted');
+        $err_num = 2;
+    } else {
+        $existRespondant = "true";
+        $err_num = 0;
+        echo ($existRespondant);
+    }
 ?>
 
 <!DOCTYPE html>
@@ -36,6 +68,7 @@ if (! isset ( $_GET ['id'] )) {
 
 <body>
 	<input id='err' type='hidden' value='<?php echo $err_num;?>' />
+<input id='exist' type='hidden' value='<?php echo $existRespondant;?>' />
 	<input id='sid' type='hidden'
 		value='<?php echo isset ( $_GET ['id'] ) ? $_GET ['id']:'' ;?>' />
 	<input id='rid' type='hidden'
@@ -58,6 +91,7 @@ if (! isset ( $_GET ['id'] )) {
 			<ul class="nav nav-tabs">
 				<li id='l1'><a id='l1a' href="#">Vote</a></li>
 				<li id='l2' class="active"><a id='l2a'>See Result</a></li>
+                <li id='l3'><a id='l3a'>Track Respondants</a></li>
 			</ul>
 		</div>
 

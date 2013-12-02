@@ -29,6 +29,7 @@ $(function() {
         $('#l2a').attr(
                  'href',
                  'stat.php?id=' + $('#sid').val());
+        $('#l3a').attr('href', 'stat2.php?id=' + $('#sid').val());
         $('#nav').show();
         loadQuestion();
         loadRecipients();
@@ -40,6 +41,8 @@ $(function() {
 				'href',
 				'stat.php?id=' + $('#sid').val() + '&responder='
 						+ $('#rid').val());
+        $('#l3a').attr('href', 'stat2.php?id=' + $('#sid').val()  + '&responder='
+                 + $('#rid').val()  );
 		$('#nav').show();
 		loadQuestion();
 		loadRecipients();
@@ -48,23 +51,6 @@ $(function() {
 
 	$('#root').show();
 });
-
-function loadNevigation()
-{
-    var contain = $('#exist').attr('value');
-    if (contain == "false")
-    {
-        $('#l2a').attr('href', 'stat.php?id=' + $('#sid').val());
-        $('#l3a').attr('href', 'stat2.php?id=' + $('#sid').val());
-    }
-    else
-    {
-        $('#l2a').attr('href', 'stat.php?id=' + $('#sid').val() + '&responder='
-                  + $('#rid').val()   );
-        $('#l3a').attr('href', 'stat2.php?id=' + $('#sid').val()  + '&responder='
-                  + $('#rid').val()  );
-    }
-}
 
 function loadQuestion() {
 	$.ajax({

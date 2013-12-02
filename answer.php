@@ -10,11 +10,11 @@
         }
         $respondantError = "false";
         $existRespondant = "false";
-            //no survey_id
+        //no survey_id
         if (! isset ( $_GET ['id'] )) {
             echo 'Broken URL, Missing survey id or responder!';
             return;
-                //no responder then judge as the initiator
+        //no responder then judge as the initiator
         } elseif (! isset ($_GET ['responder'])){
             $userInfo = getFullUserInfo();
             $respondant = $userInfo['email'];
@@ -98,8 +98,8 @@ if (! isset ( $_GET ['id'] ) || ! isset ( $_GET ['responder'] )) {
 		<div id='nav' class='container'>
 			<ul class="nav nav-tabs">
 				<li id='l1' class="active"><a href="#">Vote</a></li>
-				<li id='l2' class="active"><a id='l2a' href="">See Result</a></li>
-                <li id='l3' class="active"><a id='l3a' href="">Track Respondants</a></li>
+				<li id='l2' ><a id='l2a' href="">See Result</a></li>
+                <li id='l3' ><a id='l3a' href="">Track Respondants</a></li>
 			</ul>
 		</div>
 

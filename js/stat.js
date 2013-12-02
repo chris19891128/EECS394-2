@@ -11,12 +11,30 @@ $(function() {
 		$('#errStr').html('You have no authentication to see this poll');
 		$('#fv').show();
 		break;
+    //no responder
+    case '3':
+        $('div.container').hide();
+        $('#l1a').attr(
+                 'href',
+                 'answer.php?id=' + $('#sid').val());
+        $('#l3a').attr(
+                 'href',
+                 'answer.php?id=' + $('#sid').val());
+        $('#nav').show();
+        loadQuestion();
+        loadRecipients();
+        loadStats();
+        break;
 	default:
 		$('div.container').hide();
 		$('#l1a').attr(
 				'href',
 				'answer.php?id=' + $('#sid').val() + '&responder='
 						+ $('#rid').val());
+        $('#l3a').attr(
+                 'href',
+                 'answer.php?id=' + $('#sid').val() + '&responder='
+                 + $('#rid').val());
 		$('#nav').show();
 		loadQuestion();
 		loadRecipients();
