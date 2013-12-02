@@ -32,7 +32,6 @@
             return;
         } elseif (in_array ( $_GET ['responder'], get_survey_responded_by_id ( $_GET ['id'] ) )) {
             $existRespondant = "true";
-            echo ('You have already voted');
             $err_num = 2;
         } else {
             $existRespondant = "true";
