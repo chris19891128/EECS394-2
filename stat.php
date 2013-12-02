@@ -69,8 +69,8 @@ if (! isset ( $_GET ['id'] )) {
 	<div class="container" id="root" style="display: none">
         <!-- Panel for home button -->
         <div id='home' class='container' style='display: none'>
-        <ul class="pager\">
-        <li class="previous\"><a href=\"home.php\">&larr; Home</a></li>
+        <ul class="pager">
+        <li class="previous"><a href="home.php">&larr; Home</a></li>
         </ul>
         </div>
 
