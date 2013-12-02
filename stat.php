@@ -4,7 +4,7 @@ require_once 'lib/survey_db.php';
 require_once 'lib/session.php';
 session_start ();
 $existRespondant = "false";
-    $respondantError = "false";
+$respondantError = "false";
 /**
 if (! isset ( $_GET ['id'] )) {
     echo 'Broken URL, Missing survey id or responder!';
@@ -32,15 +32,6 @@ if (! isset ( $_GET ['id'] )) {
             $err_num = 1;
             }
         echo 'repondantError: '.($respondantError);
-            //not the recipient of the survey
-    } elseif (! in_array ( $_GET ['responder'], get_survey_recipient_by_id ( $_GET ['id'] ) )) {
-        $existRespondant = "true";
-        echo 'You have no authentication to see this poll';
-        return;
-    } elseif (in_array ( $_GET ['responder'], get_survey_responded_by_id ( $_GET ['id'] ) )) {
-        $existRespondant = "true";
-        echo ('You have already voted');
-        $err_num = 2;
     } else {
         $existRespondant = "true";
         $err_num = 0;
@@ -76,6 +67,13 @@ if (! isset ( $_GET ['id'] )) {
 		value='<?php echo isset ( $_GET ['responder'] ) ? $_GET ['responder']:'' ;?>' />
 
 	<div class="container" id="root" style="display: none">
+        <!-- Panel for home button -->
+        <div id='home' class='container' style='display: none'>
+        <ul class="pager\">
+        <li class="previous\"><a href=\"home.php\">&larr; Home</a></li>
+        </ul>
+        </div>
+
 		<!-- Panel for errors -->
 		<div id='fv' class='container' style='display: none'>
 			<p id='errStr'></p>

@@ -20,7 +20,7 @@
 
 <?php
     require_once 'lib/all_error.php';
-    require_once 'survey_db.php';
+    require_once 'lib/survey_db.php';
     $resp = "false";
     if(isset($_GET['responder']))
     {

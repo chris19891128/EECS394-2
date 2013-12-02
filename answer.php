@@ -20,15 +20,14 @@
             $respondant = $userInfo['email'];
             echo($respondant);
             $err_num = 3;
-                //the home did not create that survey
+            //the home did not create that survey
             if($respondant != get_survey_creator_by_id ( $_GET ['id']))
-                {
+            {
                 $respondantError = "true";
-                    //echo($respondantError);
                 $err_num = 1;
-                }
+            }
             echo 'repondantError: '.($respondantError);
-                //not the recipient of the survey
+        //not the recipient of the survey
         } elseif (! in_array ( $_GET ['responder'], get_survey_recipient_by_id ( $_GET ['id'] ) )) {
             $existRespondant = "true";
             echo 'You have no authentication to see this poll';
@@ -87,6 +86,13 @@ if (! isset ( $_GET ['id'] ) || ! isset ( $_GET ['responder'] )) {
 		value='<?php echo isset ( $_GET ['responder'] ) ? $_GET ['responder'] : $respondant ;?>' />
 
 	<div class="container" id="root" style="display: none">
+
+        <!-- Panel for home button -->
+        <div id='home' class='container' style='display: none'>
+            <ul class="pager\">
+            <li class="previous\"><a href=\"home.php\">&larr; Home</a></li>
+            </ul>
+        </div>
 
 		<!-- Panel for question and other recipients display -->
 		<div id='infov' class='container' style='display: none'>
