@@ -7,17 +7,21 @@ $(function() {
 	case '1':
 		$('div.container').hide();
 		$('#l2a').attr('href', 'stat.php?id=' + $('#sid').val());
+        $('#l3a').attr('href', 'stat2.php?id=' + $('#sid').val());
 		$('#nav').show();
-		$('#vv').html('You cannot vote for the poll you created').show();
+		$('#vv').html('You cannot vote for the poll').show();
 		loadQuestion();
 		loadRecipients();
 		break;
+    //already voted
 	case '2':
 		$('div.container').hide();
 		$('#l2a').attr(
 				'href',
 				'stat.php?id=' + $('#sid').val() + '&responder='
 						+ $('#rid').val());
+        $('#l3a').attr('href', 'stat2.php?id=' + $('#sid').val()  + '&responder='
+                 + $('#rid').val()  );
 		$('#nav').show();
 		$('#vv').html('You have already voted').show();
 		loadQuestion();
@@ -26,6 +30,7 @@ $(function() {
     //no responder
     case '3':
         $('div.container').hide();
+        $('#home').show();
         $('#l2a').attr(
                  'href',
                  'stat.php?id=' + $('#sid').val());

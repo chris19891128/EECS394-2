@@ -19,8 +19,9 @@ $(function() {
                  'answer.php?id=' + $('#sid').val());
         $('#l3a').attr(
                  'href',
-                 'answer.php?id=' + $('#sid').val());
+                 'stat2.php?id=' + $('#sid').val());
         $('#nav').show();
+        $('#home').show();
         loadQuestion();
         loadRecipients();
         loadStats();
@@ -33,7 +34,7 @@ $(function() {
 						+ $('#rid').val());
         $('#l3a').attr(
                  'href',
-                 'answer.php?id=' + $('#sid').val() + '&responder='
+                 'stat2.php?id=' + $('#sid').val() + '&responder='
                  + $('#rid').val());
 		$('#nav').show();
 		loadQuestion();
