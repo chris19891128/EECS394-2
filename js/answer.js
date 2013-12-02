@@ -54,14 +54,14 @@ function loadNevigation()
     var contain = $('#exist').attr('value');
     if (contain == "false")
     {
-        $('#l2').attr('href', 'stat.php?id=' + $('#sid').val());
-        $('#l3').attr('href', 'stat2.php?id=' + $('#sid').val());
+        $('#l2a').attr('href', 'stat.php?id=' + $('#sid').val());
+        $('#l3a').attr('href', 'stat2.php?id=' + $('#sid').val());
     }
     else
     {
-    $('#l2').attr('href', 'stat.php?id=' + $('#sid').val() + '&responder='
+        $('#l2a').attr('href', 'stat.php?id=' + $('#sid').val() + '&responder='
                   + $('#rid').val()   );
-    $('#l3').attr('href', 'stat2.php?id=' + $('#sid').val()  + '&responder='
+        $('#l3a').attr('href', 'stat2.php?id=' + $('#sid').val()  + '&responder='
                   + $('#rid').val()  );
     }
 }
