@@ -42,7 +42,7 @@ if (! isset ( $_SESSION ['token'] )) {
 		<h1>Your Poll Has Been Sent!</h1>
 		<p>
 			See the statistical result, click <a id="seeResult"
-				href="statp.php?id=$_GET[id]">here</a>
+				href="stat.php?id=$_GET[id]">here</a>
 		</p>
 END;
 	} else {
