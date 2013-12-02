@@ -16,7 +16,7 @@ if (! isset ( $_SESSION ['token'] )) {
 	href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"
 	rel="stylesheet">
 <link
-	href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css"
+	href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"
 	rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
@@ -30,7 +30,7 @@ if (! isset ( $_SESSION ['token'] )) {
 				var polls = $.parseJSON(data);
 				for (var i=0; i < polls.length; i++) {
 					$td1 = $('<td>' + polls[i]['survey']['question'] + '</td>');
-					$td2 = $('<td><a href="stat.php?id=' + polls[i]['id'] + '">See statistic result</a></td>');
+					$td2 = $('<td><a href="stat.php?id=' + polls[i]['id'] + '">See who&#39;s down</a></td>');
 					$td3 = $('<td><a href="edit-poll.php?id=' + polls[i]['id'] + '">Add more recipients</a></td>');
 					$row = $('<tr></tr>').append($td1).append($td2).append($td3);
 					$('#mt').append($row);

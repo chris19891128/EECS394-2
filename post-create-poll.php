@@ -20,7 +20,7 @@ if (! isset ( $_SESSION ['token'] )) {
 	href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"
 	rel="stylesheet">
 <link
-	href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css"
+	href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"
 	rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 <script type="text/javascript"
