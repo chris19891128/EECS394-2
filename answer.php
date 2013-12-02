@@ -18,7 +18,6 @@
         } elseif (! isset ($_GET ['responder'])){
             $userInfo = getFullUserInfo();
             $respondant = $userInfo['email'];
-            echo($respondant);
             $err_num = 3;
             //the home did not create that survey
             if($respondant != get_survey_creator_by_id ( $_GET ['id']))
@@ -26,7 +25,6 @@
                 $respondantError = "true";
                 $err_num = 1;
             }
-            echo 'repondantError: '.($respondantError);
         //not the recipient of the survey
         } elseif (! in_array ( $_GET ['responder'], get_survey_recipient_by_id ( $_GET ['id'] ) )) {
             $existRespondant = "true";
@@ -39,7 +37,6 @@
         } else {
             $existRespondant = "true";
             $err_num = 0;
-            echo ($existRespondant);
         }
     /**
 set_include_path ( '.' );

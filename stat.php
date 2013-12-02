@@ -22,20 +22,16 @@ if (! isset ( $_GET ['id'] )) {
     } elseif (! isset ($_GET ['responder'])){
         $userInfo = getFullUserInfo();
         $respondant = $userInfo['email'];
-        echo($respondant);
         $err_num = 3;
-            //the home did not create that survey
+        //the home did not create that survey
         if($respondant != get_survey_creator_by_id ( $_GET ['id']))
             {
             $respondantError = "true";
-                //echo($respondantError);
             $err_num = 1;
             }
-        echo 'repondantError: '.($respondantError);
     } else {
         $existRespondant = "true";
         $err_num = 0;
-        echo ($existRespondant);
     }
 ?>
 
