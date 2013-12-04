@@ -1,1 +1,1 @@
-<footer>- iMDown, Powered by the Orange Team, EECS394 2013</footer>
+<footer style="margin-top:20px;">- <i class="fa fa-thumbs-up"></i> iMDown, Powered by the Orange Team, EECS394 2013</footer>

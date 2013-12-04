@@ -13,7 +13,7 @@ require_once 'lib/all_error.php';
 	href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"
 	rel="stylesheet">
 <link
-	href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css"
+	href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"
 	rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 <script type="text/javascript"
@@ -46,14 +46,20 @@ require_once 'lib/all_error.php';
 
 <body>
 	<div class="container" id="root" style="display: none">
-		<h1 id="h1">Welcome</h1>
+		<h2 style="float:left;"><i class="fa fa-thumbs-up"></i> iMDown</h2>
+		<div style="float:right;margin-top:20px;margin-bottom:10px;">
 		<form method="GET">
-			<button type="submit" class="btn btn-primary" id="create"
-				formaction="create-poll.php">New Poll</button>
-			<button type="submit" class="btn btn-default" id="history"
-				formaction="history-poll.php">History Polls</button>
-			<button type="submit" class="btn btn-default" value="logout"
+		<button type="submit" class="btn btn-default btn-sm" value="logout"
 				name="logout" id="log" formaction=""></button>
+		</form></div>
+		<div class="clear"></div>
+		<h1 id="h1">Welcome</h1>
+		<form method="GET" style="margin-bottom: 8px;">
+			<button type="submit" class="btn btn-primary" id="create"
+			formaction="create-poll.php" style="width:100%;">What’s up <i class="fa fa-question"></i></button>
+		</form><form method="GET">
+			<button type="submit" class="btn btn-default" id="history"
+			formaction="history-poll.php" style="width:100%;">Who’s down <i class="fa fa-thumbs-o-up"></i></button>
 		</form>
 		<?php include ("footer.inc");?>
 	</div>

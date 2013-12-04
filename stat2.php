@@ -7,7 +7,7 @@
     href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"
     rel="stylesheet">
 <link
-    href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css"
+    href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"
     rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet"
@@ -82,7 +82,7 @@ mysqli_close ( $mysql );
     echo '<li><a href="stat.php?id='.$survey_id.'">Result</a></li>';
     }
     ?>
-<li class="active"><a href="#">Respondants</a></li>
+<li class="active"><a href="#">Track Respondants</a></li>
 </ul>
 <br />
         <!-- frame = "void" -- not show the edge of the table -->
