@@ -1,3 +1,5 @@
+// bad quality file, hate it
+
 var myEmail;
 
 $(function() {
@@ -128,11 +130,10 @@ function extractRecipients() {
 
 function editPoll() {
 
+	$('button[class="btn btn-default"]').attr('disabled', '');
+
 	// Extract emails
 	var emails = extractRecipients();
-
-	// TODO to be removed
-	// var pwd = askForPwd();
 
 	// Post everything to post-create-poll.php
 	$.ajax({
@@ -144,6 +145,7 @@ function editPoll() {
 			me : myEmail
 		},
 		success : function(data) {
+			alert("Email is sent out");
 			var baseUrl = document.URL.substring(0, document.URL
 					.lastIndexOf("/"));
 			location.replace(baseUrl + "/post-create-poll.php?id="

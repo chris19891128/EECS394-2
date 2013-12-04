@@ -69,7 +69,10 @@ if (! isset ( $_SESSION ['token'] )) {
 			</div>
 
 			<!-- Control buttons -->
-			<button type="submit" class="btn btn-default">Send to More People</button>
+			<div class="form-group">
+				<button type="submit" class="btn btn-default">Send to More People</button>
+				<div class="formgroup" id="spinDiv" style="display: inline-block"></div>
+			</div>
 		</form>
 		<?php include ("footer.inc");?>
 	</div>
