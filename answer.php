@@ -1,41 +1,44 @@
 <?php
-	set_include_path ( '.' );
-	require_once 'lib/survey_db.php';
-	require_once 'lib/session.php';
-	session_start ();
-	
-	$respondantError = "false";
-	$existRespondant = "false";
-	$userInfo = null;
-	
-	if (! isset ( $_GET ['id'] )) {
-		// no survey_id
-		echo 'Broken URL, Missing survey id or responder!';
-		return;
-	} elseif (! isset ( $_GET ['responder'] ) && ($userInfo = getFullUserInfo ()) == false) {
-		// no responder and not logged in
-		header ( 'location: login.php' );
-	} elseif (! isset ( $_GET ['responder'] ) && $userInfo ['email'] == get_survey_creator_by_id ( $_GET ['id'] )) {
-		// Logged in user is the creator
-		$respondant = $userInfo ['email'];
-		$err_num = 3;
-	} elseif (! isset ( $_GET ['responder'] )) {
-		// Logged in user is not the creator
-		$respondantError = "true";
+set_include_path ( '.' );
+require_once 'lib/survey_db.php';
+require_once 'lib/session.php';
+session_start ();
+
+$respondantError = "false";
+$existRespondant = "false";
+$userInfo = null;
+
+if (! isset ( $_GET ['id'] )) {
+	// no survey_id
+	echo 'Broken URL, Missing survey id or responder!';
+	return;
+} elseif (! isset ( $_GET ['responder'] ) && ($userInfo = getFullUserInfo ()) == false) {
+	// no responder and not logged in
+	header ( 'location: login.php' );
+} elseif (! isset ( $_GET ['responder'] ) && $userInfo ['email'] == get_survey_creator_by_id ( $_GET ['id'] )) {
+	$respondant = $userInfo ['email'];
+	if (in_array ( $userInfo ['email'], get_survey_responded_by_id ( $_GET ['id'] ) )) {
+		// Logged in user is the creator and responded before
 		$err_num = 1;
-	} elseif (! in_array ( $_GET ['responder'], get_survey_recipient_by_id ( $_GET ['id'] ) )) {
-		// Custom user and not authorized
-		$existRespondant = "true";
-		echo 'You have no authentication to see this poll';
-		return;
-	} elseif (in_array ( $_GET ['responder'], get_survey_responded_by_id ( $_GET ['id'] ) )) {
-		// Custom user authorized but replied
-		$existRespondant = "true";
-		$err_num = 2;
 	} else {
-		$existRespondant = "true";
-		$err_num = 0;
+		// Logged in user is the creator and did not respond before
+		$err_num = 2;
 	}
+} elseif (! isset ( $_GET ['responder'] )) {
+	echo 'You are not the owner of this poll';
+	return;
+} elseif (! in_array ( $_GET ['responder'], get_survey_recipient_by_id ( $_GET ['id'] ) )) {
+	// Custom user and not authorized
+	echo 'You have no authentication to see this poll';
+	return;
+} elseif (in_array ( $_GET ['responder'], get_survey_responded_by_id ( $_GET ['id'] ) )) {
+	// Custom user authorized but replied
+	$existRespondant = "true";
+	$err_num = 3;
+} else {
+	$existRespondant = "true";
+	$err_num = 0;
+}
 
 ?>
 <!DOCTYPE html>

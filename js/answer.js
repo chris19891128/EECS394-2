@@ -5,49 +5,54 @@ $(function() {
 
 	switch (err) {
 	case '1':
+		// Logged in user is the creator and responded before
 		$('div.container').hide();
+		$('#home').show();
 		$('#l2a').attr('href', 'stat.php?id=' + $('#sid').val());
-        $('#l3a').attr('href', 'stat2.php?id=' + $('#sid').val());
+		$('#l3a').attr('href', 'stat2.php?id=' + $('#sid').val());
 		$('#nav').show();
 		$('#vv').html('You cannot vote for the poll').show();
 		loadQuestion();
 		loadRecipients();
 		break;
-    //already voted
 	case '2':
+		// Logged in user is the creator and responded before
+		$('div.container').hide();
+		$('#home').show();
+		$('#l2a').attr('href', 'stat.php?id=' + $('#sid').val());
+		$('#l3a').attr('href', 'stat2.php?id=' + $('#sid').val());
+		$('#nav').show();
+		loadQuestion();
+		loadRecipients();
+		loadOptions();
+		break;
+	case '3':
+		// Logged in user and responded before
 		$('div.container').hide();
 		$('#l2a').attr(
 				'href',
 				'stat.php?id=' + $('#sid').val() + '&responder='
 						+ $('#rid').val());
-        $('#l3a').attr('href', 'stat2.php?id=' + $('#sid').val()  + '&responder='
-                 + $('#rid').val()  );
+		$('#l3a').attr(
+				'href',
+				'stat2.php?id=' + $('#sid').val() + '&responder='
+						+ $('#rid').val());
 		$('#nav').show();
 		$('#vv').html('You have already voted').show();
 		loadQuestion();
 		loadRecipients();
 		break;
-    //no responder
-    case '3':
-        $('div.container').hide();
-        $('#home').show();
-        $('#l2a').attr(
-                 'href',
-                 'stat.php?id=' + $('#sid').val());
-        $('#l3a').attr('href', 'stat2.php?id=' + $('#sid').val());
-        $('#nav').show();
-        loadQuestion();
-        loadRecipients();
-        loadOptions();
-        break;
 	default:
+		// Logged in user and responded before
 		$('div.container').hide();
 		$('#l2a').attr(
 				'href',
 				'stat.php?id=' + $('#sid').val() + '&responder='
 						+ $('#rid').val());
-        $('#l3a').attr('href', 'stat2.php?id=' + $('#sid').val()  + '&responder='
-                 + $('#rid').val()  );
+		$('#l3a').attr(
+				'href',
+				'stat2.php?id=' + $('#sid').val() + '&responder='
+						+ $('#rid').val());
 		$('#nav').show();
 		loadQuestion();
 		loadRecipients();
