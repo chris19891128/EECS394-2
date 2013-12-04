@@ -1,4 +1,5 @@
 var myEmail;
+var spinner;
 
 $(function() {
 	$("#e1").select2();
@@ -86,7 +87,13 @@ function extractRecipients() {
 	return recipients;
 }
 
+function processPoll(emails, poll) {
+
+}
+
 function newPoll() {
+	// Disable UI preventing bad things happening
+	frozeUI();
 
 	// Extract emails
 	var emails = extractRecipients();
@@ -94,13 +101,52 @@ function newPoll() {
 	// Extract poll content
 	var poll = encodePoll();
 
+	if (!validate(emails, poll)) {
+		unFrozeUI();
+	} else {
+		// UI
+		startSpinner();
+
+		// New GUID
+		var guid = GUID();
+
+		// Post everything to post-create-poll.php
+		$.ajax({
+			type : "POST",
+			url : 'server/process-poll.php',
+			data : {
+				id : guid,
+				recipient : emails,
+				data : poll,
+				me : myEmail
+			},
+			success : function(data) {
+				if (data == "Email send out success") {
+					alert("Your poll has been sent");
+
+					var baseUrl = document.URL.substring(0, document.URL
+							.lastIndexOf("/"));
+					location.replace(baseUrl + "/post-create-poll.php?id="
+							+ guid);
+
+				} else {
+					console.log(data);
+					alert("Error happens, Sorry that's all we know now.");
+					unFrozeUI();
+					stopSpinner();
+				}
+			}
+		});
+	}
+
+}
+
+function validate(emails, poll) {
 	// Validation
 	if (emails.length == 0) {
 		alert('You did not enter recipients');
 		return false;
-	}
-
-	if (poll['question'] == null || poll['question'] == '') {
+	} else if (poll['question'] == null || poll['question'] == '') {
 		alert('You cannot have empty question');
 		return false;
 	}
@@ -111,36 +157,7 @@ function newPoll() {
 			return false;
 		}
 	}
-
-	// New GUID
-	var guid = GUID();
-
-	// Post everything to post-create-poll.php
-	$.ajax({
-		type : "POST",
-		url : 'server/process-poll.php',
-		data : {
-			id : guid,
-			recipient : emails,
-			data : poll,
-			me : myEmail
-		},
-		success : function(data) {
-		}
-	});
-
-	setTimeout(function() {
-		var baseUrl = document.URL.substring(0, document.URL.lastIndexOf("/"));
-		location.replace(baseUrl + "/post-create-poll.php?id=" + guid);
-	}, 0);
-
-}
-
-/**
- * To be implemented
- */
-function addQuestion() {
-
+	return true;
 }
 
 /**
@@ -154,4 +171,42 @@ function addOption() {
 			+ ':</label><input type="text" class="form-control" id="option_'
 			+ (n + 1) + '_input"placeholder="" /></div>';
 	options.append(nextOption);
+}
+
+function frozeUI() {
+	$('button.btn btn-default').attr('disabled', '');
+	$('input.form-control').attr('disabled', '');
+}
+
+function unFrozeUI() {
+	$('button.btn btn-default').removeAttr('disabled');
+	$('input.form-control').removeAttr('disabled');
+}
+
+function startSpinner() {
+	var opts = {
+		lines : 13, // The number of lines to draw
+		length : 5, // The length of each line
+		width : 3, // The line thickness
+		radius : 7, // The radius of the inner circle
+		corners : 1, // Corner roundness (0..1)
+		rotate : 0, // The rotation offset
+		direction : 1, // 1: clockwise, -1: counterclockwise
+		color : '#000', // #rgb or #rrggbb or array of colors
+		speed : 1, // Rounds per second
+		trail : 60, // Afterglow percentage
+		shadow : false, // Whether to render a shadow
+		hwaccel : false, // Whether to use hardware acceleration
+		className : 'spinner', // The CSS class to assign to the spinner
+		zIndex : 2e9, // The z-index (defaults to 2000000000)
+		top : 'auto', // Top position relative to parent in px
+		left : '5%' // Left position relative to parent in px
+	};
+	var target = document.getElementById('spinDiv');
+	spinner = new Spinner(opts).spin(target);
+}
+
+function stopSpinner() {
+	if (spinner !== undefined)
+		spinner.stop();
 }

@@ -28,6 +28,10 @@ if (! isset ( $_SESSION ['token'] )) {
 <!-- Select 2 Library -->
 <link href="lib/select2-3.4.5/select2.css" rel="stylesheet" />
 <script src="lib/select2-3.4.5/select2.js"></script>
+
+<!-- Spin library -->
+<script src="js/external/spin.js"></script>
+
 </head>
 
 <body>
@@ -72,11 +76,13 @@ if (! isset ( $_SESSION ['token'] )) {
 				</div>
 			</div>
 
-			<!-- Control buttons -->
-			<button type="button" class="btn btn-default" onclick="addOption()">Add
-				Option</button>
-			<button type="submit" class="btn btn-default">Make a Poll</button>
-
+			<div class="form-group">
+				<!-- Control buttons -->
+				<button type="button" class="btn btn-default" onclick="addOption()">Add
+					Option</button>
+				<button type="submit" class="btn btn-default">Make a Poll</button>
+				<div class="formgroup" id="spinDiv" style="display:inline-block"></div>
+			</div>
 		</form>
 		<?php include ("footer.inc");?>
 	</div>
