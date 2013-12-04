@@ -174,12 +174,12 @@ function addOption() {
 }
 
 function frozeUI() {
-	$('button.btn btn-default').attr('disabled', '');
+	$('button[class="btn btn-default"]').attr('disabled', '');
 	$('input.form-control').attr('disabled', '');
 }
 
 function unFrozeUI() {
-	$('button.btn btn-default').removeAttr('disabled');
+	$('button[class="btn btn-default"]').removeAttr('disabled');
 	$('input.form-control').removeAttr('disabled');
 }
 

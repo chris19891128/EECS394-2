@@ -1,60 +1,42 @@
+<?php
+	set_include_path ( '.' );
+	require_once 'lib/survey_db.php';
+	require_once 'lib/session.php';
+	session_start ();
+	
+	$respondantError = "false";
+	$existRespondant = "false";
+	$userInfo = null;
+	
+	if (! isset ( $_GET ['id'] )) {
+		// no survey_id
+		echo 'Broken URL, Missing survey id or responder!';
+		return;
+	} elseif (! isset ( $_GET ['responder'] ) && ($userInfo = getFullUserInfo ()) == false) {
+		// no responder and not logged in
+		header ( 'location: login.php' );
+	} elseif (! isset ( $_GET ['responder'] ) && $userInfo ['email'] == get_survey_creator_by_id ( $_GET ['id'] )) {
+		// Logged in user is the creator
+		$respondant = $userInfo ['email'];
+		$err_num = 3;
+	} elseif (! isset ( $_GET ['responder'] )) {
+		// Logged in user is not the creator
+		$respondantError = "true";
+		$err_num = 1;
+	} elseif (! in_array ( $_GET ['responder'], get_survey_recipient_by_id ( $_GET ['id'] ) )) {
+		// Custom user and not authorized
+		$existRespondant = "true";
+		echo 'You have no authentication to see this poll';
+		return;
+	} elseif (in_array ( $_GET ['responder'], get_survey_responded_by_id ( $_GET ['id'] ) )) {
+		// Custom user authorized but replied
+		$existRespondant = "true";
+		$err_num = 2;
+	} else {
+		$existRespondant = "true";
+		$err_num = 0;
+	}
 
-    <?php
-        set_include_path ( '.' );
-        require_once 'lib/survey_db.php';
-        require_once 'lib/session.php';
-        session_start ();
-        if (! isset ( $_SESSION ['token'] ))
-        {
-        header ( 'location: login.php' );
-        }
-        $respondantError = "false";
-        $existRespondant = "false";
-        //no survey_id
-        if (! isset ( $_GET ['id'] )) {
-            echo 'Broken URL, Missing survey id or responder!';
-            return;
-        //no responder then judge as the initiator
-        } elseif (! isset ($_GET ['responder'])){
-            $userInfo = getFullUserInfo();
-            $respondant = $userInfo['email'];
-            $err_num = 3;
-            //the home did not create that survey
-            if($respondant != get_survey_creator_by_id ( $_GET ['id']))
-            {
-                $respondantError = "true";
-                $err_num = 1;
-            }
-        //not the recipient of the survey
-        } elseif (! in_array ( $_GET ['responder'], get_survey_recipient_by_id ( $_GET ['id'] ) )) {
-            $existRespondant = "true";
-            echo 'You have no authentication to see this poll';
-            return;
-        } elseif (in_array ( $_GET ['responder'], get_survey_responded_by_id ( $_GET ['id'] ) )) {
-            $existRespondant = "true";
-            $err_num = 2;
-        } else {
-            $existRespondant = "true";
-            $err_num = 0;
-        }
-    /**
-set_include_path ( '.' );
-require_once 'lib/survey_db.php';
-
-if (! isset ( $_GET ['id'] ) || ! isset ( $_GET ['responder'] )) {
-	echo 'Broken URL, Missing survey id or responder!';
-	return;
-} elseif ($_GET ['responder'] == get_survey_creator_by_id ( $_GET ['id'] )) {
-	$err_num = 1;
-} elseif (! in_array ( $_GET ['responder'], get_survey_recipient_by_id ( $_GET ['id'] ) )) {
-	echo 'You have no authentication to see this poll';
-	return;
-} elseif (in_array ( $_GET ['responder'], get_survey_responded_by_id ( $_GET ['id'] ) )) {
-	$err_num = 2;
-} else {
-	$err_num = 0;
-}
-**/
 ?>
 <!DOCTYPE html>
 <html>
@@ -75,7 +57,7 @@ if (! isset ( $_GET ['id'] ) || ! isset ( $_GET ['responder'] )) {
 
 <body>
 	<input id='err' type='hidden' value='<?php echo $err_num;?>' />
-    <input id='exist' type='hidden' value='<?php echo $existRespondant;?>' />
+	<input id='exist' type='hidden' value='<?php echo $existRespondant;?>' />
 	<input id='sid' type='hidden'
 		value='<?php echo isset ( $_GET ['id'] ) ? $_GET ['id']:'' ;?>' />
 	<input id='rid' type='hidden'
@@ -83,12 +65,12 @@ if (! isset ( $_GET ['id'] ) || ! isset ( $_GET ['responder'] )) {
 
 	<div class="container" id="root" style="display: none">
 
-        <!-- Panel for home button -->
-        <div id='home' class='container' style='display: none'>
-            <ul class="pager">
-            <li class="previous"><a href="home.php">&larr; Home</a></li>
-            </ul>
-        </div>
+		<!-- Panel for home button -->
+		<div id='home' class='container' style='display: none'>
+			<ul class="pager">
+				<li class="previous"><a href="home.php">&larr; Home</a></li>
+			</ul>
+		</div>
 
 		<!-- Panel for question and other recipients display -->
 		<div id='infov' class='container' style='display: none'>
@@ -100,8 +82,8 @@ if (! isset ( $_GET ['id'] ) || ! isset ( $_GET ['responder'] )) {
 		<div id='nav' class='container'>
 			<ul class="nav nav-tabs">
 				<li id='l1' class="active"><a href="#">Vote</a></li>
-				<li id='l2' ><a id='l2a' href="">See Result</a></li>
-                <li id='l3' ><a id='l3a' href="">Track Respondants</a></li>
+				<li id='l2'><a id='l2a' href="">See Result</a></li>
+				<li id='l3'><a id='l3a' href="">Track Respondants</a></li>
 			</ul>
 		</div>
 

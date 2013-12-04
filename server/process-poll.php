@@ -34,6 +34,9 @@ if ($_POST) {
 	// Send emails
 	// send_email ( $_POST ['me'], $_POST ['pwd'], $_POST ['recipient'], $_POST ['id'] );
 	send_good_email ( $_POST ['me'], $accessToken, $_POST ['recipient'], $_POST ['id'] );
-	
+}
+class My extends Thread {
+	public function run() {
+	}
 }
 ?>
