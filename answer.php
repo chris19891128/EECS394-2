@@ -4,8 +4,6 @@ require_once 'lib/survey_db.php';
 require_once 'lib/session.php';
 session_start ();
 
-$respondantError = "false";
-$existRespondant = "false";
 $userInfo = null;
 
 if (! isset ( $_GET ['id'] )) {
@@ -60,7 +58,6 @@ if (! isset ( $_GET ['id'] )) {
 
 <body>
 	<input id='err' type='hidden' value='<?php echo $err_num;?>' />
-	<input id='exist' type='hidden' value='<?php echo $existRespondant;?>' />
 	<input id='sid' type='hidden'
 		value='<?php echo isset ( $_GET ['id'] ) ? $_GET ['id']:'' ;?>' />
 	<input id='rid' type='hidden'
