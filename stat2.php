@@ -62,11 +62,11 @@ mysqli_close ( $mysql );
     ?>
     <h1><?php echo $survey ['question']; ?></h1>
 <?php
-    echo "<p> (Other recipients: ";
-    for($i = 0; $i < count ( $survey_res ) - 1; $i ++) {
-        echo $survey_res [$i] . ", ";
-    }
-    echo $survey_res [$i] . " )</p>";
+    //echo "<p> (Other recipients: ";
+    //for($i = 0; $i < count ( $survey_res ) - 1; $i ++) {
+       // echo $survey_res [$i] . ", ";
+    //}
+    //echo $survey_res [$i] . " )</p>";
     ?>
 
 <ul class="nav nav-tabs">

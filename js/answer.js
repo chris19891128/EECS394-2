@@ -13,7 +13,7 @@ $(function() {
 		$('#nav').show();
 		$('#vv').html('You cannot vote for the poll').show();
 		loadQuestion();
-		loadRecipients();
+		//loadRecipients();
 		break;
 	case '2':
 		// Logged in user is the creator and responded before
@@ -23,7 +23,7 @@ $(function() {
 		$('#l3a').attr('href', 'stat2.php?id=' + $('#sid').val());
 		$('#nav').show();
 		loadQuestion();
-		loadRecipients();
+		//loadRecipients();
 		loadOptions();
 		break;
 	case '3':
@@ -40,7 +40,7 @@ $(function() {
 		$('#nav').show();
 		$('#vv').html('You have already voted').show();
 		loadQuestion();
-		loadRecipients();
+		//loadRecipients();
 		break;
 	default:
 		// Logged in user and responded before
@@ -55,7 +55,7 @@ $(function() {
 						+ $('#rid').val());
 		$('#nav').show();
 		loadQuestion();
-		loadRecipients();
+		//loadRecipients();
 		loadOptions();
 	}
 

@@ -23,7 +23,7 @@ $(function() {
         $('#nav').show();
         $('#home').show();
         loadQuestion();
-        loadRecipients();
+       //loadRecipients();
         loadStats();
         break;
 	default:
@@ -38,7 +38,7 @@ $(function() {
                  + $('#rid').val());
 		$('#nav').show();
 		loadQuestion();
-		loadRecipients();
+		//loadRecipients();
 		loadStats();
 	}
 	$('#root').show();
